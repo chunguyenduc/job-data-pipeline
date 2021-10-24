@@ -1,0 +1,17 @@
+version: '2'
+services:
+  db:
+    image: mongo
+  web:
+    build: 
+      context: ./skills_dashboard/
+      # dockerfile: Dockerfile
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./skills_dashboard:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    tty: true
+
