@@ -2,14 +2,13 @@ import scrapy
 from skillscraper.items import SkillscraperItem, Skill
 
 # scrapy crawl skills
-
-
 class SkillsSpider(scrapy.Spider):
     name = "skills"
 
+
+
     def start_requests(self):
-        urls = ['https://itviec.com/it-jobs?page=%s&query=&source=search_job' %
-                page for page in range(1, 3)]
+        urls = ['https://itviec.com/it-jobs?page=%s&query=&source=search_job' % page for page in range(1, 3)]
 
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
@@ -50,3 +49,5 @@ class SkillsSpider(scrapy.Spider):
             skill = skill.strip('\n')
             res.append(skill)
         return res
+
+

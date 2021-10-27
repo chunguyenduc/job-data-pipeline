@@ -1,0 +1,255 @@
+2021-10-26 16:54:05 [scrapy.utils.log] INFO: Scrapy 2.4.1 started (bot: skillscraper)
+2021-10-26 16:54:05 [scrapy.utils.log] INFO: Versions: lxml 4.6.3.0, libxml2 2.9.10, cssselect 1.1.0, parsel 1.6.0, w3lib 1.22.0, Twisted 21.7.0, Python 3.6.9 (default, Nov 23 2019, 06:41:34) - [GCC 8.3.0], pyOpenSSL 21.0.0 (OpenSSL 1.1.1l  24 Aug 2021), cryptography 35.0.0, Platform Linux-5.4.0-87-generic-x86_64-with-debian-10.2
+2021-10-26 16:54:05 [scrapy.crawler] INFO: Overridden settings:
+{'BOT_NAME': 'skillscraper',
+ 'LOG_FILE': 'logs/default/skills/510e19b8367d11eca3b60242ac160003.log',
+ 'LOG_LEVEL': 'INFO',
+ 'NEWSPIDER_MODULE': 'skillscraper.spiders',
+ 'ROBOTSTXT_OBEY': True,
+ 'SPIDER_MODULES': ['skillscraper.spiders']}
+2021-10-26 16:54:05 [scrapy.extensions.telnet] INFO: Telnet Password: 72e7b2051079798b
+2021-10-26 16:54:05 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.logstats.LogStats']
+2021-10-26 16:54:05 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2021-10-26 16:54:05 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2021-10-26 16:54:05 [scrapy.middleware] INFO: Enabled item pipelines:
+['skillscraper.pipelines.MongoDBPipeline']
+2021-10-26 16:54:05 [scrapy.core.engine] INFO: Spider opened
+2021-10-26 16:54:05 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2021-10-26 16:54:05 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Ruby on Rails'}, {'name': 'PostgreSql'}, {'name': 'AWS'}],
+ 'title': 'Remote Backend Dev (Ruby/Java/Go/.Net..)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Software Architect'},
+            {'name': 'MySQL'},
+            {'name': '.NET'}],
+ 'title': 'Software Developer'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Database'}, {'name': 'SQL'}, {'name': 'Oracle'}],
+ 'title': 'Software Developer (Oracle, PL/SQL)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'HTML5'},
+            {'name': 'CSS'},
+            {'name': 'JavaScript'},
+            {'name': 'Fresher Accepted'}],
+ 'title': 'Web Developer-30,000,000d SIGN-UP BONUS'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'VueJS'}, {'name': 'JavaScript'}, {'name': 'JQuery'}],
+ 'title': 'Frontend Dev (Vue/React/JS) + BONUS'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Java'},
+            {'name': 'Tester'},
+            {'name': 'QA QC'},
+            {'name': 'Fresher Accepted'}],
+ 'title': 'Automation QA/QC-30 millionSIGN-UP BONUS'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'Database'}, {'name': 'MySQL'}, {'name': 'Oracle'}],
+ 'title': 'Sr Data Engineer (MySQL, Oracle)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Tester'}, {'name': 'C#'}, {'name': 'QA QC'}],
+ 'title': 'Test Engineer (C#, QA QC, Database)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Project Manager'},
+            {'name': 'English'},
+            {'name': 'Manager'}],
+ 'title': 'Project Manager (English)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Team Leader'}, {'name': 'Python'}, {'name': 'Golang'}],
+ 'title': 'Tech Lead'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Tester'}, {'name': 'Agile'}, {'name': 'QA QC'}],
+ 'title': 'QA QC Engineer (Mobile Apps Tester)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Tester'}, {'name': 'SQL'}, {'name': 'QA QC'}],
+ 'title': 'Manual Tester (QA QC)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Java'}, {'name': 'J2EE'}, {'name': 'Spring'}],
+ 'title': 'Backend JAVA (Spring Boot/ J2EE) '}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'QA QC'}, {'name': 'SQL'}, {'name': 'Tester'}],
+ 'title': '(HN-HCM) Quality control/Tester'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'Tester'}, {'name': 'QA QC'}],
+ 'title': 'QC Engineer/ Tester (Automation)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'JavaScript'}, {'name': 'Python'}, {'name': 'ReactJS'}],
+ 'title': 'Frontend Engineer (JS, Python, ReactJS)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Business Analyst'},
+            {'name': 'Agile'},
+            {'name': 'English'}],
+ 'title': 'Technical Business Analyst (Agile)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'ReactJS'},
+            {'name': 'JavaScript'},
+            {'name': 'React Native'}],
+ 'title': 'Frontend Engineer (ReactJS, Javascript)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'JavaScript'}, {'name': 'CSS'}, {'name': 'Magento'}],
+ 'title': 'Frontend Developer (Magento, Javascript)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'PHP'}, {'name': 'JavaScript'}, {'name': 'NodeJS'}],
+ 'title': 'FullStack Dev (PHP/NodeJS/JavaSctipt)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': '.NET'}, {'name': 'C#'}, {'name': 'ASP.NET'}],
+ 'title': 'Mid/Senior Software Engineer (.NET) '}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Java'}, {'name': 'C++'}, {'name': 'Blockchain'}],
+ 'title': 'IT Project Coordinator'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'iOS'},
+            {'name': 'Swift'},
+            {'name': 'Flutter'},
+            {'name': 'Fresher Accepted'}],
+ 'title': 'Mobile Dev (iOS, Flutter) Sign-on Bonus'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Team Leader'}, {'name': 'CSS'}, {'name': 'ReactJS'}],
+ 'title': 'Frontend Team Leader (ReactJS/CSS)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Python'}, {'name': 'SQL'}, {'name': 'AWS'}],
+ 'title': 'Data Engineer (AWS, Python, Java, SQL)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'UI-UX'}, {'name': 'CSS'}, {'name': 'Designer'}],
+ 'title': 'UI/UX Designer '}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Software Architect'},
+            {'name': 'Ruby on Rails'},
+            {'name': 'Golang'}],
+ 'title': 'Technical Architect (Sign-on bonus)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'AWS'}, {'name': 'Linux'}, {'name': 'Cloud'}],
+ 'title': 'AWS Cloud System Engineer ( Linux)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'DevOps'}, {'name': 'Networking'}, {'name': 'Manager'}],
+ 'title': 'Application Security Manager'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Business Analyst'},
+            {'name': 'Database'},
+            {'name': 'Data Analyst'}],
+ 'title': 'Business Analyst '}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'DevOps'},
+            {'name': 'Linux'},
+            {'name': 'Fresher Accepted'}],
+ 'title': 'All Level - DevOps Engineer '}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Agile'}, {'name': 'Business Analyst'}],
+ 'title': 'Business Analyst'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'JavaScript'},
+            {'name': 'SQL'},
+            {'name': 'PHP'},
+            {'name': 'Fresher Accepted'}],
+ 'title': '03 Fullstack Devs (JavaScript, PHP, SQL)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Da Nang',
+ 'skills': [{'name': 'Java'}, {'name': 'JavaScript'}, {'name': 'ReactJS'}],
+ 'title': 'Fullstack Dev (Java, JavaScript)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'skills': [{'name': 'Java'},
+            {'name': 'PostgreSql'},
+            {'name': 'Spring'},
+            {'name': 'Fresher Accepted'}],
+ 'title': 'Java Full stack-30 million SIGN-UP BONUS'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'Business Analyst'},
+            {'name': 'Database'},
+            {'name': 'SQL'}],
+ 'title': 'Business Analyst (SQL, Database)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'Tester'}, {'name': 'SQL'}],
+ 'title': 'Manual Tester (Dự án Banking)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'Android'}, {'name': 'Java'}, {'name': 'Kotlin'}],
+ 'title': 'Senior Android Developer'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'Tester'}, {'name': 'QA QC'}],
+ 'title': 'T6003 Automation Tester Engineer (QA QC)'}
+
+2021-10-26 16:54:07 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'skills': [{'name': 'Java'}, {'name': 'MVC'}, {'name': 'JavaScript'}],
+ 'title': 'Java Developer (Javascript) - Upto 40M'}
+
+2021-10-26 16:54:07 [scrapy.core.engine] INFO: Closing spider (finished)
+2021-10-26 16:54:07 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 718,
+ 'downloader/request_count': 3,
+ 'downloader/request_method_count/GET': 3,
+ 'downloader/response_bytes': 186075,
+ 'downloader/response_count': 3,
+ 'downloader/response_status_count/200': 3,
+ 'elapsed_time_seconds': 1.615434,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2021, 10, 26, 16, 54, 7, 489090),
+ 'item_scraped_count': 40,
+ 'log_count/INFO': 50,
+ 'memusage/max': 68583424,
+ 'memusage/startup': 68583424,
+ 'response_received_count': 3,
+ 'robotstxt/request_count': 1,
+ 'robotstxt/response_count': 1,
+ 'robotstxt/response_status_count/200': 1,
+ 'scheduler/dequeued': 2,
+ 'scheduler/dequeued/memory': 2,
+ 'scheduler/enqueued': 2,
+ 'scheduler/enqueued/memory': 2,
+ 'start_time': datetime.datetime(2021, 10, 26, 16, 54, 5, 873656)}
+2021-10-26 16:54:07 [scrapy.core.engine] INFO: Spider closed (finished)

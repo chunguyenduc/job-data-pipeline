@@ -2,10 +2,9 @@ version: '2'
 services:
   db:
     image: mongo
-  web:
-    build: 
+  api:
+    build:
       context: ./skills_dashboard/
-      # dockerfile: Dockerfile
     command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - ./skills_dashboard:/code
@@ -14,4 +13,13 @@ services:
     depends_on:
       - db
     tty: true
-
+  crawl:
+    build:
+      context: ./skills_dashboard/
+    command: bash -c "cd skillscraper && scrapyd"
+    volumes:
+      - ./skills_dashboard:/code
+    ports:
+      - "6800:6800"
+    tty: true
+    stdin_open: true
