@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, action
-import logging
+from rest_framework import filters
+from rest_framework import generics
 
 
 class SkillList(APIView):
@@ -56,11 +57,18 @@ class SkillDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class JobList(APIView):
+class JobList(generics.ListAPIView):
+    lookup_field = ['city']
+    serializer_class = JobSerializer
 
-    def get(self, request):
-        jobs = Job.objects.all()
-        serializer = JobSerializer(jobs, many=True)
-        return Response(serializer.data)
-
-
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases to a given user,
+        by filtering against a `username` query parameter in the URL.
+        """
+        city = self.request.query_params.get('city')
+        print(city)
+        if city is not None:
+            queryset = Job.objects.filter(city=city)
+            return queryset
+        return Job.objects.all()
