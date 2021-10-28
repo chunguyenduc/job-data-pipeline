@@ -5,7 +5,8 @@ from skills import views
 urlpatterns = [
     path('skills/', views.SkillList.as_view()),
     path('skills/<int:pk>/', views.SkillDetail.as_view()),
+    path('jobs/', views.JobList.as_view()),
+
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)
-

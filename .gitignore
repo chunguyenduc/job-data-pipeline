@@ -9,4 +9,6 @@ skills_dashboard/skillscraper/project.egg-info
 skills_dashboard/skillscraper/dbs
 skills_dashboard/skillscraper/*.html
 skills_dashboard/skillscraper/xi_kiu
+*/*/*/*/__pycache__/*
+skills_dashboard/skillscraper/twistd.pid
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from skills.models import Skill
+from skills.models import Skill, Job, SkillForm, SkillModel
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from django.utils.encoding import smart_text
@@ -21,9 +21,16 @@ class ObjectIdField(serializers.Field):
         return smart_text(value)
 
 class SkillSerializer(serializers.ModelSerializer):
+    # _id = ObjectIdField(read_only=True)
+    class Meta:
+        model = SkillModel
+
+        fields = ('id', 'name')
+
+class JobSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     class Meta:
-        model = Skill
-        fields = ('_id', 'id', 'name')
+        model = Job
+        fields = ('_id', 'id', 'title', 'city', 'skills')
 
 

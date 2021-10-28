@@ -10,8 +10,8 @@ services:
       - ./skills_dashboard:/code
     ports:
       - "8000:8000"
-    depends_on:
-      - db
+    # depends_on:
+      # - db
     tty: true
   crawl:
     build:
