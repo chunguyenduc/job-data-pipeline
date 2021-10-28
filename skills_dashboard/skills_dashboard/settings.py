@@ -81,7 +81,7 @@ DATABASES = {
         'ENGINE': 'djongo',
         'NAME': 'skills-db',
         'CLIENT': {
-            'host': 'db',
+            'host': 'localhost',
             'port': 27017,
         },
     }
