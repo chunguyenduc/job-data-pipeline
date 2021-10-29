@@ -34,4 +34,7 @@ class JobSerializer(serializers.ModelSerializer):
         model = Job
         fields = ('_id', 'title', 'city', 'skills')
 
-
+class JobListQuerySerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=150, required=False)
+    city = serializers.CharField(max_length=100, required=False)
+    skills = serializers.ListField(child=serializers.CharField(max_length=50), required=False)

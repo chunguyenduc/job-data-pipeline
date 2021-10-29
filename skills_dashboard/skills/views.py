@@ -1,5 +1,5 @@
 from skills.models import Skill, Job, SkillModel
-from skills.serializers import SkillSerializer, JobSerializer
+from skills.serializers import SkillSerializer, JobSerializer, JobListQuerySerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -61,14 +61,28 @@ class JobList(generics.ListAPIView):
     lookup_field = ['city']
     serializer_class = JobSerializer
 
+    @swagger_auto_schema(
+        query_serializer=JobListQuerySerializer,
+        responses={200: JobSerializer(many=True)},
+    )
+    def get(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     def get_queryset(self):
         """
         Optionally restricts the returned purchases to a given user,
         by filtering against a `username` query parameter in the URL.
         """
-        city = self.request.query_params.get('city')
-        print(city)
-        if city is not None:
-            queryset = Job.objects.filter(city=city)
-            return queryset
-        return Job.objects.all()
+        queryset = Job.objects.all()
+        city_value = self.request.query_params.get('city')
+        title_value = self.request.query_params.get('title')
+        skill_value = self.request.query_params.getlist('skills')
+        print(city_value, title_value, skill_value)
+        if city_value is not None:
+            queryset = Job.objects.filter(city__iexact=city_value)
+        if title_value is not None:
+            queryset = Job.objects.filter(title__icontains=title_value)
+        return queryset
