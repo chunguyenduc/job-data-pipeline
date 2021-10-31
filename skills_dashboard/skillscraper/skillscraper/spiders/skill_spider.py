@@ -1,6 +1,7 @@
 import scrapy
+from scrapy import item
 from skillscraper.items import SkillscraperItem, Skill
-
+from urllib.parse import urljoin
 # scrapy crawl skills
 
 
@@ -13,8 +14,8 @@ class SkillsSpider(scrapy.Spider):
 
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
-        self.f = open('xi_kiu', 'w')
-
+        # self.f = open('xi_kiu', 'w')
+        self.base_url = "https://itviec.com"
     def parse(self, response):
         first_group = response.xpath('//div[@id="search-results"]')
 
@@ -24,21 +25,28 @@ class SkillsSpider(scrapy.Spider):
 
         job_body = job_content.xpath('.//div[@class="job__body"]')
         job_bottom = job_content.xpath('.//div[@class="job-bottom"]')
-        for (body, bottom) in zip(job_body, job_bottom):
+        job_logo = job_content.xpath('.//div[@class="logo"]')
+        for (body, bottom, logo) in zip(job_body, job_bottom, job_logo):
             title = body.xpath('.//h2/a/text()').get()
             skills = bottom.xpath('.//a/span/text()').getall()
             city = body.xpath('.//div[@class="city"]/div/text()').get()
+            url = body.xpath('.//h2/a/@href').get()
             skills = self.format_skills(skills)
-            item = SkillscraperItem()
-            item['title'] = title
+            company = logo.xpath('.//img/@alt').get()[:-11]
             skill_items = []
             for s in skills:
-                skill = Skill()
-                skill['name'] = s
-                skill_items.append(skill)
+                # skill = Skill()
+                # skill['name'] = s
+                skill_items.append(s)
+
+            item = SkillscraperItem()
+            item['title'] = title
             item['skills'] = skill_items
             item['city'] = city
-            self.f.write("{}: {}\n".format(title, skills))
+            item['company'] = company
+            item['url'] = urljoin(self.base_url, url)
+
+            # self.f.write("{}: {}\n".format(title, skills))
             yield item
 
     def format_skills(self, skills_list):

@@ -33,10 +33,10 @@ class MongoDBPipeline(object):
                 valid = False
                 raise DropItem("Missing {0}!".format(data))
         if valid:
-
+            old_item = {'title': item['title']}
             new_item = {"$set": dict(item)}
 
-            self.collection.update_one(dict(item), new_item, upsert=True)
+            self.collection.update_one(old_item, new_item, upsert=True)
             logging.info('Job added: {}\n'.format(item))
 
         return item

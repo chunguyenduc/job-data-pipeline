@@ -1,7 +1,7 @@
-# from django.db import models
-import django
-from djongo import models
-# from django import forms
+from django.db import models
+from django.contrib.postgres.fields import ArrayField, JSONField
+# from djongo.models.fields import JSONField
+# from djongo.models import ArrayField
 # Create your models here.
 
 
@@ -22,9 +22,9 @@ class SkillModel(Skill):
 class Job(models.Model):
     title = models.CharField(max_length=150)
     city = models.CharField(max_length=100)
-    skills = models.ArrayField(
-        model_container=Skill,
-    )
+    skills = ArrayField(models.CharField(max_length=100))
+    company = models.CharField(max_length=100)
+    url = models.URLField(max_length=200)
     class Meta:
         db_table = 'jobs'
 

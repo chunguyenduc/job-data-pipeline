@@ -58,7 +58,6 @@ class SkillDetail(APIView):
 
 
 class JobList(generics.ListAPIView):
-    lookup_field = ['city']
     serializer_class = JobSerializer
 
     @swagger_auto_schema(
@@ -80,9 +79,14 @@ class JobList(generics.ListAPIView):
         city_value = self.request.query_params.get('city')
         title_value = self.request.query_params.get('title')
         skill_value = self.request.query_params.getlist('skills')
-        print(city_value, title_value, skill_value)
+        company_value = self.request.query_params.get('company')
+        print(city_value, title_value, skill_value, company_value)
         if city_value is not None:
-            queryset = Job.objects.filter(city__iexact=city_value)
+            queryset = queryset.objects.filter(city__iexact=city_value)
         if title_value is not None:
-            queryset = Job.objects.filter(title__icontains=title_value)
+            queryset = queryset.objects.filter(title__icontains=title_value)
+        if company_value is not None:
+            queryset = queryset.objects.filter(company__icontains=company_value)
+        if len(skill_value) > 0:
+            queryset = queryset.objects.filter(skills__icontains=skill_value)
         return queryset
