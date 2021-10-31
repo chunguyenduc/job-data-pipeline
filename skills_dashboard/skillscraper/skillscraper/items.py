@@ -16,5 +16,9 @@ class SkillscraperItem(scrapy.Item):
     url = Field()
     skills = Field()
     city = Field()
+    company = Field()
+    url = Field()
+
+
 
 

@@ -1,12 +1,13 @@
 from skills.models import Skill, Job, SkillModel
-from skills.serializers import SkillSerializer, JobSerializer
+from skills.serializers import SkillSerializer, JobSerializer, JobListQuerySerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, action
-import logging
+from rest_framework import filters
+from rest_framework import generics
 
 
 class SkillList(APIView):
@@ -56,11 +57,36 @@ class SkillDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class JobList(APIView):
+class JobList(generics.ListAPIView):
+    serializer_class = JobSerializer
 
-    def get(self, request):
-        jobs = Job.objects.all()
-        serializer = JobSerializer(jobs, many=True)
+    @swagger_auto_schema(
+        query_serializer=JobListQuerySerializer,
+        responses={200: JobSerializer(many=True)},
+    )
+    def get(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases to a given user,
+        by filtering against a `username` query parameter in the URL.
+        """
+        queryset = Job.objects.all()
+        city_value = self.request.query_params.get('city')
+        title_value = self.request.query_params.get('title')
+        skill_value = self.request.query_params.getlist('skills')
+        company_value = self.request.query_params.get('company')
+        print(city_value, title_value, skill_value, company_value)
+        if city_value is not None:
+            queryset = queryset.objects.filter(city__iexact=city_value)
+        if title_value is not None:
+            queryset = queryset.objects.filter(title__icontains=title_value)
+        if company_value is not None:
+            queryset = queryset.objects.filter(company__icontains=company_value)
+        if len(skill_value) > 0:
+            queryset = queryset.objects.filter(skills__icontains=skill_value)
+        return queryset
