@@ -30,6 +30,7 @@ class SkillSerializer(serializers.ModelSerializer):
 
 class JobSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
+    skills = serializers.ListField(child=serializers.CharField(max_length=50), required=True)
     class Meta:
         model = Job
         fields = ('_id', 'title', 'city', 'skills', 'city', 'url')
