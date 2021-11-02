@@ -66,7 +66,7 @@ class JobList(generics.ListAPIView):
     )
     def get(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-
+        # print(queryset)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -78,7 +78,7 @@ class JobList(generics.ListAPIView):
         queryset = Job.objects.all()
         city_value = self.request.query_params.get('city')
         title_value = self.request.query_params.get('title')
-        skill_value = self.request.query_params.getlist('skills')
+        skill_value = self.request.query_params.get('skills')
         company_value = self.request.query_params.get('company')
         print(city_value, title_value, skill_value, company_value)
         if city_value is not None:
@@ -87,8 +87,8 @@ class JobList(generics.ListAPIView):
             queryset = queryset.filter(title__icontains=title_value)
         if company_value is not None:
             queryset = queryset.filter(company__icontains=company_value)
-        if len(skill_value) > 0:
-            queryset = queryset.filter(skills=skill_value)
+        # if len(skill_value) > 0:
+        # if skill_value is not None:
+            # queryset = queryset.filter(skills__contains=[skill_value])
         print(queryset.query)
         return queryset
-

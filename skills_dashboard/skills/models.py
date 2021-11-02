@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField
 # from djongo.models.fields import JSONField
 # from djongo.models import ArrayField
 # Create your models here.
@@ -22,9 +22,11 @@ class SkillModel(Skill):
 class Job(models.Model):
     title = models.CharField(max_length=150)
     city = models.CharField(max_length=100)
-    skills = ArrayField(models.CharField(max_length=100))
+    skills = ArrayField(models.CharField(max_length=50))
     company = models.CharField(max_length=100)
     url = models.URLField(max_length=200)
     class Meta:
         db_table = 'jobs'
+    def __str__(self):
+        return self.title
 
