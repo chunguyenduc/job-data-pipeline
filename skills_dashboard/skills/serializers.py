@@ -32,10 +32,10 @@ class JobSerializer(serializers.ModelSerializer):
     _id = ObjectIdField(read_only=True)
     class Meta:
         model = Job
-        fields = ('_id', 'title', 'city', 'skills', 'company', 'url')
+        fields = ('_id', 'title', 'city', 'skills', 'company', 'url', 'site', 'created_at')
 
 class JobListQuerySerializer(serializers.Serializer):
     title = serializers.CharField(max_length=150, required=False)
     city = serializers.CharField(max_length=100, required=False)
-    # skills = serializers.CharField(max_length=50, required=False)
     company = serializers.CharField(max_length=100, required=False)
+    site = serializers.CharField(max_length=100, required=False)

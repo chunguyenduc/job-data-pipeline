@@ -80,13 +80,16 @@ class JobList(generics.ListAPIView):
         title_value = self.request.query_params.get('title')
         skill_value = self.request.query_params.get('skills')
         company_value = self.request.query_params.get('company')
-        print(city_value, title_value, skill_value, company_value)
+        site_value = self.request.query_params.get('site')
+        print(city_value, title_value, skill_value, company_value, site_value)
         if city_value is not None:
             queryset = queryset.filter(city__iexact=city_value)
         if title_value is not None:
             queryset = queryset.filter(title__icontains=title_value)
         if company_value is not None:
             queryset = queryset.filter(company__icontains=company_value)
+        if site_value is not None:
+            queryset = queryset.filter(site=site_value)
         # if len(skill_value) > 0:
         # if skill_value is not None:
             # queryset = queryset.filter(skills__contains=[skill_value])

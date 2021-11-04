@@ -13,13 +13,13 @@ services:
     # depends_on:
       # - db
     tty: true
-  crawl:
-    build:
-      context: ./skills_dashboard/
-    command: bash -c "cd skillscraper && scrapyd"
-    volumes:
-      - ./skills_dashboard:/code
-    ports:
-      - "6800:6800"
-    tty: true
-    stdin_open: true
+  # crawl:
+  #   build:
+  #     context: ./skills_dashboard/
+  #   command: bash -c "cd skillscraper && scrapyd"
+  #   volumes:
+  #     - ./skills_dashboard:/code
+  #   ports:
+  #     - "6800:6800"
+  #   tty: true
+  #   stdin_open: true

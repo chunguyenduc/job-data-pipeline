@@ -2,6 +2,7 @@ import scrapy
 from scrapy import item
 from skillscraper.items import SkillscraperItem, Skill
 from urllib.parse import urljoin
+import datetime
 # scrapy crawl skills
 
 
@@ -33,6 +34,9 @@ class SkillsSpider(scrapy.Spider):
             url = body.xpath('.//h2/a/@href').get()
             skills = self.format_skills(skills)
             company = logo.xpath('.//img/@alt').get()[:-11]
+            distance_time = bottom.xpath('.//div[@class="distance-time-job-posted"]/span/text()').get()
+            print(distance_time)
+            created_at = self.get_created_time(distance_time)
             skill_items = []
             for s in skills:
                 # skill = Skill()
@@ -45,6 +49,8 @@ class SkillsSpider(scrapy.Spider):
             item['city'] = city
             item['company'] = company
             item['url'] = urljoin(self.base_url, url)
+            item['site'] = 'ITVIEC'
+            item['created_at'] = created_at
 
             # self.f.write("{}: {}\n".format(title, skills))
             yield item
@@ -58,3 +64,31 @@ class SkillsSpider(scrapy.Spider):
             skill = skill.strip('\n')
             res.append(skill)
         return res
+
+    def get_created_time(self, distance_time):
+        """
+            Get created time from distance time.
+            ie: 5h -> now-5h
+        """
+        # Process distance time
+        distance_time = distance_time.strip('\n')
+        time_now = datetime.datetime.now()
+        # case minute
+        if distance_time[-1] == 'm':
+            minute = int(distance_time[:-1])
+            minute_subtracted = datetime.timedelta(minutes = minute)
+            created = time_now - minute_subtracted
+            return created
+        # case hour
+        elif distance_time[-1] == 'h':
+            hour = int(distance_time[:-1])
+            hour_subtracted = datetime.timedelta(hours = hour)
+            created = time_now - hour_subtracted
+            return created
+        # case day
+        elif distance_time[-1] == 'd':
+            day = int(distance_time[:-1])
+            day_subtracted = datetime.timedelta(days = day)
+            created = time_now - day_subtracted
+            return created
+        return time_now

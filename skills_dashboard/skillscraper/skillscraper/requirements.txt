@@ -1,0 +1,4 @@
+Django==3.2
+Scrapy==2.4.1
+pymongo==3.12.1
+scrapyd==1.2.1

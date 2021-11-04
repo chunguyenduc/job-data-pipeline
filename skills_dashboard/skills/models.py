@@ -25,6 +25,8 @@ class Job(models.Model):
     skills = ArrayField(models.CharField(max_length=50))
     company = models.CharField(max_length=100)
     url = models.URLField(max_length=200)
+    site = models.CharField(max_length=100, default=None)
+    created_at = models.DateTimeField(null=True, blank=True)
     class Meta:
         db_table = 'jobs'
     def __str__(self):

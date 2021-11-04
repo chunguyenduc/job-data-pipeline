@@ -18,6 +18,9 @@ class SkillscraperItem(scrapy.Item):
     city = Field()
     company = Field()
     url = Field()
+    site=Field()
+    created_at = Field()
+
 
 
 
