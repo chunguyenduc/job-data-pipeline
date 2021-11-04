@@ -7,3 +7,4 @@ djangorestframework==3.12.4
 djongo==1.3.6
 psycopg2-binary==2.9.1
 sqlparse==0.2.4
+django-cors-headers==3.10.0
