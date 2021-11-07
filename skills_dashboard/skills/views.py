@@ -1,5 +1,6 @@
 from skills.models import Skill, Job, SkillModel
 from skills.serializers import SkillSerializer, JobSerializer, JobListQuerySerializer
+from rest_framework.pagination import PageNumberPagination
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,6 +9,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, action
 from rest_framework import filters
 from rest_framework import generics
+from collections import OrderedDict
 
 
 class SkillList(APIView):
@@ -57,16 +59,71 @@ class SkillDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+    def get_paginated_response(self, data):
+        print('paginator : ', len(self.page))
+        return Response(OrderedDict([
+            ('count', self.page.paginator.count),
+            ('page', self.page.number),
+            ('page_size', len(self.page)),
+            ('next', self.get_next_link()),
+            ('previous', self.get_previous_link()),
+            ('results', data)
+        ]))
+
+    def get_paginated_response_schema(self, schema):
+        return {
+            'type': 'object',
+            'properties': {
+                'count': {
+                    'type': 'integer',
+                    'example': 123,
+                },
+                'page_size': {
+                    'type': 'integer',
+                    'example': 123,
+                },
+
+                'next': {
+                    'type': 'string',
+                    'nullable': True,
+                    'format': 'uri',
+                    'example': 'http://api.example.org/accounts/?{page_query_param}=4'.format(
+                        page_query_param=self.page_query_param)
+                },
+                'previous': {
+                    'type': 'string',
+                    'nullable': True,
+                    'format': 'uri',
+                    'example': 'http://api.example.org/accounts/?{page_query_param}=2'.format(
+                        page_query_param=self.page_query_param)
+                },
+                'results': schema,
+            },
+        }
+
+
 class JobList(generics.ListAPIView):
     serializer_class = JobSerializer
+    pagination_class = StandardResultsSetPagination
 
     @swagger_auto_schema(
         query_serializer=JobListQuerySerializer,
         responses={200: JobSerializer(many=True)},
     )
     def get(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        # print(queryset)
+        queryset = self.filter_queryset(
+            self.get_queryset().order_by('-created_at'))
+        page = self.paginate_queryset(queryset)
+        # print('Page: ', page)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            # print(serializer)
+            return self.get_paginated_response(serializer.data)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
