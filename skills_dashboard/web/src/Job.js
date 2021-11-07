@@ -61,9 +61,8 @@ class Job extends Component {
         const link = baseUrl + "/jobs/"
         axios.get(link, { params })
             .then(res => {
-                // console.log(res);
                 console.log(res.data);
-                const totalPages = res.data.count / params["page_size"]
+                const totalPages = Math.floor(res.data.count / params["page_size"])
                 this.setState({
                     jobs: res.data.results,
                     totalPages: totalPages,
@@ -73,19 +72,6 @@ class Job extends Component {
                 console.log(e);
             });
 
-        // TutorialDataService.getAll(params)
-        //     .then((response) => {
-        //         const { tutorials, totalPages } = response.data;
-
-        //         this.setState({
-        //             tutorials: tutorials,
-        //             count: totalPages,
-        //         });
-        //         console.log(response.data);
-        //     })
-        //     .catch((e) => {
-        //         console.log(e);
-        //     });
     }
     handlePageChange(event, value) {
         this.setState(
@@ -113,26 +99,18 @@ class Job extends Component {
 
 
     componentDidMount() {
-        // const link = baseUrl + "/jobs/"
-        // axios.get(link, { params: {} })
-        //     .then(res => {
-        //         console.log(res.data);
-        //         // console.log(res.data);
-        //         this.setState({ jobs: res.data.results });
-        //     })
-        // console.log('Jobs: ', this.state.jobs)
         this.retrieveJobs();
     }
 
     renderTableData() {
         return this.state.jobs.map((job, index) => {
-            const { title, city, company, url, created_at } = job
-            // console.log(typeof(created_at))
-            // var temp = new Date();
-            // temp.setTime(created_at)
+            const { title, city, company, url, created_at, skills } = job
+            const listSkills = skills.map((s) => ' '+s).join();
             var temp = Date.parse(created_at)
             console.log(typeof (temp))
             var a = new Date(temp);
+            console.log(a.getTimezoneOffset()/60)
+            console.log(a.toLocaleString())
             var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var year = a.getFullYear();
             var month = months[a.getMonth()];
@@ -147,9 +125,10 @@ class Job extends Component {
 
             return (
                 <tr>
-                    <td><a href={url} target="_blank" rel="noreferrer">{title}</a></td>
-                    <td>{city}</td>
+                    <td><a id="title" href={url} target="_blank" rel="noreferrer">{title}</a></td>
+                    <td id="city">{city}</td>
                     <td>{company}</td>
+                    <td>{listSkills}</td>
                     <td>{time}</td>
                 </tr>
             )
@@ -167,21 +146,26 @@ class Job extends Component {
         } = this.state;
         return (
             <div>
-                <table id='students'>
-                    <tbody>
-                        {this.renderTableData()}
-                    </tbody>
-                </table>
-                <Pagination
-                    className="my-3"
-                    count={totalPages}
-                    page={page}
-                    siblingCount={1}
-                    boundaryCount={1}
-                    variant="outlined"
-                    shape="rounded"
-                    onChange={this.handlePageChange}
-                />
+                <div>
+                    <table id='students'>
+                        <tbody>
+                            {this.renderTableData()}
+                        </tbody>
+                    </table>
+                </div>
+                <br />
+                <div>
+                    <Pagination
+                        className="my-3"
+                        count={totalPages}
+                        page={page}
+                        siblingCount={1}
+                        boundaryCount={1}
+                        variant="outlined"
+                        shape="rounded"
+                        onChange={this.handlePageChange}
+                    />
+                </div>
 
             </div>
         )

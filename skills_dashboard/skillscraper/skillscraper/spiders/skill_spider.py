@@ -92,3 +92,34 @@ class SkillsSpider(scrapy.Spider):
             created = time_now - day_subtracted
             return created
         return time_now
+
+
+class SkillsSpiderTopDev(scrapy.Spider):
+    name = "skills_topdev"
+
+    def start_requests(self):
+        urls = ['https://topdev.vn/viec-lam-it']
+
+        for url in urls:
+            yield scrapy.Request(url=url, callback=self.parse)
+        # self.f = open('xi_kiu', 'w')
+        self.base_url = 'https://topdev.vn'
+    def parse(self, response):
+        # list_job = response.xpath('.//div[@class="list__job"]').get()
+        # print('List Job: ', list_job)
+        # with open('topdev_list_job.html', 'w') as f:
+        #     f.write(list_job)
+        list_job = response.xpath('.//div[@class="list__job"]')
+        scroll_jobs = list_job.xpath('.//div[@id="scroll-it-jobs"]')
+
+        job_content = scroll_jobs.xpath('.//div[@class="cont"]')
+        job_bottom = scroll_jobs.xpath('.//div[@class="job-bottom mb-0"]')
+        title_list = []
+        for (content, bottom) in zip(job_content, job_bottom):
+
+            title = content.xpath('.//h3/a/text()').get()
+            company = content.xpath('.//div[@class="clearfix"]/p/text()').get()
+            print(title, company)
+            title_list.append(title)
+
+        print(title_list)
