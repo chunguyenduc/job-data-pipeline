@@ -5,6 +5,15 @@ from urllib.parse import urljoin
 import datetime
 # scrapy crawl skills
 
+def format_skills(skills_list):
+        """
+            Process skills list from scrape output
+        """
+        res = []
+        for skill in skills_list:
+            skill = skill.strip()
+            res.append(skill)
+        return res
 
 class SkillsSpider(scrapy.Spider):
     name = "skills"
@@ -17,6 +26,7 @@ class SkillsSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
         # self.f = open('xi_kiu', 'w')
         self.base_url = "https://itviec.com"
+
     def parse(self, response):
         first_group = response.xpath('//div[@id="search-results"]')
 
@@ -32,9 +42,10 @@ class SkillsSpider(scrapy.Spider):
             skills = bottom.xpath('.//a/span/text()').getall()
             city = body.xpath('.//div[@class="city"]/div/text()').get()
             url = body.xpath('.//h2/a/@href').get()
-            skills = self.format_skills(skills)
+            skills = format_skills(skills)
             company = logo.xpath('.//img/@alt').get()[:-11]
-            distance_time = bottom.xpath('.//div[@class="distance-time-job-posted"]/span/text()').get()
+            distance_time = bottom.xpath(
+                './/div[@class="distance-time-job-posted"]/span/text()').get()
             print(distance_time)
             created_at = self.get_created_time(distance_time)
             skill_items = []
@@ -76,19 +87,19 @@ class SkillsSpider(scrapy.Spider):
         # case minute
         if distance_time[-1] == 'm':
             minute = int(distance_time[:-1])
-            minute_subtracted = datetime.timedelta(minutes = minute)
+            minute_subtracted = datetime.timedelta(minutes=minute)
             created = time_now - minute_subtracted
             return created
         # case hour
         elif distance_time[-1] == 'h':
             hour = int(distance_time[:-1])
-            hour_subtracted = datetime.timedelta(hours = hour)
+            hour_subtracted = datetime.timedelta(hours=hour)
             created = time_now - hour_subtracted
             return created
         # case day
         elif distance_time[-1] == 'd':
             day = int(distance_time[:-1])
-            day_subtracted = datetime.timedelta(days = day)
+            day_subtracted = datetime.timedelta(days=day)
             created = time_now - day_subtracted
             return created
         return time_now
@@ -104,6 +115,12 @@ class SkillsSpiderTopDev(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
         # self.f = open('xi_kiu', 'w')
         self.base_url = 'https://topdev.vn'
+        self.city_in_english = {
+            "Hồ Chí Minh": "Ho Chi Minh",
+            "Hà Nội": "Ha Noi",
+            "Đà Nẵng": "Da Nang",
+        }
+
     def parse(self, response):
         # list_job = response.xpath('.//div[@class="list__job"]').get()
         # print('List Job: ', list_job)
@@ -114,12 +131,22 @@ class SkillsSpiderTopDev(scrapy.Spider):
 
         job_content = scroll_jobs.xpath('.//div[@class="cont"]')
         job_bottom = scroll_jobs.xpath('.//div[@class="job-bottom mb-0"]')
+        job_ago = scroll_jobs.xpath('.//p[@class="job-ago"]')
         title_list = []
-        for (content, bottom) in zip(job_content, job_bottom):
+        for (content, bottom, ago) in zip(job_content, job_bottom, job_ago):
 
-            title = content.xpath('.//h3/a/text()').get()
-            company = content.xpath('.//div[@class="clearfix"]/p/text()').get()
-            print(title, company)
-            title_list.append(title)
+            title = content.xpath('.//h3/a/text()').getall()[-1].strip()
+            company = content.xpath('.//div[@class="clearfix"]/p/text()').getall()[0].strip()
+            url = content.xpath('.//h3/a/@href').get()
+            url = urljoin(self.base_url, url)
+            city = content.xpath('.//div[@class="clearfix"]/p/text()').getall()[2].split(', ')[-1].strip()
+            city_eng = self.city_in_english[city]
+            skills = bottom.xpath('.//a/span/text()').getall()
+            skills = format_skills(skills)
+            what = ago.xpath('text()').get().strip()
+            # print('Log: ', title, company, url, city)
+            print('{} | {} | {} | {} | {} | {}'.format(city_eng, company, url, title, skills, what))
+            # print(city_eng)
+            # title_list.append(title)
 
-        print(title_list)
+        # print(title_list)
