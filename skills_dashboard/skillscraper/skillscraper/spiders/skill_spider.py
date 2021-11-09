@@ -66,15 +66,15 @@ class SkillsSpider(scrapy.Spider):
             # self.f.write("{}: {}\n".format(title, skills))
             yield item
 
-    def format_skills(self, skills_list):
-        """
-            Process skills list from scrape output
-        """
-        res = []
-        for skill in skills_list:
-            skill = skill.strip('\n')
-            res.append(skill)
-        return res
+    # def format_skills(self, skills_list):
+    #     """
+    #         Process skills list from scrape output
+    #     """
+    #     res = []
+    #     for skill in skills_list:
+    #         skill = skill.strip('\n')
+    #         res.append(skill)
+    #     return res
 
     def get_created_time(self, distance_time):
         """
@@ -138,15 +138,53 @@ class SkillsSpiderTopDev(scrapy.Spider):
             title = content.xpath('.//h3/a/text()').getall()[-1].strip()
             company = content.xpath('.//div[@class="clearfix"]/p/text()').getall()[0].strip()
             url = content.xpath('.//h3/a/@href').get()
-            url = urljoin(self.base_url, url)
+            # url = urljoin(self.base_url, url)
             city = content.xpath('.//div[@class="clearfix"]/p/text()').getall()[2].split(', ')[-1].strip()
-            city_eng = self.city_in_english[city]
+            city_eng = ''
+            if city in self.city_in_english:
+                city_eng = self.city_in_english[city]
             skills = bottom.xpath('.//a/span/text()').getall()
             skills = format_skills(skills)
             what = ago.xpath('text()').get().strip()
+            created_at = self.get_created_time(what)
             # print('Log: ', title, company, url, city)
-            print('{} | {} | {} | {} | {} | {}'.format(city_eng, company, url, title, skills, what))
+            print('{} | {} | {} | {} | {} | {} '.format(city_eng, company, url, title, skills, created_at))
+            item = SkillscraperItem()
+            item['title'] = title
+            item['skills'] = skills
+            item['city'] = city
+            item['company'] = company
+            item['url'] = urljoin(self.base_url, url)
+            item['site'] = 'TOPDEV'
+            item['created_at'] = created_at
+
             # print(city_eng)
             # title_list.append(title)
+            yield item
 
         # print(title_list)
+    def get_created_time(self, distance_time):
+        """
+            Get created time from distance time.
+            ie: 5 giờ trước -> now-5h
+                5 ngày trước -> now-5d
+        """
+        # Process distance time
+        distance_time = distance_time.strip('\n')
+        time_now = datetime.datetime.now()
+        # print(distance_time[:-10])
+        # case hour
+        if distance_time[-10:] == ' giờ trước':
+            hour = int(distance_time[:-10])
+            hour_subtracted = datetime.timedelta(hours=hour)
+            # print(hour)
+            created = time_now - hour_subtracted
+            return created
+        # case day
+        elif distance_time[-11:] == ' ngày trước':
+            day = int(distance_time[:-11])
+            day_subtracted = datetime.timedelta(days=day)
+            created = time_now - day_subtracted
+            return created
+        return time_now
+
