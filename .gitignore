@@ -12,4 +12,4 @@ skills_dashboard/skillscraper/xi_kiu
 */*/*/*/__pycache__/*
 skills_dashboard/skillscraper/twistd.pid
 skills_dashboard/web/node_modules
-
+skills_dashboard/log.out

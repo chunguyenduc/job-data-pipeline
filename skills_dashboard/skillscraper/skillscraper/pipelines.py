@@ -12,6 +12,7 @@ from . import settings
 from scrapy.exceptions import DropItem
 import logging
 
+
 class SkillscraperPipeline:
     def process_item(self, item, spider):
         return item
@@ -33,8 +34,17 @@ class MongoDBPipeline(object):
                 valid = False
                 raise DropItem("Missing {0}!".format(data))
         if valid:
-            old_item = {'title': item['title']}
-            new_item = {"$set": dict(item)}
+            old_item = {
+                'title': item['title'],
+                'city': item['city'],
+                'company': item['company'],
+                'url': item['url'],
+                'site': item['site']
+            }
+            new_item = {
+                # "$set": old_item,
+                "$setOnInsert": dict(item)
+            }
 
             self.collection.update_one(old_item, new_item, upsert=True)
             logging.info('Job added: {}\n'.format(item))

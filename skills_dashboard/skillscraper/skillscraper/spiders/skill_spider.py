@@ -84,6 +84,8 @@ class SkillsSpider(scrapy.Spider):
         # Process distance time
         distance_time = distance_time.strip('\n')
         time_now = datetime.datetime.now()
+        print('Time now: ', time_now)
+
         # case minute
         if distance_time[-1] == 'm':
             minute = int(distance_time[:-1])
@@ -172,6 +174,7 @@ class SkillsSpiderTopDev(scrapy.Spider):
         # Process distance time
         distance_time = distance_time.strip('\n')
         time_now = datetime.datetime.now()
+        print('Time now: ', time_now)
         # print(distance_time[:-10])
         # case hour
         if distance_time[-10:] == ' giờ trước':
