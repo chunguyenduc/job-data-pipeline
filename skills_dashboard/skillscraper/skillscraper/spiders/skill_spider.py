@@ -38,10 +38,10 @@ class SkillsSpider(scrapy.Spider):
         job_bottom = job_content.xpath('.//div[@class="job-bottom"]')
         job_logo = job_content.xpath('.//div[@class="logo"]')
         for (body, bottom, logo) in zip(job_body, job_bottom, job_logo):
-            title = body.xpath('.//h2/a/text()').get()
+            title = body.xpath('.//h3/a/text()').get()
             skills = bottom.xpath('.//a/span/text()').getall()
             city = body.xpath('.//div[@class="city"]/div/text()').get()
-            url = body.xpath('.//h2/a/@href').get()
+            url = body.xpath('.//h3/a/@href').get()
             skills = format_skills(skills)
             company = logo.xpath('.//img/@alt').get()[:-11]
             distance_time = bottom.xpath(

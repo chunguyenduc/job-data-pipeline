@@ -105,20 +105,22 @@ class Job extends Component {
     renderTableData() {
         return this.state.jobs.map((job, index) => {
             const { title, city, company, url, created_at, skills } = job
-            const listSkills = skills.map((s) => ' '+s).join();
+            const listSkills = skills.map((s) => ' ' + s).join();
             var temp = Date.parse(created_at)
             console.log(typeof (temp))
             var a = new Date(temp);
-            console.log(a.getTimezoneOffset()/60)
+            console.log(a.getTimezoneOffset() / 60)
             console.log(a.toLocaleString())
-            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            // var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             var year = a.getFullYear();
-            var month = months[a.getMonth()];
+            // var month = months[a.getMonth()];
+            var month = a.getMonth();
+
             var date = a.getDate();
             var hour = "0" + a.getHours();
             var min = "0" + a.getMinutes();
             // var sec = "0" + a.getSeconds();
-            var time = date + ' ' + month + ' ' + year + ' ' + hour.substr(-2) + ':' + min.substr(-2);
+            var time = date + '/' + month + '/' + year + ' ' + hour.substr(-2) + ':' + min.substr(-2);
 
 
 
@@ -135,6 +137,14 @@ class Job extends Component {
         })
     }
 
+    renderTableHeader() {
+        let header = ['TITLE', 'CITY', 'COMPANY', 'TAG', 'POSTED TIME']
+        return header.map((key, index) => {
+            return <th id="student" key={index}>{key.toUpperCase()}</th>
+        })
+    }
+
+
 
     render() {
         const {
@@ -148,6 +158,9 @@ class Job extends Component {
             <div>
                 <div>
                     <table id='students'>
+                        <thead>
+                            {this.renderTableHeader()}
+                        </thead>
                         <tbody>
                             {this.renderTableData()}
                         </tbody>
