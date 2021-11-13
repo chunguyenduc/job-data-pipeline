@@ -3,9 +3,11 @@
   border-left: none;
   border-right: none;
   text-align: left;
-
+  /* line-height: 10px; */
   padding: 8px;
   width: 10%;
+  height: 35px;
+  color: #3d3b3b;
 }
 
 #city {
@@ -45,12 +47,13 @@
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   border: 3px solid #ddd;
-  width: 100%;
+  /* width: 100%; */
   word-wrap: break-word;
 }
 
 #title {
-  text-decoration: none
+  text-decoration: none;
+  width: 300%;
 }
 
 a {color:blue;}         /* Unvisited link  */

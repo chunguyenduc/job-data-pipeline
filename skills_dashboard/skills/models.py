@@ -20,7 +20,7 @@ class SkillModel(Skill):
 
 
 class Job(models.Model):
-    title = models.CharField(max_length=150)
+    title = models.CharField(max_length=150, null=False, blank=False)
     city = models.CharField(max_length=100)
     skills = ArrayField(models.CharField(max_length=50))
     company = models.CharField(max_length=100)

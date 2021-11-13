@@ -36,7 +36,7 @@ class MongoDBPipeline(object):
         if valid:
             old_item = {
                 'title': item['title'],
-                'city': item['city'],
+                # 'city': item['city'],
                 'company': item['company'],
                 'url': item['url'],
                 'site': item['site']

@@ -138,7 +138,13 @@ class JobList(generics.ListAPIView):
         skill_value = self.request.query_params.get('skills')
         company_value = self.request.query_params.get('company')
         site_value = self.request.query_params.get('site')
-        print(city_value, title_value, skill_value, company_value, site_value)
+        from_date = self.request.query_params.get('from_date')
+        to_date = self.request.query_params.get('to_date')
+
+
+        print(city_value, title_value, skill_value, company_value, site_value, from_date, to_date)
+        if from_date is not None and to_date is not None:
+            queryset = queryset.filter(created_at__range=[from_date, to_date])
         if city_value is not None:
             queryset = queryset.filter(city__iexact=city_value)
         if title_value is not None:

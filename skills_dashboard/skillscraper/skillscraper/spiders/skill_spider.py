@@ -145,6 +145,8 @@ class SkillsSpiderTopDev(scrapy.Spider):
             city_eng = ''
             if city in self.city_in_english:
                 city_eng = self.city_in_english[city]
+            else:
+                city_eng = city
             skills = bottom.xpath('.//a/span/text()').getall()
             skills = format_skills(skills)
             what = ago.xpath('text()').get().strip()
@@ -154,7 +156,7 @@ class SkillsSpiderTopDev(scrapy.Spider):
             item = SkillscraperItem()
             item['title'] = title
             item['skills'] = skills
-            item['city'] = city
+            item['city'] = city_eng
             item['company'] = company
             item['url'] = urljoin(self.base_url, url)
             item['site'] = 'TOPDEV'
