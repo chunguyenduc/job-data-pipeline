@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 import datetime
 import pandas as pd
 
-JOB_FIELD = ['title', 'company', 'skills', 'address', 'url', 'created_at']
+JOB_FIELD = ['title', 'company', 'skills', 'url', 'created_at']
 
 class JobSpider(scrapy.Spider):
     name = "job"
@@ -34,19 +34,18 @@ class JobSpider(scrapy.Spider):
             title = body.xpath('.//h3/a/text()').get()
             skills = bottom.xpath('.//a/span/text()').getall()
             city = body.xpath('.//div[@class="city"]/div/text()').get()
-            url = body.xpath('.//h3/a/@href').get()
+            url = self.base_url + body.xpath('.//h3/a/@href').get()
             company = logo.xpath('.//img/@alt').get()[:-11]
             distance_time = bottom.xpath(
                 './/div[@class="distance-time-job-posted"]/span/text()').get()
-            print(distance_time)
             created_at = self.get_created_time(distance_time)
             skill_items = []
             for s in skills:
                 skill_items.append(s)
-            job_list.append([title, add])
-           
-
-
+            df_add = pd.DataFrame([[title, company, skills, url, created_at]], columns=JOB_FIELD)
+            self.df = pd.concat([self.df, df_add], ignore_index=True)
+        print(self.df.head())
+        self.df.to_csv('job.csv', index=False)
     def get_created_time(self, distance_time):
         """
             Get created time from distance time.
