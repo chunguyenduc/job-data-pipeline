@@ -1,0 +1,304 @@
+2021-11-02 14:12:06 [scrapy.utils.log] INFO: Scrapy 2.4.1 started (bot: skillscraper)
+2021-11-02 14:12:06 [scrapy.utils.log] INFO: Versions: lxml 4.6.3.0, libxml2 2.9.10, cssselect 1.1.0, parsel 1.6.0, w3lib 1.22.0, Twisted 21.7.0, Python 3.6.9 (default, Nov 23 2019, 06:41:34) - [GCC 8.3.0], pyOpenSSL 21.0.0 (OpenSSL 1.1.1l  24 Aug 2021), cryptography 35.0.0, Platform Linux-5.4.0-87-generic-x86_64-with-debian-10.2
+2021-11-02 14:12:06 [scrapy.crawler] INFO: Overridden settings:
+{'BOT_NAME': 'skillscraper',
+ 'LOG_FILE': 'logs/default/skills/da5cc9123be611ec86660242ac160004.log',
+ 'LOG_LEVEL': 'INFO',
+ 'NEWSPIDER_MODULE': 'skillscraper.spiders',
+ 'ROBOTSTXT_OBEY': True,
+ 'SPIDER_MODULES': ['skillscraper.spiders']}
+2021-11-02 14:12:06 [scrapy.extensions.telnet] INFO: Telnet Password: c2d30cd8443435d6
+2021-11-02 14:12:06 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.logstats.LogStats']
+2021-11-02 14:12:06 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',
+ 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2021-11-02 14:12:06 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2021-11-02 14:12:06 [scrapy.middleware] INFO: Enabled item pipelines:
+['skillscraper.pipelines.MongoDBPipeline']
+2021-11-02 14:12:06 [scrapy.core.engine] INFO: Spider opened
+2021-11-02 14:12:06 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2021-11-02 14:12:06 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'Seal Commerce Vietnam',
+ 'skills': ['VueJS', 'JavaScript', 'JQuery'],
+ 'title': 'Frontend Dev (Vue/React/JS) + BONUS',
+ 'url': 'https://itviec.com/it-jobs/frontend-vuejs-jquery-sign-on-bonus-seal-commerce-2132'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'DatVietVAC Vietnam',
+ 'skills': ['Golang', 'C++', 'Java'],
+ 'title': 'SENIOR BACKEND DEVELOPER (Go, C++)',
+ 'url': 'https://itviec.com/it-jobs/senior-backend-developer-go-c-datvietvac-1715'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'VNDIRECT Vietnam',
+ 'skills': ['Spring', 'PostgreSql', 'Java'],
+ 'title': 'Senior Java Developer (Spring)',
+ 'url': 'https://itviec.com/it-jobs/senior-java-developer-spring-vndirect-2407'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'VINBRAIN Vietnam',
+ 'skills': ['C++', 'Python', 'C language'],
+ 'title': 'Senior Machine Learning Engineer (C/C++)',
+ 'url': 'https://itviec.com/it-jobs/senior-machine-learning-engineer-c-c-vinbrain-2904'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'ABBANK Vietnam',
+ 'skills': ['Database', 'SQL', 'Oracle'],
+ 'title': 'Database Admin (SQL, Oracle)',
+ 'url': 'https://itviec.com/it-jobs/database-admin-sql-oracle-abbank-1953'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'ABBANK Vietnam',
+ 'skills': ['.NET', 'NodeJS', 'Java'],
+ 'title': 'Back-end Dev (.NET/ Java/ NodeJS, SQL)',
+ 'url': 'https://itviec.com/it-jobs/back-end-dev-net-java-nodejs-sql-abbank-1900'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'ABBANK Vietnam',
+ 'skills': ['Oracle', 'Database', 'SQL'],
+ 'title': 'Application Admin (ESB/API, Oracle, SQL)',
+ 'url': 'https://itviec.com/it-jobs/application-admin-esb-api-oracle-sql-abbank-0750'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': ' Viện Nghiên cứu Dữ liệu lớn - VinBigdata Vietnam',
+ 'skills': ['Tester', 'QA QC'],
+ 'title': 'QC Engineer/ Tester',
+ 'url': 'https://itviec.com/it-jobs/qc-engineer-tester-vien-nghien-cuu-du-lieu-lon-vinbigdata-5915'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': ' Viện Nghiên cứu Dữ liệu lớn - VinBigdata Vietnam',
+ 'skills': ['JavaScript', 'Python', 'ReactJS'],
+ 'title': 'Frontend Engineer (JS, Python, ReactJS)',
+ 'url': 'https://itviec.com/it-jobs/frontend-engineer-js-python-reactjs-vien-nghien-cuu-du-lieu-lon-vinbigdata-1850'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Houze Group Vietnam',
+ 'skills': ['Team Leader', 'Python', 'Golang'],
+ 'title': 'Backend Lead ( Python/Golang/NodeJS/...)',
+ 'url': 'https://itviec.com/it-jobs/backend-lead-python-golang-nodejs-houze-group-2024'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'FPT Software Vietnam',
+ 'skills': ['Java', 'SQL', 'Angular'],
+ 'title': 'Fullstack (Java/Angular)~3k-NO PROBATION',
+ 'url': 'https://itviec.com/it-jobs/fullstack-java-angular-3k-no-probation-fpt-software-4650'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Houze Group Vietnam',
+ 'skills': ['Team Leader', 'CSS', 'ReactJS'],
+ 'title': 'Frontend Lead (ReactJS, CSS, Redux)',
+ 'url': 'https://itviec.com/it-jobs/frontend-lead-react-redux-houze-group-0408'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Houze Group Vietnam',
+ 'skills': ['NodeJS', 'Python', 'Golang'],
+ 'title': 'Backend Lead ( Python/Golang/NodeJS)',
+ 'url': 'https://itviec.com/it-jobs/backend-lead-python-golang-nodejs-houze-group-5314'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Hansen Technologies Vietnam',
+ 'skills': ['Java', 'SQL', 'Spring'],
+ 'title': 'Java Developer ( Agile, Spring, SQL)',
+ 'url': 'https://itviec.com/it-jobs/java-developer-spring-sql-hansen-technologies-0322'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'GHN Vietnam',
+ 'skills': ['Python', 'MySQL', 'SQL'],
+ 'title': 'Data Engineer (Python, SQL, MySQL)',
+ 'url': 'https://itviec.com/it-jobs/data-engineer-python-sql-mysql-ghn-0139'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'HANET Việt Nam - CN HCM Vietnam',
+ 'skills': ['Golang', 'MySQL', 'Java'],
+ 'title': 'Backend Developer (Golang/Java/MySQL)',
+ 'url': 'https://itviec.com/it-jobs/backend-developer-golang-java-mysql-hanet-viet-nam-cn-hcm-4751'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'CodeHQ (formerly Augen) Vietnam',
+ 'skills': ['QA QC', 'English', 'Tester'],
+ 'title': 'Senior QA/QC Automation Tester',
+ 'url': 'https://itviec.com/it-jobs/senior-qa-automation-tester-codehq-formerly-augen-4155'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Ominext Vietnam',
+ 'skills': ['Flutter', 'Android', 'iOS'],
+ 'title': 'Mobile dev (Thưởng 1 tháng lương)',
+ 'url': 'https://itviec.com/it-jobs/mobile-dev-thuong-1-thang-luong-ominext-5454'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'SHINHAN DS Vietnam',
+ 'skills': ['Java', 'Oracle', 'Spring'],
+ 'title': 'Developer (Java, Spring Boot, Oracle)',
+ 'url': 'https://itviec.com/it-jobs/developer-java-spring-boot-oracle-shinhan-ds-2116'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Smart Pay Vietnam',
+ 'skills': ['Tester', 'Java', 'QA QC'],
+ 'title': 'Sr. QC Engineer (Manual Tester, QA/QC)',
+ 'url': 'https://itviec.com/it-jobs/senior-qc-engineer-manual-test-qa-qc-smart-pay-2116'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'VINBRAIN Vietnam',
+ 'skills': ['DevOps', 'Linux', 'Cloud'],
+ 'title': 'DevOps Engineer ',
+ 'url': 'https://itviec.com/it-jobs/devops-engineer-vinbrain-1732'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Da Nang',
+ 'company': 'DYNU IN MEDIA Vietnam',
+ 'skills': ['Business Analyst', 'QA QC'],
+ 'title': 'Junior Business Analyst',
+ 'url': 'https://itviec.com/it-jobs/junior-business-analyst-dynu-in-media-1738'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'JMango Vietnam Operations Co.,Ltd Vietnam',
+ 'skills': ['Tester', 'English', 'QA QC', 'Fresher Accepted'],
+ 'title': 'Manual Tester (QA QC)',
+ 'url': 'https://itviec.com/it-jobs/manual-tester-qa-qc-jmango-vietnam-operations-co-ltd-4326'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'CÔNG TY DỊCH VỤ MOBIFONE KHU VỰC 1 Vietnam',
+ 'skills': ['JavaScript', 'Java', '.NET'],
+ 'title': 'Chuyên viên CNTT (JavaScript/Java/.NET)',
+ 'url': 'https://itviec.com/it-jobs/chuyen-vien-cntt-javascript-java-net-cong-ty-dich-vu-mobifone-khu-vuc-1-5712'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Pacific Technology Vietnam',
+ 'skills': ['C#', 'Python', 'C++'],
+ 'title': 'AI Engineer (Python, C++, C#)',
+ 'url': 'https://itviec.com/it-jobs/3-ai-engineer-python-c-c-pacific-technology-3702'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Fossil Vietnam Vietnam',
+ 'skills': ['NodeJS', 'Python', 'Golang'],
+ 'title': 'Senior, Backend Developer',
+ 'url': 'https://itviec.com/it-jobs/senior-backend-developer-fossil-vietnam-5350'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Da Nang',
+ 'company': 'DYNU IN MEDIA Vietnam',
+ 'skills': ['JavaScript', 'HTML5', 'CSS'],
+ 'title': 'Frontend Dev (JavaScript, HTML5, CSS)',
+ 'url': 'https://itviec.com/it-jobs/frontend-dev-javascript-html5-css-dynu-in-media-2056'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'DAYONE Vietnam',
+ 'skills': ['Business Analyst', 'Agile'],
+ 'title': 'Senior BUSINESS ANALYST',
+ 'url': 'https://itviec.com/it-jobs/senior-business-analyst-dayone-0555'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'IHOUZZ TECH Vietnam',
+ 'skills': ['Java', 'Python', 'NodeJS'],
+ 'title': 'Data Engineer (Python, Java, NodeJS)',
+ 'url': 'https://itviec.com/it-jobs/data-engineer-python-java-nodejs-ihouzz-tech-4824'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'IHOUZZ TECH Vietnam',
+ 'skills': ['Python', 'Linux', 'SQL'],
+ 'title': 'AI Engineer (Python, SQL, Linux)',
+ 'url': 'https://itviec.com/it-jobs/ai-engineer-python-sql-linux-ihouzz-tech-5339'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'South Telecom Vietnam',
+ 'skills': ['System Admin', 'IT Support', 'Networking'],
+ 'title': 'System Admin (Networking)',
+ 'url': 'https://itviec.com/it-jobs/system-admin-networking-south-telecom-5643'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Central Retail Vietnam',
+ 'skills': ['Tester', 'Agile', 'QA QC'],
+ 'title': 'Software Tester/QC (Middle, senior)',
+ 'url': 'https://itviec.com/it-jobs/software-tester-qc-middle-senior-central-retail-3428'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'Toshiba Software Development (Viet Nam) Co, Ltd Vietnam',
+ 'skills': ['Java', 'English', 'Cloud'],
+ 'title': ' Java Developer (Middle/Senior)',
+ 'url': 'https://itviec.com/it-jobs/mid-sr-java-developer-up-to-2000-toshiba-software-development-viet-nam-co-ltd-2036'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'FPT Software Vietnam',
+ 'skills': ['Database', 'Python', 'System Engineer'],
+ 'title': 'Data Engineer -Up to $2500 -NO PROBATION',
+ 'url': 'https://itviec.com/it-jobs/data-engineer-up-to-2500-no-probation-fpt-software-4614'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'IHOUZZ TECH Vietnam',
+ 'skills': ['Java', 'Python', 'SQL'],
+ 'title': 'Data Analyst (Python, Java, SQL)',
+ 'url': 'https://itviec.com/it-jobs/data-engineer-python-java-nodejs-ihouzz-tech-4842'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Be Group Vietnam',
+ 'skills': ['Cloud', 'System Engineer', 'System Admin', 'Fresher Accepted'],
+ 'title': 'Security Engineer - Pentester',
+ 'url': 'https://itviec.com/it-jobs/security-engineer-pentester-be-group-0219'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Da Nang',
+ 'company': 'OdinBI Vietnam',
+ 'skills': ['PHP', 'MySQL', 'Laravel', 'Fresher Accepted'],
+ 'title': '[Da Nang] Senior/Junior PHP Developer',
+ 'url': 'https://itviec.com/it-jobs/senior-junior-php-developer-laravel-odinbi-4430'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Minerva Technology Solutions Vietnam',
+ 'skills': ['iOS', 'Android', 'Swift', 'Fresher Accepted'],
+ 'title': 'Fresh/Jr Mobile Developer (iOS, Android)',
+ 'url': 'https://itviec.com/it-jobs/fresh-jr-mobile-developer-ios-android-minerva-technology-solutions-4409'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ho Chi Minh',
+ 'company': 'Silentium Vietnam Vietnam',
+ 'skills': ['Product Manager', 'Project Manager', 'Manager'],
+ 'title': 'Senior Product Manager - Up to $ 5,000',
+ 'url': 'https://itviec.com/it-jobs/senior-product-manager-up-to-5-000-silentium-vietnam-0629'}
+
+2021-11-02 14:12:09 [root] INFO: Job added: {'city': 'Ha Noi',
+ 'company': 'BlueBottle Digital Việt Nam Vietnam',
+ 'skills': ['Tester', 'English', 'QA QC'],
+ 'title': 'Tester (QA QC, English) ~ Upto 1200$',
+ 'url': 'https://itviec.com/it-jobs/tester-qa-qc-english-upto-1200-bluebottle-digital-viet-nam-5444'}
+
+2021-11-02 14:12:09 [scrapy.core.engine] INFO: Closing spider (finished)
+2021-11-02 14:12:09 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 718,
+ 'downloader/request_count': 3,
+ 'downloader/request_method_count/GET': 3,
+ 'downloader/response_bytes': 205370,
+ 'downloader/response_count': 3,
+ 'downloader/response_status_count/200': 3,
+ 'elapsed_time_seconds': 2.901047,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2021, 11, 2, 14, 12, 9, 677922),
+ 'item_scraped_count': 40,
+ 'log_count/INFO': 50,
+ 'memusage/max': 68751360,
+ 'memusage/startup': 68751360,
+ 'response_received_count': 3,
+ 'robotstxt/request_count': 1,
+ 'robotstxt/response_count': 1,
+ 'robotstxt/response_status_count/200': 1,
+ 'scheduler/dequeued': 2,
+ 'scheduler/dequeued/memory': 2,
+ 'scheduler/enqueued': 2,
+ 'scheduler/enqueued/memory': 2,
+ 'start_time': datetime.datetime(2021, 11, 2, 14, 12, 6, 776875)}
+2021-11-02 14:12:09 [scrapy.core.engine] INFO: Spider closed (finished)
