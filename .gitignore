@@ -13,3 +13,6 @@ skills_dashboard/skillscraper/xi_kiu
 skills_dashboard/skillscraper/twistd.pid
 skills_dashboard/web/node_modules
 skills_dashboard/log.out
+.DS_Store
+*/.DS_Store
+*/*/.DS_Store
