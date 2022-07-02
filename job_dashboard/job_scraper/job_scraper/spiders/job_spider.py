@@ -6,7 +6,7 @@ import scrapy
 
 JOB_FIELD = ["title", "company", "skills", "url", "created_at"]
 FILE_NAME = "job"
-FORMAT = ".csv"
+FORMAT = "csv"
 
 
 class JobSpider(scrapy.Spider):
