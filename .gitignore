@@ -16,3 +16,6 @@ skills_dashboard/log.out
 .DS_Store
 */.DS_Store
 */*/.DS_Store
+/logs
+/plugins
+/data
