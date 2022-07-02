@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 import pandas as pd
 import scrapy
 
-JOB_FIELD = ["title", "company", "skills", "url", "created_at"]
+JOB_FIELD = ["title", "company", "city", "skills", "url", "created_at"]
 FILE_NAME = "job"
 FORMAT = "csv"
 
@@ -15,7 +15,7 @@ class JobSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = [
-            "https://itviec.com/it-jobs?page=%s&query=&source=search_job" % page
+            f"https://itviec.com/it-jobs?page={page}&query=&source=search_job"
             for page in range(1, 3)
         ]
 
@@ -46,7 +46,7 @@ class JobSpider(scrapy.Spider):
             for s in skills:
                 skill_items.append(s)
             df_add = pd.DataFrame(
-                [[title, company, skills, url, created_at]], columns=JOB_FIELD
+                [[title, company, city, skills, url, created_at]], columns=JOB_FIELD
             )
             self.df = pd.concat([self.df, df_add], ignore_index=True)
         print(self.df.head())
@@ -84,6 +84,4 @@ class JobSpider(scrapy.Spider):
         return time_now
 
     def create_file(self):
-        return "{}-{}.{}".format(
-            FILE_NAME, datetime.datetime.now().strftime("%d%m%y-%I%M"), FORMAT
-        )
+        return f'{FILE_NAME}-{datetime.datetime.now().strftime("%d%m%y-%I%M")}.{FORMAT}'
