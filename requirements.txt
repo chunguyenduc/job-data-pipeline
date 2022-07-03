@@ -1,0 +1,5 @@
+airflow==0.6
+apache_airflow_providers_ftp==2.1.2
+itemadapter==0.6.0
+pandas==1.4.3
+Scrapy==2.6.1
