@@ -1,31 +1,3 @@
-# version: '2'
-# services:
-#   # db:
-#   #   image: mongo
-#   # api:
-#   #   build:
-#   #     context: ./skills_dashboard/
-#   #   command: python3 manage.py runserver 0.0.0.0:8000
-#   #   volumes:
-#   #     - ./skills_dashboard:/code
-#   #   ports:
-#   #     - "8000:8000"
-#   #   # depends_on:
-#   #     # - db
-#   #   tty: true
-#   # crawl:
-#   #   build:
-#   #     context: ./skills_dashboard/
-#   #   command: bash -c "cd skillscraper && scrapyd"
-#   #   volumes:
-#   #     - ./skills_dashboard:/code
-#   #   ports:
-#   #     - "6800:6800"
-#   #   tty: true
-#   #   stdin_open: true
-#   hadoop:
-#     image: apache/hadoop:2
-
 version: "3"
 x-airflow-common:
   &airflow-common
@@ -61,7 +33,7 @@ x-airflow-common:
 services:
   namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
-    container_name: namenode
+    # container_name: namenode
     restart: always
     ports:
       - 9870:9870
@@ -69,13 +41,13 @@ services:
     volumes:
       - hadoop_namenode:/hadoop/dfs/name
     environment:
-      - CLUSTER_NAME=test
+      - CLUSTER_NAME=job_dashboard
     env_file:
       - ./hadoop.env
 
   datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
-    container_name: datanode
+    # container_name: datanode
     restart: always
     volumes:
       - hadoop_datanode:/hadoop/dfs/data
@@ -86,7 +58,7 @@ services:
   
   resourcemanager:
     image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
-    container_name: resourcemanager
+    # container_name: resourcemanager
     restart: always
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864"
@@ -95,7 +67,7 @@ services:
 
   nodemanager1:
     image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
-    container_name: nodemanager
+    # container_name: nodemanager
     restart: always
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
@@ -104,7 +76,7 @@ services:
   
   historyserver:
     image: bde2020/hadoop-historyserver:2.0.0-hadoop3.2.1-java8
-    container_name: historyserver
+    # container_name: historyserver
     restart: always
     environment:
       SERVICE_PRECONDITION: "namenode:9000 namenode:9870 datanode:9864 resourcemanager:8088"
