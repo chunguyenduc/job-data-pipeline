@@ -1,4 +1,4 @@
-FROM python:3.6-stretch
+FROM python:3.7-stretch
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     openjdk-8-jdk \
