@@ -64,7 +64,6 @@ class JobSpider(scrapy.Spider):
         # Process distance time
         distance_time = distance_time.strip("\n")
         time_now = datetime.datetime.now()
-        print("Time now: ", time_now)
 
         # case minute
         if distance_time[-1] == "m":
@@ -90,13 +89,7 @@ class JobSpider(scrapy.Spider):
         return f"{PREFIX}-{time_crawl}.{FORMAT}"
 
 
-process = CrawlerProcess(
-    settings={
-        "FEEDS": {
-            "items.json": {"format": "json"},
-        },
-    }
-)
+process = CrawlerProcess()
 
 process.crawl(JobSpider)
 process.start()
