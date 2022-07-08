@@ -28,23 +28,22 @@ class JobSpider(scrapy.Spider):
         self.df = pd.DataFrame(columns=JOB_FIELD)
 
     def parse(self, response):
-        first_group = response.xpath('//div[@id="search-results"]')
-        jobs = first_group.xpath('.//div[@id="jobs"]')
-        job_content = jobs.xpath('.//div[@class="job_content"]')
 
-        job_body = job_content.xpath('.//div[@class="job__body"]')
-        job_bottom = job_content.xpath('.//div[@class="job-bottom"]')
-        job_logo = job_content.xpath('.//div[@class="logo"]')
+        first_group = response.css("div#search-results")
+        jobs = first_group.css("div#jobs")
+        job_content = jobs.css("div.job_content")
+
+        job_body = job_content.css("div.job__body")
+        job_bottom = job_content.css("div.job-bottom")
+        job_logo = job_content.css("div.logo")
 
         for (body, bottom, logo) in zip(job_body, job_bottom, job_logo):
-            title = body.xpath(".//h3/a/text()").get()
-            skills = bottom.xpath(".//a/span/text()").getall()
-            city = body.xpath('.//div[@class="city"]/div/text()').get()
-            url = urljoin(self.base_url, body.xpath(".//h3/a/@href").get())
-            company = logo.xpath(".//img/@alt").get()[:-11]
-            distance_time = bottom.xpath(
-                './/div[@class="distance-time-job-posted"]/span/text()'
-            ).get()
+            title = body.css("h3 a::text").get()
+            skills = bottom.css("a span::text").getall()
+            city = body.css("div.city div::text").get()
+            url = urljoin(self.base_url, body.css("h3 a::attr(href)").get())
+            company = logo.css("img::attr(alt)").get()[:-11]
+            distance_time = bottom.css("div.distance-time-job-posted span::text").get()
             created_at = self.get_created_time(distance_time)
             skill_items = []
             for s in skills:
