@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timedelta
+from upload_hdfs import upload_to_hdfs
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
@@ -31,10 +32,12 @@ with DAG(
         retry_delay=timedelta(seconds=30),
     )
 
-    upload_to_hdfs = BashOperator(
+    upload_to_hdfs = PythonOperator(
         task_id="upload_data_to_hdfs",
-        bash_command=f"{os.path.join(dag_path, 'upload_hdfs.sh')} {os.path.join(crawl_path, file_name)} {file_name}",
+        python_callable=upload_to_hdfs(os.path.join(dag_path, file_name)),
         retries=3,
         retry_delay=timedelta(seconds=30),
     )
-crawl_job >> upload_to_hdfs
+# crawl_job >> upload_to_hdfs
+crawl_job 
+
