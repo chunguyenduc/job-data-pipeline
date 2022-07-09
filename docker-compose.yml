@@ -28,8 +28,8 @@ services:
                 max-size: 10m
                 max-file: "3"
         volumes:
-            - ./dags:/usr/local/airflow/dags
-            - ./plugins:/usr/local/airflow/plugins
+            - ./airflow/dags:/usr/local/airflow/dags
+            - ./airflow/plugins:/usr/local/airflow/plugins
         ports:
             - "8080:8080"
         command: webserver

@@ -72,6 +72,7 @@ RUN chmod a+x /entrypoint.sh
 ADD webserver_config.py ${AIRFLOW_USER_HOME}
 COPY airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 
+
 RUN chown -R airflow: ${AIRFLOW_USER_HOME}
 
 EXPOSE 8080 5555 8793

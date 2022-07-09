@@ -6,7 +6,8 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
 craw_time = datetime.now().strftime("%d%m%y-%I%M")
-crawl_path = "/opt/airflow/dags/spiders"
+dag_path = "/usr/local/airflow/dags"
+crawl_path = os.path.join(dag_path, "spiders")
 file_name = f"job-{craw_time}.csv"
 
 with DAG(
@@ -25,14 +26,14 @@ with DAG(
 
     crawl_job = BashOperator(
         task_id="crawl_job_data",
-        bash_command=f"python3 /opt/airflow/dags/spiders/job_spider.py {craw_time}",
+        bash_command=f"python3 {os.path.join(crawl_path, 'job_spider.py')} {craw_time}",
         retries=3,
         retry_delay=timedelta(seconds=30),
     )
 
     upload_to_hdfs = BashOperator(
         task_id="upload_data_to_hdfs",
-        bash_command=f"./upload_hdfs.sh {os.path.join(crawl_path, file_name)} {file_name}",
+        bash_command=f"{os.path.join(dag_path, 'upload_hdfs.sh')} {os.path.join(crawl_path, file_name)} {file_name}",
         retries=3,
         retry_delay=timedelta(seconds=30),
     )
