@@ -9,6 +9,7 @@ from scrapy.crawler import CrawlerProcess
 time_crawl = sys.argv[1]
 
 JOB_FIELD = ["title", "company", "city", "skills", "url", "created_at"]
+DAG_PATH = "/usr/local/airflow/dags"
 PREFIX = "job"
 FORMAT = "csv"
 
@@ -54,7 +55,7 @@ class JobSpider(scrapy.Spider):
             self.df = pd.concat([self.df, df_add], ignore_index=True)
         print(self.df.head())
 
-        self.df.to_csv(self.get_filename(), index=False)
+        print(self.df.to_csv(self.get_filename(), index=False))
 
     def get_created_time(self, distance_time):
         """
@@ -86,7 +87,7 @@ class JobSpider(scrapy.Spider):
         return time_now
 
     def get_filename(self):
-        return f"{PREFIX}-{time_crawl}.{FORMAT}"
+        return f"{DAG_PATH}/{PREFIX}-{time_crawl}.{FORMAT}"
 
 
 process = CrawlerProcess()

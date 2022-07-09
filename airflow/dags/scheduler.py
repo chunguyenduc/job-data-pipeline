@@ -21,7 +21,7 @@ with DAG(
     description="ETL pipeline crawl job description from itviec",
     schedule_interval=timedelta(minutes=5),
     start_date=datetime.now(),
-    catchup=False,
+    catchup=True,
     tags=["job"],
 ) as dag:
 
@@ -34,10 +34,10 @@ with DAG(
 
     upload_to_hdfs = PythonOperator(
         task_id="upload_data_to_hdfs",
-        python_callable=upload_to_hdfs(os.path.join(dag_path, file_name)),
+        python_callable=upload_to_hdfs,
+        op_kwargs={"filename": f"{dag_path}/{file_name}"},
         retries=3,
         retry_delay=timedelta(seconds=30),
+        depends_on_past=True,
     )
-# crawl_job >> upload_to_hdfs
-crawl_job 
-
+    crawl_job >> upload_to_hdfs

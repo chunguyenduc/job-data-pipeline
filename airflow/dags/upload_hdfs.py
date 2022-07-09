@@ -10,9 +10,4 @@ def upload_to_hdfs(filename):
     if client.content(DATA_DIR, strict=False) is None:
         client.makedirs(DATA_DIR)
 
-    # client.makedirs("temp")
-    # client.set_permission(DATA_DIR, permission=777)
     client.upload(DATA_DIR, filename)
-
-    # As a context manager:
-    # with client.write("/records.jsonl", encoding="utf-8") as writer:
