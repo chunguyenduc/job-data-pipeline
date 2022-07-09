@@ -1,26 +1,29 @@
-FROM hadoop-base:0.0.1
+FROM python:3.9-slim-buster
+
+# Never prompt the user for choices on installation/configuration of packages
+ENV DEBIAN_FRONTEND noninteractive
+ENV TERM linux
 
 # Airflow
 ARG AIRFLOW_VERSION=2.3.2
 ARG AIRFLOW_USER_HOME=/usr/local/airflow
 ARG AIRFLOW_DEPS=""
-ARG PYTHON_DEPS=""
+ARG PYTHON_DEPS="Scrapy"
 ENV AIRFLOW_HOME=${AIRFLOW_USER_HOME}
+ENV _AIRFLOW_WWW_USER_USERNAME="airflow"
+ENV _AIRFLOW_WWW_USER_PASSWORD="airflow"
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV TERM linux
 
+# Define en_US.
 ENV LANGUAGE en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 ENV LC_CTYPE en_US.UTF-8
 ENV LC_MESSAGES en_US.UTF-8
 
+
 RUN set -ex \
     && buildDeps=' \
-        build-essential \
-        libblas-dev \
-        libatlas-base-dev \
         freetds-dev \
         libkrb5-dev \
         libsasl2-dev \
@@ -41,8 +44,6 @@ RUN set -ex \
         rsync \
         netcat \
         locales \
-        gcc \
-        libpq5 \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
@@ -52,11 +53,8 @@ RUN set -ex \
     && pip install pyOpenSSL \
     && pip install ndg-httpsclient \
     && pip install pyasn1 \
-    && pip install cython \
-    && pip install Scrapy \
-    && pip install apache-airflow[crypto,celery,postgres,hive,spark,sqoop,jdbc,mysql,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} \
-    && pip install 'redis==3.2' \
-    && pip install SQLAlchemy==1.3.23 Flask-SQLAlchemy==2.4.4 \
+    && pip install apache-airflow[crypto,celery,postgres,hive,jdbc,mysql,ssh${AIRFLOW_DEPS:+,}${AIRFLOW_DEPS}]==${AIRFLOW_VERSION} \
+    && pip install 'redis' \
     && if [ -n "${PYTHON_DEPS}" ]; then pip install ${PYTHON_DEPS}; fi \
     && apt-get purge --auto-remove -yqq $buildDeps \
     && apt-get autoremove -yqq --purge \
@@ -69,9 +67,10 @@ RUN set -ex \
         /usr/share/doc \
         /usr/share/doc-base
 
-ADD entrypoint.sh /entrypoint.sh
-RUN chmod u+x /entrypoint.sh
-ADD airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
+ADD webserver_config.py ${AIRFLOW_USER_HOME}
+COPY airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
 
 RUN chown -R airflow: ${AIRFLOW_USER_HOME}
 
