@@ -6,7 +6,7 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-craw_time = datetime.now().strftime("%d%m%y-%I%M")
+craw_time = datetime.now().strftime("%d%m%y-%H%M")
 dag_path = "/usr/local/airflow/dags"
 crawl_path = os.path.join(dag_path, "spiders")
 file_name = f"job-{craw_time}.csv"
@@ -20,8 +20,8 @@ with DAG(
     },
     description="ETL pipeline crawl job description from itviec",
     schedule_interval=timedelta(minutes=5),
-    start_date=datetime.now(),
-    catchup=True,
+    start_date=datetime(2021, 1, 1),
+    catchup=False,
     tags=["job"],
 ) as dag:
 
@@ -38,6 +38,5 @@ with DAG(
         op_kwargs={"filename": f"{dag_path}/{file_name}"},
         retries=3,
         retry_delay=timedelta(seconds=30),
-        depends_on_past=True,
     )
     crawl_job >> upload_to_hdfs
