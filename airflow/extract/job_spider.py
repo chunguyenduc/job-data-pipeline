@@ -1,6 +1,7 @@
 import datetime
 import sys
 from urllib.parse import urljoin
+import time
 
 import pandas as pd
 import scrapy
@@ -94,3 +95,4 @@ process = CrawlerProcess()
 
 process.crawl(JobSpider)
 process.start()
+time.sleep(60)

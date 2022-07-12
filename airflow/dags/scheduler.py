@@ -1,11 +1,14 @@
-import os
 from datetime import datetime, timedelta
-from upload_hdfs import upload_to_hdfs
+from extract.upload_hdfs import upload_hdfs
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
+craw_time = datetime.now().strftime("%d%m%y-%H%M")
+dag_path = "/usr/local/airflow/dags"
+crawl_path = "/usr/local/airflow/extract"
+file_name = f"job-{craw_time}.csv"
 
 with DAG(
     "job_dashboard",
@@ -21,23 +24,21 @@ with DAG(
     tags=["job"],
 ) as dag:
 
-    craw_time = datetime.now().strftime("%d%m%y-%H%M")
-    dag_path = "/usr/local/airflow/dags"
-    crawl_path = os.path.join(dag_path, "spiders")
-    file_name = f"job-{craw_time}.csv"
-
     crawl_job = BashOperator(
         task_id="crawl_job_data",
-        bash_command=f"python3 {os.path.join(crawl_path, 'job_spider.py')} {craw_time}",
+        bash_command=f"python3 {crawl_path}/job_spider.py {craw_time}",
         retries=3,
         retry_delay=timedelta(seconds=30),
+        dag=dag,
     )
 
     upload_to_hdfs = PythonOperator(
         task_id="upload_data_to_hdfs",
-        python_callable=upload_to_hdfs,
-        op_kwargs={"filename": f"{dag_path}/{file_name}"},
+        python_callable=upload_hdfs,
+        op_kwargs={"filename": f"{crawl_path}/{file_name}"},
         retries=3,
         retry_delay=timedelta(seconds=30),
+        dag=dag,
+        depends_on_past=False,
     )
 crawl_job >> upload_to_hdfs

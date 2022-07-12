@@ -5,7 +5,7 @@ import os
 DATA_DIR = "job"
 
 
-def upload_to_hdfs(filename):
+def upload_hdfs(filename):
     print("Filename: ", filename)
     client = InsecureClient("http://namenode:50070", user="root")
     if client.content(DATA_DIR, strict=False) is None:

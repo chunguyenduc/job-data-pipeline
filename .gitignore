@@ -19,3 +19,5 @@ skills_dashboard/log.out
 /logs
 /plugins
 /data
+*/.cache/
+*/logs/
