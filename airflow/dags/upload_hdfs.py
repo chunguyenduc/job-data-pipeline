@@ -11,3 +11,4 @@ def upload_to_hdfs(filename):
         client.makedirs(DATA_DIR)
 
     client.upload(DATA_DIR, filename)
+    os.system(f"rm {filename}")
