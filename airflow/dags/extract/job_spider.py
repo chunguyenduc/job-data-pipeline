@@ -1,13 +1,12 @@
-import datetime
+from datetime import datetime, timedelta
 import sys
 from urllib.parse import urljoin
-import time
 
 import pandas as pd
 import scrapy
 from scrapy.crawler import CrawlerProcess
 
-time_crawl = sys.argv[1]
+crawl_time = datetime.now().strftime("%d%m%y-%H%M")
 
 JOB_FIELD = ["title", "company", "city", "skills", "url", "created_at"]
 DAG_PATH = "/usr/local/airflow/dags"
@@ -56,7 +55,7 @@ class JobSpider(scrapy.Spider):
             self.df = pd.concat([self.df, df_add], ignore_index=True)
         print(self.df.head())
 
-        print(self.df.to_csv(self.get_filename(), index=False))
+        print(self.df.to_csv(get_filename(), index=False))
 
     def get_created_time(self, distance_time):
         """
@@ -65,34 +64,34 @@ class JobSpider(scrapy.Spider):
         """
         # Process distance time
         distance_time = distance_time.strip("\n")
-        time_now = datetime.datetime.now()
+        time_now = datetime.now()
 
         # case minute
         if distance_time[-1] == "m":
             minute = int(distance_time[:-1])
-            minute_subtracted = datetime.timedelta(minutes=minute)
+            minute_subtracted = timedelta(minutes=minute)
             created = time_now - minute_subtracted
             return created
         # case hour
         elif distance_time[-1] == "h":
             hour = int(distance_time[:-1])
-            hour_subtracted = datetime.timedelta(hours=hour)
+            hour_subtracted = timedelta(hours=hour)
             created = time_now - hour_subtracted
             return created
         # case day
         elif distance_time[-1] == "d":
             day = int(distance_time[:-1])
-            day_subtracted = datetime.timedelta(days=day)
+            day_subtracted = timedelta(days=day)
             created = time_now - day_subtracted
             return created
         return time_now
 
-    def get_filename(self):
-        return f"{DAG_PATH}/{PREFIX}-{time_crawl}.{FORMAT}"
+def get_filename():
+    return f"{DAG_PATH}/{PREFIX}-{crawl_time}.{FORMAT}"
 
 
-process = CrawlerProcess()
-
-process.crawl(JobSpider)
-process.start()
-time.sleep(60)
+def crawl_data():
+    process = CrawlerProcess()
+    process.crawl(JobSpider)
+    process.start()
+    return crawl_time

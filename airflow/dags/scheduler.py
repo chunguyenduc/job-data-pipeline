@@ -1,13 +1,13 @@
 from datetime import datetime, timedelta
 from extract.upload_hdfs import upload_hdfs
+from extract.job_spider import crawl_data
 
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-crawl_time = datetime.now().strftime("%d%m%y-%H%M")
 dag_path = "/usr/local/airflow/dags"
-crawl_path = "/usr/local/airflow/extract"
+crawl_path = f"{dag_path}/extract"
 
 with DAG(
     "job_dashboard",
@@ -23,9 +23,9 @@ with DAG(
     tags=["job"],
 ) as dag:
 
-    crawl_job = BashOperator(
+    crawl_job = PythonOperator(
         task_id="crawl_job_data",
-        bash_command=f"python3 {crawl_path}/job_spider.py {crawl_time}",
+        python_callable=crawl_data,
         retries=3,
         retry_delay=timedelta(seconds=30),
         dag=dag,
@@ -34,7 +34,7 @@ with DAG(
     upload_to_hdfs = PythonOperator(
         task_id="upload_data_to_hdfs",
         python_callable=upload_hdfs,
-        op_kwargs={"filename": f"{crawl_path}/{crawl_time}"},
+        op_kwargs={"crawl_time": "{{ task_instance.xcom_pull(task_ids='crawl_job_data') }}" },
         retries=3,
         retry_delay=timedelta(seconds=30),
         dag=dag,
