@@ -4,7 +4,7 @@ DATA_DIR = "job"
 
 
 def upload_hdfs(crawl_time):
-    
+
     print("Filename: ", crawl_time)
     client = InsecureClient("http://namenode:50070", user="root")
     if client.content(DATA_DIR, strict=False) is None:
@@ -12,5 +12,6 @@ def upload_hdfs(crawl_time):
     filename = f"/usr/local/airflow/dags/job-{crawl_time}.csv"
     client.upload(DATA_DIR, f"/usr/local/airflow/dags/job-{crawl_time}.csv")
 
-    import os
-    os.system(f"rm {filename}")
+    # import os
+
+    # os.system(f"rm {filename}")
