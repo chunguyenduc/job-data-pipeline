@@ -93,6 +93,20 @@ services:
             - hadoop_historyserver:/hadoop/yarn/timeline
         env_file:
             - ./hadoop.env
+    spark:
+        image: bitnami/spark:3.1.2
+        user: root # Run container as root container: https://docs.bitnami.com/tutorials/work-with-non-root-containers/
+        container_name: spark
+        environment:
+            - SPARK_MODE=master
+            - SPARK_RPC_AUTHENTICATION_ENABLED=no
+            - SPARK_RPC_ENCRYPTION_ENABLED=no
+            - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+            - SPARK_SSL_ENABLED=no
+        volumes:
+            - ./airflow/dags/transform:/usr/local/airflow/dags/transform
+        ports:
+            - "7077:7077"
 volumes:
     hadoop_namenode:
     hadoop_datanode:
