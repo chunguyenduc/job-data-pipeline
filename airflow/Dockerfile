@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.7-stretch
 
 # Never prompt the user for choices on installation/configuration of packages
 ENV DEBIAN_FRONTEND noninteractive
