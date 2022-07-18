@@ -7,3 +7,5 @@ df = spark.read.option("header", True).csv(
 )
 df.show(n=20, truncate=True)
 df.printSchema()
+
+df.select("skills").show(n=5, truncate=False)

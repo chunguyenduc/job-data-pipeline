@@ -3,7 +3,7 @@ x-environment:
     &airflow_environment
     - AIRFLOW__CORE__EXECUTOR=LocalExecutor
     - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
-    - AIRFLOW__CORE__LOAD_EXAMPLES=True
+    - AIRFLOW__CORE__LOAD_EXAMPLES=False
     - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql://airflow:airflow@postgres:5432/airflow
     - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
 
@@ -62,14 +62,14 @@ services:
             - postgres
         environment: *airflow_environment
         entrypoint: /bin/bash
-        command: -c 'airflow db init && airflow users create --username admin --password admin --firstname Anonymous --lastname Admin --role Admin --email admin@example.org'
+        command: -c 'yes | airflow db reset && airflow db init && airflow users create --username admin --password admin --firstname Anonymous --lastname Admin --role Admin --email admin@example.org'
 
     webserver:
         build:
             context: airflow
             args:
                 AIRFLOW_BASE_IMAGE: *airflow_image
-        restart: always
+        # restart: always
         depends_on:
             - postgres
         volumes:
@@ -86,7 +86,7 @@ services:
             context: airflow
             args:
                 AIRFLOW_BASE_IMAGE: *airflow_image
-        restart: always
+        # restart: always
         depends_on:
             - postgres
         volumes:
@@ -184,7 +184,7 @@ services:
     presto-coordinator:
         image: shawnzhu/prestodb:0.181
         ports:
-            - "8080:8081"
+            - "8081:8081"
 volumes:
     hadoop_namenode:
     hadoop_datanode:
