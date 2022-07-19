@@ -14,7 +14,7 @@ RUN apt-get update && \
     apt-get install -y openjdk-8-jdk && \
     java -version $$ \
     javac -version
-    
+
 # Fix certificate issues
 RUN apt-get update && \
     apt-get install ca-certificates-java && \
@@ -27,7 +27,8 @@ RUN export JAVA_HOME
 
 USER airflow
 RUN pip install --user --no-cache-dir \
-    Scrapy pyspark hdfs 
+    requests[security] Scrapy hdfs && \
+    PYSPARK_HADOOP_VERSION=2 pip install pyspark -v
 
 COPY default-airflow.cfg opt/airflow/airflow.cfg
 COPY webserver_config.py opt/airflow/webserver_config.py
