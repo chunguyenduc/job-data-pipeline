@@ -48,9 +48,11 @@ class JobSpider(scrapy.Spider):
             created_at = self.get_created_time(distance_time)
             skill_items = []
             for s in skills:
-                skill_items.append(s)
+                skill_items.append(s.strip())
+            skill_items_str = ','.join(skill_items)
+            # print(skill_items)
             df_add = pd.DataFrame(
-                [[title, company, city, skills, url, created_at]], columns=JOB_FIELD
+                [[title, company, city, skill_items_str, url, created_at]], columns=JOB_FIELD
             )
             self.df = pd.concat([self.df, df_add], ignore_index=True)
         print(self.df.head())

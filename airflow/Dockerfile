@@ -1,9 +1,6 @@
+
 ARG AIRFLOW_BASE_IMAGE="apache/airflow:2.3.2-python3.8"
 FROM ${AIRFLOW_BASE_IMAGE}
-
-
-RUN pip install --user --no-cache-dir \
-    Scrapy pyspark hdfs
 
 USER root
 
@@ -27,6 +24,10 @@ RUN apt-get update && \
 # Setup JAVA_HOME -- useful for docker commandline
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 RUN export JAVA_HOME
+
+USER airflow
+RUN pip install --user --no-cache-dir \
+    Scrapy pyspark hdfs 
 
 COPY default-airflow.cfg opt/airflow/airflow.cfg
 COPY webserver_config.py opt/airflow/webserver_config.py
