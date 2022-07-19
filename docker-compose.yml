@@ -3,11 +3,12 @@ x-environment:
     &airflow_environment
     - AIRFLOW__CORE__EXECUTOR=LocalExecutor
     - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
-    - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - AIRFLOW__CORE__LOAD_EXAMPLES=True
     - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql://airflow:airflow@postgres:5432/airflow
     - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
+    - AIRFLOW__WEBSERVER__RBAC=False
 
-x-airflow-image: &airflow_image apache/airflow:2.0.0-python3.8
+x-airflow-image: &airflow_image apache/airflow:2.3.2-python3.8
 
 services:
     redis:
@@ -24,35 +25,6 @@ services:
                 max-file: "3"
         ports:
             - "5432:5432"
-    # airflow-webserver:
-    #     build:
-    #         context: ./airflow
-    #         dockerfile: Dockerfile
-    #     # restart: always
-    #     depends_on:
-    #         - postgres
-    #     environment:
-    #         - LOAD_EX=y
-    #         - EXECUTOR=Local
-    #     logging:
-    #         options:
-    #             max-size: 10m
-    #             max-file: "3"
-    #     volumes:
-    #         - ./airflow/dags:/usr/local/airflow/dags
-    #         - ./airflow/plugins:/usr/local/airflow/plugins
-    #     ports:
-    #         - "8080:8080"
-    #     command: webserver
-    #     healthcheck:
-    #         test:
-    #             [
-    #                 "CMD-SHELL",
-    #                 "[ -f /usr/local/airflow/airflow-webserver.pid ]"
-    #             ]
-    #         interval: 30s
-    #         timeout: 30s
-    #         retries: 3
     initdb_adduser:
         build:
             context: airflow
@@ -62,7 +34,7 @@ services:
             - postgres
         environment: *airflow_environment
         entrypoint: /bin/bash
-        command: -c 'yes | airflow db reset && airflow db init && airflow users create --username admin --password admin --firstname Anonymous --lastname Admin --role Admin --email admin@example.org'
+        command: -c 'airflow db upgrade && yes | airflow db reset && airflow db init && airflow users create --username admin --password admin --firstname Anonymous --lastname Admin --role Admin --email admin@example.org'
 
     webserver:
         build:
@@ -185,6 +157,35 @@ services:
         image: shawnzhu/prestodb:0.181
         ports:
             - "8081:8081"
+             # airflow-webserver:
+    #     build:
+    #         context: ./airflow
+    #         dockerfile: Dockerfile
+    #     # restart: always
+    #     depends_on:
+    #         - postgres
+    #     environment:
+    #         - LOAD_EX=y
+    #         - EXECUTOR=Local
+    #     logging:
+    #         options:
+    #             max-size: 10m
+    #             max-file: "3"
+    #     volumes:
+    #         - ./airflow/dags:/usr/local/airflow/dags
+    #         - ./airflow/plugins:/usr/local/airflow/plugins
+    #     ports:
+    #         - "8080:8080"
+    #     command: webserver
+    #     healthcheck:
+    #         test:
+    #             [
+    #                 "CMD-SHELL",
+    #                 "[ -f /usr/local/airflow/airflow-webserver.pid ]"
+    #             ]
+    #         interval: 30s
+    #         timeout: 30s
+    #         retries: 3
 volumes:
     hadoop_namenode:
     hadoop_datanode:

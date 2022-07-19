@@ -9,7 +9,7 @@ from scrapy.crawler import CrawlerProcess
 crawl_time = datetime.now().strftime("%d%m%y-%H%M")
 
 JOB_FIELD = ["title", "company", "city", "skills", "url", "created_at"]
-DAG_PATH = "/usr/local/airflow/dags"
+DAG_PATH = "/opt/airflow/dags"
 PREFIX = "job"
 FORMAT = "csv"
 
