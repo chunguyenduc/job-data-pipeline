@@ -8,9 +8,13 @@ from scrapy.crawler import CrawlerProcess
 
 crawl_time = datetime.now().strftime("%d%m%y-%H%M")
 
-JOB_FIELD = ["title", "company", "city", "skills", "url", "created_at"]
+JOB_FIELD = ["id", "title", "company", "city", "url", "created_at"]
+JOB_SKILL_FIELD = ["id", "skill"]
+
 DAG_PATH = "/opt/airflow/dags"
-PREFIX = "job"
+PREFIX_JOB = "job"
+PREFIX_JOB_SKILL = "job_skill"
+
 FORMAT = "csv"
 
 
@@ -26,7 +30,8 @@ class JobSpider(scrapy.Spider):
 
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
-        self.df = pd.DataFrame(columns=JOB_FIELD)
+        self.df_job = pd.DataFrame(columns=JOB_FIELD)
+        self.df_job_skill = pd.DataFrame(columns=JOB_SKILL_FIELD)
 
     def parse(self, response):
 
@@ -43,21 +48,21 @@ class JobSpider(scrapy.Spider):
             skills = bottom.css("a span::text").getall()
             city = body.css("div.city div::text").get()
             url = urljoin(self.base_url, body.css("h3 a::attr(href)").get())
+            id = get_id(url)
             company = logo.css("img::attr(alt)").get()[:-11]
             distance_time = bottom.css("div.distance-time-job-posted span::text").get()
             created_at = self.get_created_time(distance_time)
-            skill_items = []
             for s in skills:
-                skill_items.append(s.strip())
-            skill_items_str = ','.join(skill_items)
-            # print(skill_items)
+                df_add_job_skill = pd.DataFrame([[id, s.strip()]], columns=JOB_SKILL_FIELD)
+                self.df_job_skill = pd.concat([self.df_job_skill, df_add_job_skill], ignore_index=True)
             df_add = pd.DataFrame(
-                [[title, company, city, skill_items_str, url, created_at]], columns=JOB_FIELD
+                [[id, title, company, city, url, created_at]], columns=JOB_FIELD
             )
-            self.df = pd.concat([self.df, df_add], ignore_index=True)
-        print(self.df.head())
-
-        print(self.df.to_csv(get_filename(), index=False))
+            self.df_job = pd.concat([self.df_job, df_add], ignore_index=True)
+        print(self.df_job.head())
+        print(self.df_job_skill.head())
+        self.df_job.to_csv(get_filename(PREFIX_JOB), index=False)
+        self.df_job_skill.to_csv(get_filename(PREFIX_JOB_SKILL), index=False)
 
     def get_created_time(self, distance_time):
         """
@@ -88,8 +93,13 @@ class JobSpider(scrapy.Spider):
             return created
         return time_now
 
-def get_filename():
-    return f"{DAG_PATH}/{PREFIX}-{crawl_time}.{FORMAT}"
+def get_filename(prefix:str) -> str:
+    return f"{DAG_PATH}/{prefix}-{crawl_time}.{FORMAT}"
+
+def get_id(url:str) -> str:
+    url_no_param = url = url[:url.find('?')]
+    id = url_no_param.split('-')[-1]
+    return id
 
 
 def crawl_data():

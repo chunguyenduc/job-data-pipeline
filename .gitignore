@@ -21,3 +21,5 @@ skills_dashboard/log.out
 /data
 */.cache/
 */logs/
+*.csv
+
