@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import sys
 from urllib.parse import urljoin
 
 import pandas as pd
@@ -53,8 +52,12 @@ class JobSpider(scrapy.Spider):
             distance_time = bottom.css("div.distance-time-job-posted span::text").get()
             created_at = self.get_created_time(distance_time)
             for s in skills:
-                df_add_job_skill = pd.DataFrame([[id, s.strip()]], columns=JOB_SKILL_FIELD)
-                self.df_job_skill = pd.concat([self.df_job_skill, df_add_job_skill], ignore_index=True)
+                df_add_job_skill = pd.DataFrame(
+                    [[id, s.strip()]], columns=JOB_SKILL_FIELD
+                )
+                self.df_job_skill = pd.concat(
+                    [self.df_job_skill, df_add_job_skill], ignore_index=True
+                )
             df_add = pd.DataFrame(
                 [[id, title, company, city, url, created_at]], columns=JOB_FIELD
             )
@@ -93,12 +96,14 @@ class JobSpider(scrapy.Spider):
             return created
         return time_now
 
-def get_filename(prefix:str) -> str:
+
+def get_filename(prefix: str) -> str:
     return f"{DAG_PATH}/{prefix}-{crawl_time}.{FORMAT}"
 
-def get_id(url:str) -> str:
-    url_no_param = url = url[:url.find('?')]
-    id = url_no_param.split('-')[-1]
+
+def get_id(url: str) -> str:
+    url_no_param = url = url[: url.find("?")]
+    id = url_no_param.split("-")[-1]
     return id
 
 

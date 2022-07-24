@@ -1,6 +1,3 @@
-docker exec -it skillsdashboard_db_1 bash
-scrapy crawl skills
-docker exec -t -i skillsdashboard_api_1 /bin/bash
-docker exec -it skillsdashboard_crawl_1 bash
-docker-compose run crawl curl http://127.0.0.1:6800/schedule.json -d project=default -d spider=skills
-docker-compose run api python3 manage.py makemigrations
+Step to load data from Spark to Hive:
+- Create user/hive/warehouse and grand g+w to it and /tmp
+

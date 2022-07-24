@@ -22,4 +22,8 @@ skills_dashboard/log.out
 */.cache/
 */logs/
 *.csv
+*/*.log
+*/*/*/spark-warehouse/
+airflow/dags/transform/derby.log
+airflow/dags/transform/metastore_db/
 
