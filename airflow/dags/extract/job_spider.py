@@ -7,7 +7,7 @@ from scrapy.crawler import CrawlerProcess
 
 crawl_time = datetime.now().strftime("%d%m%y-%H%M")
 
-JOB_FIELD = ["id", "title", "company", "city", "url", "created_at"]
+JOB_FIELD = ["id", "title", "company", "city", "url", "created_date"]
 JOB_SKILL_FIELD = ["id", "skill"]
 
 DAG_PATH = "/opt/airflow/dags"
@@ -50,7 +50,7 @@ class JobSpider(scrapy.Spider):
             id = get_id(url)
             company = logo.css("img::attr(alt)").get()[:-11]
             distance_time = bottom.css("div.distance-time-job-posted span::text").get()
-            created_at = self.get_created_time(distance_time)
+            created_date = self.get_created_time(distance_time).strftime("%Y%m%d")
             for s in skills:
                 df_add_job_skill = pd.DataFrame(
                     [[id, s.strip()]], columns=JOB_SKILL_FIELD
@@ -59,7 +59,7 @@ class JobSpider(scrapy.Spider):
                     [self.df_job_skill, df_add_job_skill], ignore_index=True
                 )
             df_add = pd.DataFrame(
-                [[id, title, company, city, url, created_at]], columns=JOB_FIELD
+                [[id, title, company, city, url, created_date]], columns=JOB_FIELD
             )
             self.df_job = pd.concat([self.df_job, df_add], ignore_index=True)
         print(self.df_job.head())

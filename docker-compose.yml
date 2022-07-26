@@ -34,7 +34,9 @@ services:
             - postgres
         environment: *airflow_environment
         entrypoint: /bin/bash
-        command: -c 'airflow db init && airflow users create --username admin --password admin --firstname Anonymous --lastname Admin --role Admin --email admin@example.org'
+        # command: -c 'airflow db upgrade | yes && airflow db reset && airflow db init && airflow users create --username admin --password admin --firstname Anonymous --lastname Admin --role Admin --email admin@example.org'
+        command: -c 'airflow db upgrade  && airflow db init && airflow users create --username admin --password admin --firstname Anonymous --lastname Admin --role Admin --email admin@example.org'
+
 
     webserver:
         build:
@@ -131,8 +133,25 @@ services:
         volumes:
             - ./airflow/dags/transform:/usr/local/airflow/dags/transform
         ports:
+            - "8181:8080"
             - "7077:7077"
-
+    spark-worker:
+        image: bitnami/spark:3.1.2
+        user: root
+        depends_on: 
+            - spark
+        container_name: spark-worker
+        environment:
+            - SPARK_MODE=worker
+            - SPARK_MASTER_URL=spark://spark:7077
+            - SPARK_WORKER_MEMORY=8G
+            - SPARK_WORKER_CORES=4
+            - SPARK_RPC_AUTHENTICATION_ENABLED=no
+            - SPARK_RPC_ENCRYPTION_ENABLED=no
+            - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+            - SPARK_SSL_ENABLED=no
+        volumes:
+            - ./airflow/dags/transform:/usr/local/airflow/dags/transform
     hive-server:
         image: bde2020/hive:2.3.2-postgresql-metastore
         env_file:
@@ -156,7 +175,7 @@ services:
     presto-coordinator:
         image: shawnzhu/prestodb:0.181
         ports:
-            - "8081:8081"
+            - "8081:8080"
 volumes:
     hadoop_namenode:
     hadoop_datanode:
