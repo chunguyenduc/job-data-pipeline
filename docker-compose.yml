@@ -121,8 +121,9 @@ services:
         env_file:
             - ./hadoop.env
     spark:
-        image: bitnami/spark:3.1.2
-        user: root # Run container as root container: https://docs.bitnami.com/tutorials/work-with-non-root-containers/
+        build: 
+            context: spark
+        user: root
         container_name: spark
         environment:
             - SPARK_MODE=master
@@ -131,12 +132,13 @@ services:
             - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
             - SPARK_SSL_ENABLED=no
         volumes:
-            - ./airflow/dags/transform:/usr/local/airflow/dags/transform
+            - ./airflow/dags/transform:/opt/airflow/dags/transform
         ports:
             - "8181:8080"
             - "7077:7077"
     spark-worker:
-        image: bitnami/spark:3.1.2
+        build: 
+            context: spark
         user: root
         depends_on: 
             - spark
@@ -151,7 +153,7 @@ services:
             - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
             - SPARK_SSL_ENABLED=no
         volumes:
-            - ./airflow/dags/transform:/usr/local/airflow/dags/transform
+            - ./airflow/dags/transform:/opt/airflow/dags/transform
     hive-server:
         image: bde2020/hive:2.3.2-postgresql-metastore
         env_file:
