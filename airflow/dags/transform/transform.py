@@ -50,9 +50,6 @@ def insert_staging_data(crawl_time):
     spark.sql("CREATE DATABASE IF NOT EXISTS staging;")
     spark.sql("DROP TABLE IF EXISTS staging.job_info;")
     spark.sql("DROP TABLE IF EXISTS staging.job__skill_info;")
-    # with  open("/opt/airflow/dags/transform/create_staging_table.sql") as fr:
-    #     query = fr.read()
-    #     print(query)
     spark.sql("CREATE TABLE IF NOT EXISTS staging.job_info (\
         id String, title String, company String, city String, url String, created_date String) \
         USING hive;")
