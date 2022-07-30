@@ -1,0 +1,4 @@
+hdfs==2.7.0
+pandas==1.4.3
+pyspark==3.3.0
+scrapy==2.6.2

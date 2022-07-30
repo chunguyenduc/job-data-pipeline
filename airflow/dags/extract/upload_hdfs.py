@@ -22,4 +22,3 @@ def upload_hdfs(crawl_time):
     import os
     os.system(f"rm {filename_job}")
     os.system(f"rm {filename_job_skill}")
-

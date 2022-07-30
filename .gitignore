@@ -26,4 +26,4 @@ skills_dashboard/log.out
 */*/*/spark-warehouse/
 airflow/dags/transform/derby.log
 airflow/dags/transform/metastore_db/
-
+.vscode/

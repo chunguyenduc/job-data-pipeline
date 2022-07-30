@@ -37,7 +37,6 @@ services:
         # command: -c 'airflow db upgrade | yes && airflow db reset && airflow db init && airflow users create --username admin --password admin --firstname Anonymous --lastname Admin --role Admin --email admin@example.org'
         command: -c 'airflow db upgrade && airflow db init && airflow users create --username admin --password admin --firstname Anonymous --lastname Admin --role Admin --email admin@example.org'
 
-
     webserver:
         build:
             context: airflow
@@ -121,7 +120,7 @@ services:
         env_file:
             - ./hadoop.env
     spark:
-        build: 
+        build:
             context: spark
         user: root
         container_name: spark
@@ -137,10 +136,10 @@ services:
             - "8181:8080"
             - "7077:7077"
     spark-worker:
-        build: 
+        build:
             context: spark
         user: root
-        depends_on: 
+        depends_on:
             - spark
         container_name: spark-worker
         environment:

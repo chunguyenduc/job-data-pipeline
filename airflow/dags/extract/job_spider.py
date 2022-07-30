@@ -49,8 +49,10 @@ class JobSpider(scrapy.Spider):
             url = urljoin(self.base_url, body.css("h3 a::attr(href)").get())
             id = get_id(url)
             company = logo.css("img::attr(alt)").get()[:-11]
-            distance_time = bottom.css("div.distance-time-job-posted span::text").get()
-            created_date = self.get_created_time(distance_time).strftime("%Y%m%d")
+            distance_time = bottom.css(
+                "div.distance-time-job-posted span::text").get()
+            created_date = self.get_created_time(
+                distance_time).strftime("%Y%m%d")
             for s in skills:
                 df_add_job_skill = pd.DataFrame(
                     [[id, s.strip()]], columns=JOB_SKILL_FIELD
