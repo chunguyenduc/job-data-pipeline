@@ -13,12 +13,13 @@ def upload_hdfs(crawl_time):
     if client.content(DATA_DIR_JOB_SKILL, strict=False) is None:
         client.makedirs(DATA_DIR_JOB_SKILL)
 
-    # filename_job = f"/opt/airflow/dags/job-{crawl_time}.csv"
-    client.upload(DATA_DIR_JOB, f"/opt/airflow/dags/job-{crawl_time}.csv")
+    filename_job = f"/opt/airflow/dags/job-{crawl_time}.csv"
+    client.upload(DATA_DIR_JOB, filename_job)
 
-    # filename_job = f"/opt/airflow/dags/job-{crawl_time}.csv"
-    client.upload(DATA_DIR_JOB_SKILL, f"/opt/airflow/dags/job_skill-{crawl_time}.csv")
+    filename_job_skill = f"/opt/airflow/dags/job_skill-{crawl_time}.csv"
+    client.upload(DATA_DIR_JOB_SKILL, filename_job_skill)
 
-    # import os
+    import os
+    os.system(f"rm {filename_job}")
+    os.system(f"rm {filename_job_skill}")
 
-    # os.system(f"rm {filename}")
