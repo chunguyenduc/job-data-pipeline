@@ -4,7 +4,6 @@ from extract.job_spider import crawl_data
 from transform.transform import insert_staging_data
 
 from airflow import DAG
-from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
 dag_path = "/usr/local/airflow/dags"
@@ -35,7 +34,8 @@ with DAG(
     upload_to_hdfs = PythonOperator(
         task_id="upload_data_to_hdfs",
         python_callable=upload_hdfs,
-        op_kwargs={"crawl_time": "{{ task_instance.xcom_pull(task_ids='crawl_job_data') }}" },
+        op_kwargs={
+            "crawl_time": "{{ task_instance.xcom_pull(task_ids='crawl_job_data') }}"},
         retries=3,
         retry_delay=timedelta(seconds=30),
         dag=dag,
@@ -44,7 +44,8 @@ with DAG(
     insert_data_hive = PythonOperator(
         task_id="insert_data_hive",
         python_callable=insert_staging_data,
-        op_kwargs={"crawl_time": "{{ task_instance.xcom_pull(task_ids='crawl_job_data') }}" },
+        op_kwargs={
+            "crawl_time": "{{ task_instance.xcom_pull(task_ids='crawl_job_data') }}"},
         retries=3,
         retry_delay=timedelta(seconds=30),
         dag=dag,

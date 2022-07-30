@@ -1,6 +1,7 @@
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StringType, StructField, TimestampType
+# from pyspark.sql.types import StructType, StringType, StructField, TimestampType
+from pyspark.sql.functions import col, current_timestamp
 
 master = "spark://spark:7077"
 conf = (
@@ -24,36 +25,28 @@ spark = (
 
 
 def prepare_data(crawl_time):
-
-    schema = StructType(
-        [
-            StructField("id", StringType(), False),
-            StructField("title", StringType(), False),
-            StructField("company", StringType(), False),
-            StructField("city", StringType(), False),
-            StructField("url", StringType(), False),
-            StructField("created_date", StringType(), False),
-            StructField("insert_at", TimestampType(), False),
-        ]
-    )
-
     df = (
         spark.read.option("header", True)
-        .schema(schema)
         .csv(f"hdfs://namenode:9000/user/root/job/job-{crawl_time}.csv")
     )
-    df.select(
-        col()
-    ).show(n=20, truncate=True)
-    df.printSchema()
+    df_job = df.select(
+        col("*"),
+        current_timestamp().alias("insert_at")
+    )
+    df_job.show(n=20, truncate=True)
+    df_job.printSchema()
 
     df_job_skill = spark.read.option("header", True).csv(
         f"hdfs://namenode:9000/user/root/job_skill/job_skill-{crawl_time}.csv"
     )
+    df_job_skill = df_job_skill.select(
+        col("*"),
+        current_timestamp().alias("insert_at")
+    )
     df_job_skill.show(n=20, truncate=True)
     df_job_skill.printSchema()
 
-    return df, df_job_skill
+    return df_job, df_job_skill
 
 
 def insert_staging_data(crawl_time):
@@ -64,13 +57,14 @@ def insert_staging_data(crawl_time):
     spark.sql("DROP TABLE IF EXISTS staging.job_skill_info;")
     spark.sql(
         "CREATE TABLE IF NOT EXISTS staging.job_info (\
-        id String, title String, company String, city String, url String, created_date String) \
+        id String, title String, company String, city String, \
+        url String, created_date String, insert_at Timestamp) \
         USING hive;"
     )
 
     spark.sql(
         "CREATE TABLE IF NOT EXISTS staging.job_skill_info ( \
-        id String, skill String) \
+        id String, skill String, insert_at Timestamp) \
         USING hive;"
     )
     spark.sql("show databases").show(n=10)
