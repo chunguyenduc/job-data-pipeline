@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from extract.upload_hdfs import upload_hdfs
 from extract.job_spider import crawl_data
-from transform.transform import insert_staging_data
+from transform.transform import insert_staging_data, load_data
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
@@ -17,7 +17,7 @@ with DAG(
         "retry_delay": timedelta(seconds=10),
     },
     description="ETL pipeline crawl job description from itviec",
-    schedule_interval=timedelta(minutes=5),
+    schedule_interval=timedelta(minutes=10),
     start_date=datetime(2021, 1, 1),
     catchup=False,
     tags=["job"],
@@ -43,11 +43,11 @@ with DAG(
     )
     insert_data_hive = PythonOperator(
         task_id="insert_data_hive",
-        python_callable=insert_staging_data,
+        python_callable=load_data,
         op_kwargs={
             "crawl_time": "{{ task_instance.xcom_pull(task_ids='crawl_job_data') }}"},
         retries=3,
-        retry_delay=timedelta(seconds=30),
+        retry_delay=timedelta(seconds=5),
         dag=dag,
         depends_on_past=False,
     )

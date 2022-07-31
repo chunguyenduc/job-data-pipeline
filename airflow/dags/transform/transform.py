@@ -25,6 +25,7 @@ spark = (
 
 
 def prepare_data(crawl_time):
+    print(crawl_time)
     df = (
         spark.read.option("header", True)
         .csv(f"hdfs://namenode:9000/user/root/job/job-{crawl_time}.csv")
@@ -76,3 +77,20 @@ def insert_staging_data(crawl_time):
     )
     spark.sql("SELECT * FROM staging.job_info").show(n=20)
     spark.sql("SELECT * FROM staging.job_skill_info").show(n=20)
+
+def insert_public_data():
+    spark.sql("CREATE DATABASE IF NOT EXISTS public;")
+    spark.sql("CREATE TABLE IF NOT EXISTS public.job_info ( \
+        id String, title String, company String, city String, url String, insert_at Timestamp) \
+        USING hive \
+        PARTITIONED BY (created_date STRING);")
+    spark.sql("INSERT INTO TABLE public.job_info PARTITION(created_date) \
+    SELECT id, title, company, city, url, insert_at, created_date \
+    FROM staging.job_info")
+
+def load_data(crawl_time):
+    insert_staging_data(crawl_time)
+    insert_public_data()
+    spark.sql("SELECT * FROM public.job_info").show(n=20, truncate=False)
+
+    
