@@ -20,6 +20,8 @@ spark = (
     .config("spark.memory.offHeap.enabled", "true")
     .config("spark.memory.offHeap.size", "10g")
     .enableHiveSupport()
+    .config("hive.exec.dynamic.partition","true")
+    .config("hive.exec.dynamic.partition.mode", "nonstrict")
     .getOrCreate()
 )
 
@@ -91,6 +93,7 @@ def insert_public_data():
 def load_data(crawl_time):
     insert_staging_data(crawl_time)
     insert_public_data()
-    spark.sql("SELECT * FROM public.job_info").show(n=20, truncate=False)
+    spark.sql("SELECT COUNT(DISTINCT id) FROM public.job_info").show(n=10, truncate=True)
+    spark.sql("SELECT * FROM public.job_info WHERE id = 3208").show(n=20, truncate=False)
 
     
