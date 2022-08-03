@@ -9,6 +9,17 @@ x-environment:
     - AIRFLOW__WEBSERVER__RBAC=False
 
 x-airflow-image: &airflow_image apache/airflow:2.3.2-python3.8
+x-superset-image: &superset-image apache/superset:latest
+x-superset-user: &superset-user root
+x-superset-depends-on:
+    &superset-depends-on
+    - postgres
+    - redis
+x-superset-volumes:
+    # /app/pythonpath_docker will be appended to the PYTHONPATH in the final container
+    &superset-volumes
+    - ./superset/docker:/app/docker
+    - superset_home:/app/superset_home
 
 services:
     redis:
@@ -150,6 +161,7 @@ services:
             - ./airflow/dags/transform:/opt/airflow/dags/transform
     hive-server:
         image: bde2020/hive:2.3.2-postgresql-metastore
+        container_name: hive-server
         env_file:
             - ./hadoop-hive.env
         environment:
@@ -172,7 +184,31 @@ services:
         image: shawnzhu/prestodb:0.181
         ports:
             - "8081:8080"
+
+    superset:
+        image: *superset-image
+        container_name: superset
+        command: [ "/app/docker/docker-bootstrap.sh", "app" ]
+        restart: unless-stopped
+        ports:
+            - 8088:8088
+        user: *superset-user
+        depends_on: *superset-depends-on
+        volumes: *superset-volumes
+
+    superset-init:
+        image: *superset-image
+        container_name: superset_init
+        command: [ "/app/docker/docker-init.sh" ]
+        depends_on: *superset-depends-on
+        user: "root"
+        volumes: *superset-volumes
+        environment:
+            SUPERSET_LOAD_EXAMPLES: "yes"
+
 volumes:
     hadoop_namenode:
     hadoop_datanode:
     hadoop_historyserver:
+    superset_home:
+        external: false

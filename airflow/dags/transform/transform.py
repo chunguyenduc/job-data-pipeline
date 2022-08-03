@@ -1,7 +1,5 @@
-from pyspark import SparkConf, SparkContext
+from pyspark import SparkConf
 from pyspark.sql import SparkSession
-# from pyspark.sql.types import StructType, StringType, StructField, TimestampType
-from pyspark.sql.functions import col, current_timestamp
 
 
 def prepare_data(spark, crawl_time):
@@ -59,8 +57,19 @@ def insert_public_data(spark):
         id String, title String, company String, city String, url String) \
         USING hive \
         PARTITIONED BY (created_date STRING);")
-    spark.sql("MERGE INTO public.job_info USING (SELECT * FROM staging.job_info) sub ON staging.job_info.id = public.job_info.id \
-        WHEN NOT MATCHED THEN INSERT VALUES (staging.job_info.id, staging.job_info.title, staging.job_info.company, staging.job_info.city, staging.job_info.url);")
+    spark.sql("INSERT INTO public.job_info \
+        SELECT sub.id, sub.title, sub.company, sub.city, sub.url, sub.created_date FROM staging.job_info AS sub \
+        LEFT OUTER JOIN public.job_info AS pub ON sub.id = pub.id \
+	    WHERE pub.id is NULL;")
+
+    spark.sql("CREATE TABLE IF NOT EXISTS public.job_skill_info ( \
+        id String, skill String) \
+        USING hive \
+        PARTITIONED BY (created_date STRING);")
+    spark.sql("INSERT INTO public.job_skill_info \
+        SELECT sub.id, sub.skill, sub.created_date FROM staging.job_skill_info AS sub \
+        LEFT OUTER JOIN public.job_skill_info AS pub ON sub.id = pub.id \
+	    WHERE pub.id is NULL;")
 
 
 def load_data(crawl_time):
@@ -92,4 +101,13 @@ def load_data(crawl_time):
     spark.sql("SELECT COUNT(id) FROM public.job_info").show(
         n=20, truncate=False)
     spark.sql("SELECT * FROM public.job_info").show(
+        n=20, truncate=False)
+    spark.sql("SELECT id, url FROM public.job_info where id = (SELECT id FROM public.job_info GROUP BY id HAVING COUNT(id) > 1)").show(
+        n=20, truncate=False)
+
+    spark.sql("SELECT COUNT(DISTINCT id) FROM public.job_skill_info").show(
+        n=10, truncate=True)
+    spark.sql("SELECT COUNT(id) FROM public.job_skill_info").show(
+        n=20, truncate=False)
+    spark.sql("SELECT * FROM public.job_skill_info").show(
         n=20, truncate=False)

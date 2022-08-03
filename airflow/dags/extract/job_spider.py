@@ -104,8 +104,8 @@ def get_filename(prefix: str) -> str:
 
 
 def get_id(url: str) -> str:
-    url_no_param = url = url[: url.find("?")]
-    id = url_no_param.split("-")[-1]
+    url_no_param = url[:url.find("?")]
+    id = url_no_param.split("/")[-1]
     return id
 
 
