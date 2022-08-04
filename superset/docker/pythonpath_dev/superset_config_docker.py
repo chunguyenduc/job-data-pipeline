@@ -26,3 +26,5 @@
 
 SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://pguser:pgpwd@some.host/superset"
 SQLALCHEMY_ECHO = True
+SECRET_KEY = 'mySecretKey'
+WTF_CSRF_ENABLED = False

@@ -180,10 +180,7 @@ services:
             - "9083:9083"
     hive-metastore-postgresql:
         image: bde2020/hive-metastore-postgresql:2.3.0
-    presto-coordinator:
-        image: shawnzhu/prestodb:0.181
-        ports:
-            - "8081:8080"
+    
 
     superset:
         image: *superset-image

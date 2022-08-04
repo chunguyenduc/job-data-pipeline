@@ -99,6 +99,10 @@ WEBDRIVER_BASEURL_USER_FRIENDLY = WEBDRIVER_BASEURL
 
 SQLLAB_CTAS_NO_LIMIT = True
 
+SESSION_COOKIE_SAMESITE = "None"  # Sufficient for Firefox
+# Required for Google Chrome (at least from version 84)
+SESSION_COOKIE_SECURE = True
+WTF_CSRF_ENABLED = False
 #
 # Optionally import superset_config_docker.py (which will have been included on
 # the PYTHONPATH) in order to allow for local settings to be overridden

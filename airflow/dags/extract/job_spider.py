@@ -52,7 +52,7 @@ class JobSpider(scrapy.Spider):
             distance_time = bottom.css(
                 "div.distance-time-job-posted span::text").get()
             created_date = self.get_created_time(
-                distance_time).strftime("%Y%m%d")
+                distance_time).strftime("%Y-%m-%d")
             for s in skills:
                 df_add_job_skill = pd.DataFrame(
                     [[id, s.strip(), created_date]], columns=JOB_SKILL_FIELD

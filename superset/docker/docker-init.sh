@@ -58,6 +58,12 @@ superset fab create-admin \
               --lastname Admin \
               --email admin@superset.com \
               --password $ADMIN_PASSWORD
+superset fab create-admin \
+              --username superset \
+              --firstname Superset \
+              --lastname Superset \
+              --email admin@abc.com \
+              --password superset
 echo_step "2" "Complete" "Setting up admin user"
 # Create default roles and permissions
 echo_step "3" "Starting" "Setting up roles and perms"
@@ -76,3 +82,4 @@ if [ "$SUPERSET_LOAD_EXAMPLES" = "yes" ]; then
     fi
     echo_step "4" "Complete" "Loading examples"
 fi
+
