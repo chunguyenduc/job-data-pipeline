@@ -1,5 +1,6 @@
 from pyspark import SparkConf
 from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
 
 
 def prepare_data(spark, crawl_time):
@@ -8,7 +9,8 @@ def prepare_data(spark, crawl_time):
         spark.read.option("header", True)
         .csv(f"hdfs://namenode:9000/user/root/job/job-{crawl_time}.csv")
     )
-
+    df_job = df_job.withColumn(
+        "insert_time", F.current_timestamp().cast("timestamp"))
     df_job.show(n=20, truncate=True)
     df_job.printSchema()
 
@@ -16,6 +18,9 @@ def prepare_data(spark, crawl_time):
         f"hdfs://namenode:9000/user/root/job_skill/job_skill-{crawl_time}.csv"
     )
 
+    blacklist_skills = ['Fresher Accepted']
+    df_job_skill = df_job_skill.filter(~df_job_skill.skill.isin(blacklist_skills)).withColumn(
+        "insert_time", F.current_timestamp().cast("timestamp"))
     df_job_skill.show(n=20, truncate=True)
     df_job_skill.printSchema()
 
@@ -31,13 +36,13 @@ def insert_staging_data(spark, crawl_time):
     spark.sql(
         "CREATE TABLE IF NOT EXISTS staging.job_info (\
         id String, title String, company String, city String, \
-        url String, created_date String) \
+        url String, created_date String, insert_time Timestamp) \
         USING hive;"
     )
 
     spark.sql(
         "CREATE TABLE IF NOT EXISTS staging.job_skill_info ( \
-        id String, skill String) \
+        id String, skill String, insert_time Timestamp) \
         USING hive;"
     )
     spark.sql("show databases").show(n=10)
@@ -54,20 +59,20 @@ def insert_staging_data(spark, crawl_time):
 def insert_public_data(spark):
     spark.sql("CREATE DATABASE IF NOT EXISTS public;")
     spark.sql("CREATE TABLE IF NOT EXISTS public.job_info ( \
-        id String, title String, company String, city String, url String) \
+        id String, title String, company String, city String, url String, insert_time Timestamp) \
         USING hive \
         PARTITIONED BY (created_date STRING);")
     spark.sql("INSERT INTO public.job_info \
-        SELECT sub.id, sub.title, sub.company, sub.city, sub.url, sub.created_date FROM staging.job_info AS sub \
+        SELECT sub.id, sub.title, sub.company, sub.city, sub.url, sub.created_date, sub.insert_time FROM staging.job_info AS sub \
         LEFT OUTER JOIN public.job_info AS pub ON sub.id = pub.id \
 	    WHERE pub.id is NULL;")
 
     spark.sql("CREATE TABLE IF NOT EXISTS public.job_skill_info ( \
-        id String, skill String) \
+        id String, skill String, insert_time Timestamp) \
         USING hive \
         PARTITIONED BY (created_date STRING);")
     spark.sql("INSERT INTO public.job_skill_info \
-        SELECT sub.id, sub.skill, sub.created_date FROM staging.job_skill_info AS sub \
+        SELECT sub.id, sub.skill, sub.created_date, sub.insert_time FROM staging.job_skill_info AS sub \
         LEFT OUTER JOIN public.job_skill_info AS pub ON sub.id = pub.id \
 	    WHERE pub.id is NULL;")
 
