@@ -24,7 +24,7 @@ class JobSpider(scrapy.Spider):
     def start_requests(self):
         urls = [
             f"https://itviec.com/it-jobs?page={page}&query=&source=search_job"
-            for page in range(1, 3)
+            for page in range(1, 2)
         ]
 
         for url in urls:

@@ -90,12 +90,13 @@ def load_data(crawl_time):
     insert_staging_data(spark, crawl_time)
     insert_public_data(spark)
 
+    logging.info("Showing hive table")
     # debugging
     spark.sql("SELECT COUNT(DISTINCT id) FROM public.job_info").show(
         n=10, truncate=True)
-    spark.sql("SELECT COUNT(id) FROM public.job_info").show(
+    spark.sql("SELECT COUNT(id) FROM public.job_info;").show(
         n=20, truncate=False)
-    spark.sql("SELECT * FROM public.job_info").show(
+    spark.sql("SELECT * FROM public.job_info ORDER BY insert_time DESC;").show(
         n=20, truncate=False)
     spark.sql("SELECT id, url FROM public.job_info where id = (SELECT id FROM public.job_info GROUP BY id HAVING COUNT(id) > 1)").show(
         n=20, truncate=False)
@@ -104,5 +105,5 @@ def load_data(crawl_time):
         n=10, truncate=True)
     spark.sql("SELECT COUNT(id) FROM public.job_skill_info").show(
         n=20, truncate=False)
-    spark.sql("SELECT * FROM public.job_skill_info").show(
+    spark.sql("SELECT * FROM public.job_skill_info ORDER BY insert_time DESC;").show(
         n=20, truncate=False)
