@@ -18,7 +18,7 @@ with DAG(
         "retry_delay": timedelta(seconds=10),
     },
     description="ETL pipeline crawl job description from itviec",
-    schedule_interval=timedelta(minutes=10),
+    schedule_interval=timedelta(minutes=15),
     start_date=datetime(2021, 1, 1),
     catchup=False,
     tags=["job"],

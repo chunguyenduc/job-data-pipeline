@@ -35,14 +35,9 @@ def insert_staging_data(spark, crawl_time):
     spark.sql("CREATE DATABASE IF NOT EXISTS staging;")
     spark.sql("DROP TABLE IF EXISTS staging.job_info;")
     spark.sql("DROP TABLE IF EXISTS staging.job_skill_info;")
+
     spark.sql(queries.CREATE_STAGING_TABLE_JOB)
-
     spark.sql(queries.CREATE_STAGING_TABLE_JOB_SKILL)
-
-    # debugging
-    spark.sql("show databases").show(n=10)
-    spark.sql("describe staging.job_info").show(n=50, truncate=True)
-    spark.sql("describe staging.job_skill_info").show(n=50, truncate=True)
 
     # insert to staging
     df.write.mode("overwrite").format("hive").saveAsTable("staging.job_info")
@@ -50,6 +45,7 @@ def insert_staging_data(spark, crawl_time):
         "hive").saveAsTable("staging.job_skill_info")
 
     # debugging
+    logging.info("Show staging tables: ")
     spark.sql("SELECT * FROM staging.job_info").show(n=20)
     spark.sql("SELECT * FROM staging.job_skill_info").show(n=20)
 
@@ -71,12 +67,11 @@ def load_data(crawl_time):
         SparkConf()
         .setAppName("Transform")
         .setMaster(master)
-        .set("spark.memory.offHeap.enabled", True)
-        .set("spark.memory.offHeap.size", "10g")
         .set("spark.hadoop.hive.metastore.uris", "thrift://hive-metastore:9083")
         .set("spark.sql.warehouse.dir", "hdfs://namenode:9000/user/hive/warehouse")
         .set("spark.memory.offHeap.enabled", "true")
         .set("spark.memory.offHeap.size", "10g")
+        .set("spark.executor.memory", "4g")
         .set("hive.exec.dynamic.partition", "true")
         .set("hive.exec.dynamic.partition.mode", "nonstrict")
         .set("spark.sql.session.timeZone", "UTC+7")
@@ -90,20 +85,14 @@ def load_data(crawl_time):
     insert_staging_data(spark, crawl_time)
     insert_public_data(spark)
 
-    logging.info("Showing hive table")
+    logging.info("Showing public table: ")
     # debugging
-    spark.sql("SELECT COUNT(DISTINCT id) FROM public.job_info").show(
-        n=10, truncate=True)
-    spark.sql("SELECT COUNT(id) FROM public.job_info;").show(
-        n=20, truncate=False)
+    spark.sql("SELECT COUNT(id), COUNT(DISTINCT id) FROM public.job_info").show(
+        n=1, truncate=True)
     spark.sql("SELECT * FROM public.job_info ORDER BY insert_time DESC;").show(
         n=20, truncate=False)
-    spark.sql("SELECT id, url FROM public.job_info where id = (SELECT id FROM public.job_info GROUP BY id HAVING COUNT(id) > 1)").show(
-        n=20, truncate=False)
 
-    spark.sql("SELECT COUNT(DISTINCT id) FROM public.job_skill_info").show(
+    spark.sql("SELECT COUNT(id), COUNT(DISTINCT id) FROM public.job_skill_info").show(
         n=10, truncate=True)
-    spark.sql("SELECT COUNT(id) FROM public.job_skill_info").show(
-        n=20, truncate=False)
     spark.sql("SELECT * FROM public.job_skill_info ORDER BY insert_time DESC;").show(
         n=20, truncate=False)
