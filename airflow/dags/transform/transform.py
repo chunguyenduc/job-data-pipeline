@@ -1,10 +1,12 @@
 from pyspark import SparkConf
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
+import logging
+import queries
 
 
 def prepare_data(spark, crawl_time):
-    print(crawl_time)
+    logging.info(crawl_time)
     df_job = (
         spark.read.option("header", True)
         .csv(f"hdfs://namenode:9000/user/root/job/job-{crawl_time}.csv")
@@ -33,48 +35,33 @@ def insert_staging_data(spark, crawl_time):
     spark.sql("CREATE DATABASE IF NOT EXISTS staging;")
     spark.sql("DROP TABLE IF EXISTS staging.job_info;")
     spark.sql("DROP TABLE IF EXISTS staging.job_skill_info;")
-    spark.sql(
-        "CREATE TABLE IF NOT EXISTS staging.job_info (\
-        id String, title String, company String, city String, \
-        url String, created_date String, insert_time Timestamp) \
-        USING hive;"
-    )
+    spark.sql(queries.CREATE_STAGING_TABLE_JOB)
 
-    spark.sql(
-        "CREATE TABLE IF NOT EXISTS staging.job_skill_info ( \
-        id String, skill String, insert_time Timestamp) \
-        USING hive;"
-    )
+    spark.sql(queries.CREATE_STAGING_TABLE_JOB_SKILL)
+
+    # debugging
     spark.sql("show databases").show(n=10)
     spark.sql("describe staging.job_info").show(n=50, truncate=True)
     spark.sql("describe staging.job_skill_info").show(n=50, truncate=True)
+
+    # insert to staging
     df.write.mode("overwrite").format("hive").saveAsTable("staging.job_info")
-    df_job_skill.write.mode("overwrite").format("hive").saveAsTable(
-        "staging.job_skill_info"
-    )
+    df_job_skill.write.mode("overwrite").format(
+        "hive").saveAsTable("staging.job_skill_info")
+
+    # debugging
     spark.sql("SELECT * FROM staging.job_info").show(n=20)
     spark.sql("SELECT * FROM staging.job_skill_info").show(n=20)
 
 
 def insert_public_data(spark):
     spark.sql("CREATE DATABASE IF NOT EXISTS public;")
-    spark.sql("CREATE TABLE IF NOT EXISTS public.job_info ( \
-        id String, title String, company String, city String, url String, insert_time Timestamp) \
-        USING hive \
-        PARTITIONED BY (created_date STRING);")
-    spark.sql("INSERT INTO public.job_info \
-        SELECT sub.id, sub.title, sub.company, sub.city, sub.url, sub.insert_time, sub.created_date FROM staging.job_info AS sub \
-        LEFT OUTER JOIN public.job_info AS pub ON sub.id = pub.id \
-	    WHERE pub.id is NULL;")
 
-    spark.sql("CREATE TABLE IF NOT EXISTS public.job_skill_info ( \
-        id String, skill String, insert_time Timestamp) \
-        USING hive \
-        PARTITIONED BY (created_date STRING);")
-    spark.sql("INSERT INTO public.job_skill_info \
-        SELECT sub.id, sub.skill, sub.insert_time, sub.created_date FROM staging.job_skill_info AS sub \
-        LEFT OUTER JOIN public.job_skill_info AS pub ON sub.id = pub.id \
-	    WHERE pub.id is NULL;")
+    spark.sql(queries.CREATE_PUBLIC_TABLE_JOB)
+    spark.sql(queries.INSERT_PUBLIC_TABLE_JOB)
+
+    spark.sql(queries.CREATE_PUBLIC_TABLE_JOB_SKILL)
+    spark.sql(queries.INSERT_PUBLIC_TABLE_JOB_SKILL)
 
 
 def load_data(crawl_time):
@@ -92,6 +79,7 @@ def load_data(crawl_time):
         .set("spark.memory.offHeap.size", "10g")
         .set("hive.exec.dynamic.partition", "true")
         .set("hive.exec.dynamic.partition.mode", "nonstrict")
+        .set("spark.sql.session.timeZone", "UTC+7")
     )
 
     spark = (
@@ -101,6 +89,8 @@ def load_data(crawl_time):
     )
     insert_staging_data(spark, crawl_time)
     insert_public_data(spark)
+
+    # debugging
     spark.sql("SELECT COUNT(DISTINCT id) FROM public.job_info").show(
         n=10, truncate=True)
     spark.sql("SELECT COUNT(id) FROM public.job_info").show(

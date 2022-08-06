@@ -1,4 +1,5 @@
 from hdfs import InsecureClient
+import logging
 
 DATA_DIR_JOB = "job"
 DATA_DIR_JOB_SKILL = "job_skill"
@@ -6,7 +7,7 @@ DATA_DIR_JOB_SKILL = "job_skill"
 
 def upload_hdfs(crawl_time):
 
-    print("Filename: ", crawl_time)
+    logging.info(f"Filename: {crawl_time}")
     client = InsecureClient("http://namenode:50070", user="root")
     if client.content(DATA_DIR_JOB, strict=False) is None:
         client.makedirs(DATA_DIR_JOB)

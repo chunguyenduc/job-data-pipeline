@@ -1,0 +1,14 @@
+{
+    "extract": {
+        "dag_path": "/opt/airflow/dags",
+        "prefix": {
+            "job": "job",
+            "job_skill": "job_skill"
+        },
+        "format": "csv"
+    },
+    "hdfs": {
+        "http": "http://namenode:50070",
+        "default": "hdfs://namenode:9000"
+    }
+}
