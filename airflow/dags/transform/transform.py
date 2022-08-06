@@ -63,7 +63,7 @@ def insert_public_data(spark):
         USING hive \
         PARTITIONED BY (created_date STRING);")
     spark.sql("INSERT INTO public.job_info \
-        SELECT sub.id, sub.title, sub.company, sub.city, sub.url, sub.created_date, sub.insert_time FROM staging.job_info AS sub \
+        SELECT sub.id, sub.title, sub.company, sub.city, sub.url, sub.insert_time, sub.created_date FROM staging.job_info AS sub \
         LEFT OUTER JOIN public.job_info AS pub ON sub.id = pub.id \
 	    WHERE pub.id is NULL;")
 
@@ -72,7 +72,7 @@ def insert_public_data(spark):
         USING hive \
         PARTITIONED BY (created_date STRING);")
     spark.sql("INSERT INTO public.job_skill_info \
-        SELECT sub.id, sub.skill, sub.created_date, sub.insert_time FROM staging.job_skill_info AS sub \
+        SELECT sub.id, sub.skill, sub.insert_time, sub.created_date FROM staging.job_skill_info AS sub \
         LEFT OUTER JOIN public.job_skill_info AS pub ON sub.id = pub.id \
 	    WHERE pub.id is NULL;")
 

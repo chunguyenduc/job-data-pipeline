@@ -62,6 +62,7 @@ services:
             - ./airflow/plugins:/opt/airflow/plugins
         ports:
             - "8080:8080"
+        restart: on-failure
         environment: *airflow_environment
         command: webserver
 
@@ -73,6 +74,7 @@ services:
         # restart: always
         depends_on:
             - postgres
+        restart: on-failure
         volumes:
             - ./airflow/dags:/opt/airflow/dags
             - ./airflow/logs:/opt/airflow/logs
@@ -169,6 +171,7 @@ services:
             SERVICE_PRECONDITION: "hive-metastore:9083"
         ports:
             - "10000:10000"
+        restart: on-failure
     hive-metastore:
         image: bde2020/hive:2.3.2-postgresql-metastore
         env_file:
