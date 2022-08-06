@@ -2,7 +2,7 @@ from pyspark import SparkConf
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 import logging
-import queries
+from transform import queries
 
 
 def prepare_data(spark, crawl_time):

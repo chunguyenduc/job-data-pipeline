@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from extract.upload_hdfs import upload_hdfs
 from extract.job_spider import crawl_data
-from transform.transform import insert_staging_data, load_data
+from transform.transform import load_data
+
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
