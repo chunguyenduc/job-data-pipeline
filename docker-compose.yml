@@ -91,7 +91,7 @@ services:
         environment:
             - CLUSTER_NAME=test
         env_file:
-            - ./hadoop.env
+            - .env/hadoop.env
 
     datanode:
         image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
@@ -103,7 +103,7 @@ services:
         environment:
             SERVICE_PRECONDITION: "namenode:50070"
         env_file:
-            - ./hadoop.env
+            - .env/hadoop.env
 
     resourcemanager:
         image: bde2020/hadoop-resourcemanager:2.0.0-hadoop2.7.4-java8
@@ -111,7 +111,7 @@ services:
         environment:
             SERVICE_PRECONDITION: "namenode:50070 datanode:50075"
         env_file:
-            - ./hadoop.env
+            - .env/hadoop.env
 
     nodemanager1:
         image: bde2020/hadoop-nodemanager:2.0.0-hadoop2.7.4-java8
@@ -119,7 +119,7 @@ services:
         environment:
             SERVICE_PRECONDITION: "namenode:50070 datanode:50075 resourcemanager:8088"
         env_file:
-            - ./hadoop.env
+            - .env/hadoop.env
 
     historyserver:
         image: bde2020/hadoop-historyserver:2.0.0-hadoop2.7.4-java8
@@ -129,7 +129,7 @@ services:
         volumes:
             - hadoop_historyserver:/hadoop/yarn/timeline
         env_file:
-            - ./hadoop.env
+            - .env/hadoop.env
     spark:
         build:
             context: spark
@@ -171,7 +171,7 @@ services:
         image: bde2020/hive:2.3.2-postgresql-metastore
         container_name: hive_server
         env_file:
-            - ./hadoop-hive.env
+            - .env/hadoop-hive.env
         environment:
             HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
             SERVICE_PRECONDITION: "hive-metastore:9083"
@@ -182,7 +182,7 @@ services:
         image: bde2020/hive:2.3.2-postgresql-metastore
         container_name: hive_metastore
         env_file:
-            - ./hadoop-hive.env
+            - .env/hadoop-hive.env
         command: /opt/hive/bin/hive --service metastore
         environment:
             SERVICE_PRECONDITION: "namenode:50070 datanode:50075 hive-metastore-postgresql:5432"
