@@ -18,7 +18,6 @@ skills_dashboard/log.out
 */*/.DS_Store
 /logs
 /plugins
-/data
 */.cache/
 */logs/
 *.csv
@@ -27,3 +26,6 @@ skills_dashboard/log.out
 airflow/dags/transform/derby.log
 airflow/dags/transform/metastore_db/
 .vscode/
+data/grafana/alerting/
+data/grafana/grafana.db
+data/prometheus/data/
