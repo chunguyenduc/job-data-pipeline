@@ -51,8 +51,8 @@ RUN pip install --user --no-cache-dir \
     requests[security] Scrapy hdfs && \
     PYSPARK_HADOOP_VERSION=2 pip install pyspark==3.3.0
 
-COPY default-airflow.cfg opt/airflow/airflow.cfg
-COPY webserver_config.py opt/airflow/webserver_config.py
+COPY airflow.cfg /opt/airflow/
+COPY webserver_config.py /opt/airflow/
 
 
 
