@@ -215,6 +215,7 @@ services:
         volumes: *superset-volumes
         environment:
             SUPERSET_LOAD_EXAMPLES: "yes"
+            SUPERSET_CONFIG_PATH: "/app/pythonpath/superset_config.py"
     prometheus:
         image: prom/prometheus:latest
         container_name: monitoring_prometheus
