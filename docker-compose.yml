@@ -18,7 +18,6 @@ x-superset-depends-on:
     - postgres
     - redis
 x-superset-volumes:
-    # /app/pythonpath_docker will be appended to the PYTHONPATH in the final container
     &superset-volumes
     - ./superset/docker:/app/docker
     - superset_home:/app/superset_home
@@ -259,8 +258,6 @@ services:
         restart: unless-stopped
         links:
             - prometheus:prometheus
-        # volumes:
-        #     - ./data/grafana:/var/lib/grafana
         environment:
             - GF_SECURITY_ADMIN_USER=admin
             - GF_SECURITY_ADMIN_PASSWORD=admin
