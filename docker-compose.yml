@@ -21,7 +21,6 @@ x-superset-volumes:
     &superset-volumes
     - ./superset/docker:/app/docker
     - superset_home:/app/superset_home
-    - ./superset/docker/pythonpath_dev:/app/pythonpath
 
 services:
     redis:
