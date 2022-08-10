@@ -8,7 +8,7 @@ USER root
 RUN apt-get update && \
     apt-get install -y software-properties-common && \
     apt-get install -y gnupg2 && \
-    apt-get install -y libsasl2-dev && \
+    apt-get install -y libsasl2-dev libsasl2-2 libsasl2-modules-gssapi-mit && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EB9B1D8886F44E2A && \
     add-apt-repository "deb http://security.debian.org/debian-security stretch/updates main" && \ 
     apt-get update && \
