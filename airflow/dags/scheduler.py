@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from extract.upload_hdfs import upload_hdfs
 from extract.job_spider import crawl_data
-from transform.transform import load_data
+from transform.transform import transform_insert_staging
+from load.load import load_data
 
 
 from airflow import DAG
@@ -42,9 +43,9 @@ with DAG(
         dag=dag,
         depends_on_past=False,
     )
-    insert_data_hive = PythonOperator(
-        task_id="insert_data_hive",
-        python_callable=load_data,
+    transform = PythonOperator(
+        task_id="transform_and_insert_staging",
+        python_callable=transform_insert_staging,
         op_kwargs={
             "crawl_time": "{{ task_instance.xcom_pull(task_ids='crawl_job_data') }}"},
         retries=3,
@@ -52,4 +53,13 @@ with DAG(
         dag=dag,
         depends_on_past=False,
     )
-crawl_job >> upload_to_hdfs >> insert_data_hive
+
+    load_data = PythonOperator(
+        task_id="load_data_to_hive",
+        python_callable=load_data,
+        retries=3,
+        retry_delay=timedelta(seconds=5),
+        dag=dag,
+        depends_on_past=False,
+    )
+crawl_job >> upload_to_hdfs >> transform >> load_data

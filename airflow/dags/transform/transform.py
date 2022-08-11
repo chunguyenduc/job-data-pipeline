@@ -1,15 +1,15 @@
-from pyspark import SparkConf
-from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
 import logging
-from transform import queries
+
+from pyspark.sql import functions as F
+from utils import spark_session, queries
 
 
 def prepare_data(spark, crawl_time):
     logging.info(crawl_time)
+    hdfs_base_path = "hdfs://namenode:9000/user/root/"
     df_job = (
         spark.read.option("header", True)
-        .csv(f"hdfs://namenode:9000/user/root/job/job-{crawl_time}.csv")
+        .csv(hdfs_base_path + f"job/job-{crawl_time}.csv")
     )
     df_job = df_job.withColumn(
         "insert_time", F.current_timestamp().cast("timestamp"))
@@ -17,9 +17,10 @@ def prepare_data(spark, crawl_time):
     df_job.printSchema()
 
     df_job_skill = spark.read.option("header", True).csv(
-        f"hdfs://namenode:9000/user/root/job_skill/job_skill-{crawl_time}.csv"
+        hdfs_base_path + f"job_skill/job_skill-{crawl_time}.csv"
     )
 
+    # Remove unnecessary tags
     blacklist_skills = ['Fresher Accepted']
     df_job_skill = df_job_skill.filter(~df_job_skill.skill.isin(blacklist_skills)).withColumn(
         "insert_time", F.current_timestamp().cast("timestamp"))
@@ -50,49 +51,6 @@ def insert_staging_data(spark, crawl_time):
     spark.sql("SELECT * FROM staging.job_skill_info").show(n=20)
 
 
-def insert_public_data(spark):
-    spark.sql("CREATE DATABASE IF NOT EXISTS public;")
-
-    spark.sql(queries.CREATE_PUBLIC_TABLE_JOB)
-    spark.sql(queries.INSERT_PUBLIC_TABLE_JOB)
-
-    spark.sql(queries.CREATE_PUBLIC_TABLE_JOB_SKILL)
-    spark.sql(queries.INSERT_PUBLIC_TABLE_JOB_SKILL)
-
-
-def load_data(crawl_time):
-    master = "spark://spark:7077"
-
-    conf = (
-        SparkConf()
-        .setAppName("Transform")
-        .setMaster(master)
-        .set("spark.hadoop.hive.metastore.uris", "thrift://hive-metastore:9083")
-        .set("spark.sql.warehouse.dir", "hdfs://namenode:9000/user/hive/warehouse")
-        .set("spark.memory.offHeap.enabled", "true")
-        .set("spark.memory.offHeap.size", "10g")
-        .set("spark.executor.memory", "4g")
-        .set("hive.exec.dynamic.partition", "true")
-        .set("hive.exec.dynamic.partition.mode", "nonstrict")
-        .set("spark.sql.session.timeZone", "UTC+7")
-    )
-
-    spark = (
-        SparkSession.builder.config(conf=conf)
-        .enableHiveSupport()
-        .getOrCreate()
-    )
+def transform_insert_staging(crawl_time):
+    spark = spark_session.init_spark_session()
     insert_staging_data(spark, crawl_time)
-    insert_public_data(spark)
-
-    logging.info("Showing public table: ")
-    # debugging
-    spark.sql("SELECT COUNT(id), COUNT(DISTINCT id) FROM public.job_info").show(
-        n=1, truncate=True)
-    spark.sql("SELECT * FROM public.job_info ORDER BY insert_time DESC;").show(
-        n=20, truncate=False)
-
-    spark.sql("SELECT COUNT(id), COUNT(DISTINCT id) FROM public.job_skill_info").show(
-        n=10, truncate=True)
-    spark.sql("SELECT * FROM public.job_skill_info ORDER BY insert_time DESC;").show(
-        n=20, truncate=False)
