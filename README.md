@@ -1,26 +1,4 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
 
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
-
-
-<!-- PROJECT LOGO -->
 # **Job ETL Pipeline**
 
 <!-- TABLE OF CONTENTS -->
@@ -57,20 +35,24 @@ I want to make a beginner data engineering project, also want to look for a new 
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+* [Airflow](https://airflow.apache.org/)
+* [Hadoop (HDFS)](https://hadoop.apache.org/)
+* [Spark](https://spark.apache.org/)
+* [Hive](https://hive.apache.org/)
+* [Superset](https://superset.apache.org/)
+* [Docker](https://www.docker.com/)
+* [Prometheus](https://prometheus.io/) & [Grafana](https://grafana.com)
 
 
+## Architecture
+![Data pipeline design](media/job_etl.jpg)
+1. Extract data using Scrapy
+2. Load data into HDFS
+3. Use Spark to transform, remove unnecessary data
+4. Load data to Hive
+5. Create dashboard, write queries in Superset
+6. Orchestrate with Airflow in Docker
+7. Use Prometheus and Grafana to monitor resources
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -207,7 +189,7 @@ Use this space to list resources you find helpful and would like to give credit 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/othneildrew
 [product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[Airflow]: https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/AirflowLogo.png/1200px-AirflowLogo.png
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
