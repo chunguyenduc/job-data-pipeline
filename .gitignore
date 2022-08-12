@@ -2,17 +2,6 @@
 *.csv
 */*/__pycache__/
 */*/*/__pycache__/
-xi_kiu
-skills_dashboard/skillscraper/build
-skills_dashboard/skillscraper/logs
-skills_dashboard/skillscraper/project.egg-info
-skills_dashboard/skillscraper/dbs
-skills_dashboard/skillscraper/*.html
-skills_dashboard/skillscraper/xi_kiu
-*/*/*/*/__pycache__/*
-skills_dashboard/skillscraper/twistd.pid
-skills_dashboard/web/node_modules
-skills_dashboard/log.out
 .DS_Store
 */.DS_Store
 */*/.DS_Store
