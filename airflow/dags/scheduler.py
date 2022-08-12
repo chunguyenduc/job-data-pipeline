@@ -12,7 +12,7 @@ dag_path = "/usr/local/airflow/dags"
 crawl_path = f"{dag_path}/extract"
 
 with DAG(
-    "job_dashboard",
+    "job_etl_pipeline",
     default_args={
         "depends_on_past": False,
         "retries": 1,
