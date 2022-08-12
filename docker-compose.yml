@@ -54,7 +54,6 @@ services:
         volumes:
             - ./airflow/logs:/opt/airflow/logs
             - ./airflow/dags:/opt/airflow/dags
-            - ./airflow/plugins:/opt/airflow/plugins
         ports:
             - "8080:8080"
         restart: on-failure
