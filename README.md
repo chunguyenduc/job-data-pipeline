@@ -5,19 +5,8 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
+      <li><a href="#motivation">Motivation</a></li>
+      <li><a href="#built-with">Built With</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -33,7 +22,7 @@
 ## Motivation
 I want to make a beginner data engineering project, also want to look for a new job. So i make this ETL pipeline that crawl data from job search website, do some transform, store data in data warehouse and load data to visualization tool.
 
-### Built With
+## Built With
 
 * [Airflow](https://airflow.apache.org/)
 * [Hadoop (HDFS)](https://hadoop.apache.org/)
@@ -54,51 +43,48 @@ I want to make a beginner data engineering project, also want to look for a new 
 6. Orchestrate with Airflow in Docker
 7. Use Prometheus and Grafana to monitor resources
 
-<!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
-### Installation
-
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+- Clone and cd into the project directory.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+```bash
+git clone https://github.com/chunguyenduc/Job-ETL-Pipeline.git
+cd Job-ETL-Pipeline
+```
 
+- Use  `docker compose` to start. The pipeline has a lot of components so this may take a while
+```
+docker compose up -d
+```
+
+- Go to Airflow webserver on [localhost:8080](http://localhost:8080) and turn on our DAG
+
+![Job ETl Pipeline DAG](media/jot_etl_pipeline_dag.png)
+
+- Our DAG has four tasks as step 1 to 4 in [Architecture](#architecture). The DAG runs every 15 minutes and crawl the first page of [ITviec](https://itviec.com/it-jobs?page=1&query=&source=search_job)
+
+<!-- ![Job ETl Pipeline Task](media/job_etl_pipeline_task.png) -->
+| ![Job ETl Pipeline Task](media/job_etl_pipeline_task.png) | 
+|:--:| 
+| *Tasks* |
+
+| ![ITviec website](media/itviec_website.png) | 
+|:--:| 
+| *ITviec Website* |
+
+- Before running Hive, you need to create the /tmp folder and a separate Hive folder in HDFS:
+
+```
+docker exec -it namenode /bin/bash
+hadoop fs -mkdir /tmp 
+hadoop fs -mkdir /user/hive/warehouse
+hadoop fs -chmod g+w /tmp 
+hadoop fs -chmod g+w /user/hive/warehouse
+```
+
+- Once the DAG is done running, you can query data or create dashboard in Superset like this:
+![Job-ETL-Dashboard](media/job_etl_dashboard.jpg)
 
 
 <!-- ROADMAP -->
