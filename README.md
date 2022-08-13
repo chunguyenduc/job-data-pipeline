@@ -32,6 +32,7 @@ I want to make a beginner data engineering project, also want to look for a new 
 
 ## Architecture
 ![Data pipeline design](media/job_etl.jpg)
+
 1. Extract data using Scrapy
 2. Load data into HDFS
 3. Use Spark to transform, remove unnecessary data
@@ -39,9 +40,9 @@ I want to make a beginner data engineering project, also want to look for a new 
 5. Create dashboard, write queries in Superset
 6. Orchestrate with Airflow in Docker
 7. Use Prometheus and Grafana to monitor resources
-
+<br />
 ## Usage
-
+<br />
 
 - Clone and cd into the project directory.
 
@@ -49,26 +50,26 @@ I want to make a beginner data engineering project, also want to look for a new 
 git clone https://github.com/chunguyenduc/Job-ETL-Pipeline.git
 cd Job-ETL-Pipeline
 ```
+<br />  
 
 - Use  `docker compose` to start. The pipeline has a lot of components so this may take a while
 ```
 docker compose up -d
 ```
+<br />  
 
 - Go to Airflow webserver on [localhost:8080](http://localhost:8080) and turn on our DAG
 
 ![Job ETl Pipeline DAG](media/jot_etl_pipeline_dag.png)
 
+<br />  
+
 - Our DAG has four tasks as step 1 to 4 in [Architecture](#architecture). The DAG runs every 15 minutes and crawl the first page of [ITviec](https://itviec.com/it-jobs?page=1&query=&source=search_job)
 
 <!-- ![Job ETl Pipeline Task](media/job_etl_pipeline_task.png) -->
-| ![Job ETl Pipeline Task](media/job_etl_pipeline_task.png) | 
-|:--:| 
-| *Tasks* |
+![Job ETl Pipeline Task](media/job_etl_pipeline_task.png) 
 
-| ![ITviec website](media/itviec_website.png) | 
-|:--:| 
-| *ITviec Website* |
+<br />  
 
 - Before running Hive, you need to create the `/tmp` folder and a separate Hive folder in HDFS:
 
@@ -80,8 +81,14 @@ hadoop fs -chmod g+w /tmp
 hadoop fs -chmod g+w /user/hive/warehouse
 ```
 
+
+<br />
+
 - Once the DAG is done running, you can go to Superset on [127.0.0.1:8088](http://127.0.0.1:8088) and query data or create dashboard like this:
 ![Job-ETL-Dashboard](media/job_etl_dashboard.jpg)
+
+
+<br /><br />  
 
 - You can also monitor metrics like CPU usage, memory usage on Grafana ([localhost:3000](http://localhost:3000)). I have export [grafana.json](grafana.json) in this repository
 ![Job-ETL-Monitor](media/job_etl_monitor.png)
