@@ -88,13 +88,14 @@ hadoop fs -chmod g+w /user/hive/warehouse
 
 - List servers I used in this project
 
-| Service               | URL                              |                                 |
-| :-------------------: | :------------------------------: | :-------------------------------------------: |
-| Airflow | http://localhost:8080/           |                                           |
-| Spark  | http://localhost:8181/           |                                           |
-| Superset              | http://127.0.0.1:8088/           |   |
-| Prometheus               | http://localhost:9000/           |  |
-| Grafana               | http://localhost:3000/           | |
+| Service               | URL                              |                                 
+| :-------------------: | :------------------------------: | 
+| Airflow | http://localhost:8080/           |                                           
+| Spark  | http://localhost:8181/           |                                           
+| Superset              | http://127.0.0.1:8088/           |   
+| Prometheus               | http://localhost:9000/           |  
+| Grafana               | http://localhost:3000/           | 
+
 
  **Note**: 
   - Username/password is admin/admin
