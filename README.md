@@ -40,7 +40,7 @@ I want to make a beginner data engineering project, also want to look for a new 
 5. Create dashboard, write queries in Superset
 6. Orchestrate with Airflow in Docker
 7. Use Prometheus and Grafana to monitor resources
-<br />
+
 ## Usage
 <br />
 
