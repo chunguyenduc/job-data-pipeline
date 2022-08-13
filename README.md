@@ -5,8 +5,8 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-      <li><a href="#motivation">Motivation</a></li>
-      <li><a href="#built-with">Built With</a></li>
+    <li><a href="#motivation">Motivation</a></li>
+    <li><a href="#built-with">Built With</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -71,7 +71,7 @@ docker compose up -d
 |:--:| 
 | *ITviec Website* |
 
-- Before running Hive, you need to create the /tmp folder and a separate Hive folder in HDFS:
+- Before running Hive, you need to create the `/tmp` folder and a separate Hive folder in HDFS:
 
 ```
 docker exec -it namenode /bin/bash
