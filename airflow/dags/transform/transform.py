@@ -1,10 +1,12 @@
 import logging
+from typing import Tuple
 
+from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
-from utils import spark_session, queries
+from utils import queries, spark_session
 
 
-def prepare_data(spark, crawl_time):
+def prepare_data(spark, crawl_time: str) -> Tuple[DataFrame, DataFrame]:
     logging.info(crawl_time)
     hdfs_base_path = "hdfs://namenode:9000/user/root/"
     df_job = (
@@ -30,7 +32,7 @@ def prepare_data(spark, crawl_time):
     return df_job, df_job_skill
 
 
-def insert_staging_data(spark, crawl_time):
+def insert_staging_data(spark, crawl_time: str) -> None:
     df, df_job_skill = prepare_data(spark, crawl_time)
 
     spark.sql("CREATE DATABASE IF NOT EXISTS staging;")
@@ -51,6 +53,6 @@ def insert_staging_data(spark, crawl_time):
     spark.sql("SELECT * FROM staging.job_skill_info").show(n=20)
 
 
-def transform_insert_staging(crawl_time):
+def transform_insert_staging(crawl_time: str) -> None:
     spark = spark_session.init_spark_session()
     insert_staging_data(spark, crawl_time)

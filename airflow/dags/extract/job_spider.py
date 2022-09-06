@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta
 from urllib.parse import urljoin
 
@@ -21,6 +22,10 @@ class JobSpider(scrapy.Spider):
     name = "job"
     base_url = "https://itviec.com"
 
+    def __init__(self):
+        self.df_job = pd.DataFrame(columns=JOB_FIELD)
+        self.df_job_skill = pd.DataFrame(columns=JOB_SKILL_FIELD)
+
     def start_requests(self):
         urls = [
             f"https://itviec.com/it-jobs?page={page}&query=&source=search_job"
@@ -29,8 +34,6 @@ class JobSpider(scrapy.Spider):
 
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
-        self.df_job = pd.DataFrame(columns=JOB_FIELD)
-        self.df_job_skill = pd.DataFrame(columns=JOB_SKILL_FIELD)
 
     def parse(self, response):
 
@@ -47,7 +50,7 @@ class JobSpider(scrapy.Spider):
             skills = bottom.css("a span::text").getall()
             city = body.css("div.city div::text").get()
             url = urljoin(self.base_url, body.css("h3 a::attr(href)").get())
-            id = get_id(url)
+            job_id = get_id(url)
             company = logo.css("img::attr(alt)").get()[:-11]
             distance_time = bottom.css(
                 "div.distance-time-job-posted span::text").get()
@@ -55,21 +58,23 @@ class JobSpider(scrapy.Spider):
                 distance_time).strftime("%Y-%m-%d")
             for s in skills:
                 df_add_job_skill = pd.DataFrame(
-                    [[id, s.strip(), created_date]], columns=JOB_SKILL_FIELD
+                    [[job_id, s.strip(), created_date]],
+                    columns=JOB_SKILL_FIELD
                 )
                 self.df_job_skill = pd.concat(
                     [self.df_job_skill, df_add_job_skill], ignore_index=True
                 )
             df_add = pd.DataFrame(
-                [[id, title, company, city, url, created_date]], columns=JOB_FIELD
+                [[job_id, title, company, city, url, created_date]],
+                columns=JOB_FIELD
             )
             self.df_job = pd.concat([self.df_job, df_add], ignore_index=True)
-        print(self.df_job.head())
-        print(self.df_job_skill.head())
+        logging.info(self.df_job.head())
+        logging.info(self.df_job_skill.head())
         self.df_job.to_csv(get_filename(PREFIX_JOB), index=False)
         self.df_job_skill.to_csv(get_filename(PREFIX_JOB_SKILL), index=False)
 
-    def get_created_time(self, distance_time):
+    def get_created_time(self, distance_time: str) -> datetime:
         """
         Get created time from distance time.
         ie: 5h -> now-5h
@@ -85,13 +90,13 @@ class JobSpider(scrapy.Spider):
             created = time_now - minute_subtracted
             return created
         # case hour
-        elif distance_time[-1] == "h":
+        if distance_time[-1] == "h":
             hour = int(distance_time[:-1])
             hour_subtracted = timedelta(hours=hour)
             created = time_now - hour_subtracted
             return created
         # case day
-        elif distance_time[-1] == "d":
+        if distance_time[-1] == "d":
             day = int(distance_time[:-1])
             day_subtracted = timedelta(days=day)
             created = time_now - day_subtracted

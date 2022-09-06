@@ -2,7 +2,7 @@ from pyspark import SparkConf
 from pyspark.sql import SparkSession
 
 
-def init_spark_session():
+def init_spark_session() -> SparkSession:
     master = "spark://spark:7077"
 
     conf = (
