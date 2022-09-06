@@ -1,24 +1,21 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 from urllib.parse import urljoin
 
 import pandas as pd
 import scrapy
 from scrapy.crawler import CrawlerProcess
+from utils.extract_helper import JOB_FIELD, JOB_SKILL_FIELD
+from utils.extract_helper import get_data_to_csv, get_created_time, \
+    get_id, write_data_to_csv
+
 
 crawl_time = datetime.now().strftime("%d%m%y-%H%M")
 
-JOB_FIELD = ["id", "title", "company", "city", "url", "created_date"]
-JOB_SKILL_FIELD = ["id", "skill", "created_date"]
-
-DAG_PATH = "/opt/airflow/dags"
-PREFIX_JOB = "job"
-PREFIX_JOB_SKILL = "job_skill"
-
-FORMAT = "csv"
-
 
 class JobSpider(scrapy.Spider):
+    """Crawler by Scrapy
+    """
     name = "job"
     base_url = "https://itviec.com"
 
@@ -54,67 +51,23 @@ class JobSpider(scrapy.Spider):
             company = logo.css("img::attr(alt)").get()[:-11]
             distance_time = bottom.css(
                 "div.distance-time-job-posted span::text").get()
-            created_date = self.get_created_time(
+            created_date = get_created_time(
                 distance_time).strftime("%Y-%m-%d")
-            for s in skills:
-                df_add_job_skill = pd.DataFrame(
-                    [[job_id, s.strip(), created_date]],
-                    columns=JOB_SKILL_FIELD
-                )
-                self.df_job_skill = pd.concat(
-                    [self.df_job_skill, df_add_job_skill], ignore_index=True
-                )
-            df_add = pd.DataFrame(
-                [[job_id, title, company, city, url, created_date]],
-                columns=JOB_FIELD
-            )
-            self.df_job = pd.concat([self.df_job, df_add], ignore_index=True)
+
+            self.df_job, self.df_job_skill = get_data_to_csv(
+                job_id, title, company, city, url, created_date, skills)
         logging.info(self.df_job.head())
         logging.info(self.df_job_skill.head())
-        self.df_job.to_csv(get_filename(PREFIX_JOB), index=False)
-        self.df_job_skill.to_csv(get_filename(PREFIX_JOB_SKILL), index=False)
-
-    def get_created_time(self, distance_time: str) -> datetime:
-        """
-        Get created time from distance time.
-        ie: 5h -> now-5h
-        """
-        # Process distance time
-        distance_time = distance_time.strip("\n")
-        time_now = datetime.now()
-
-        # case minute
-        if distance_time[-1] == "m":
-            minute = int(distance_time[:-1])
-            minute_subtracted = timedelta(minutes=minute)
-            created = time_now - minute_subtracted
-            return created
-        # case hour
-        if distance_time[-1] == "h":
-            hour = int(distance_time[:-1])
-            hour_subtracted = timedelta(hours=hour)
-            created = time_now - hour_subtracted
-            return created
-        # case day
-        if distance_time[-1] == "d":
-            day = int(distance_time[:-1])
-            day_subtracted = timedelta(days=day)
-            created = time_now - day_subtracted
-            return created
-        return time_now
-
-
-def get_filename(prefix: str) -> str:
-    return f"{DAG_PATH}/{prefix}-{crawl_time}.{FORMAT}"
-
-
-def get_id(url: str) -> str:
-    url_no_param = url[:url.find("?")]
-    id = url_no_param.split("/")[-1]
-    return id
+        write_data_to_csv(self.df_job, crawl_time)
+        write_data_to_csv(self.df_job_skill, crawl_time)
 
 
 def crawl_data():
+    """Crawl data then output to csv
+
+    Returns:
+        None
+    """
     process = CrawlerProcess()
     process.crawl(JobSpider)
     process.start()
