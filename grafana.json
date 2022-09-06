@@ -23,7 +23,7 @@
   },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 2,
   "id": 1,
   "links": [],
   "liveNow": false,
@@ -31,7 +31,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "o0IUrXz4z"
+        "uid": "sEaEFHiVz"
       },
       "fieldConfig": {
         "defaults": {
@@ -110,7 +110,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "o0IUrXz4z"
+            "uid": "sEaEFHiVz"
           },
           "editorMode": "builder",
           "expr": "container_memory_usage_bytes{name=\"spark\"}",
@@ -121,7 +121,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "o0IUrXz4z"
+            "uid": "sEaEFHiVz"
           },
           "editorMode": "builder",
           "expr": "container_memory_usage_bytes{name=\"spark_worker\"}",
@@ -133,7 +133,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "o0IUrXz4z"
+            "uid": "sEaEFHiVz"
           },
           "editorMode": "builder",
           "expr": "container_memory_usage_bytes{name=\"airflow_scheduler\"}",
@@ -150,7 +150,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "o0IUrXz4z"
+        "uid": "sEaEFHiVz"
       },
       "fieldConfig": {
         "defaults": {
@@ -256,7 +256,7 @@
             "type": "prometheus",
             "uid": "o0IUrXz4z"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "exemplar": false,
           "expr": "rate(container_cpu_usage_seconds_total{name=\"airflow_scheduler\"}[1m])",
           "format": "time_series",
@@ -304,10 +304,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "o0IUrXz4z"
-      },
+      "datasource": {},
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -319,7 +316,7 @@
             "barAlignment": 0,
             "drawStyle": "line",
             "fillOpacity": 20,
-            "gradientMode": "none",
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -329,7 +326,7 @@
             "lineStyle": {
               "fill": "solid"
             },
-            "lineWidth": 1,
+            "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
@@ -359,44 +356,22 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "Value"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": [
-              {
-                "id": "custom.hideFrom",
-                "value": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": true
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 10,
+        "w": 24,
         "x": 0,
         "y": 8
       },
       "id": 2,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
+          "calcs": [
+            "lastNotNull",
+            "changeCount"
+          ],
+          "displayMode": "table",
           "placement": "right"
         },
         "tooltip": {
@@ -439,6 +414,6 @@
   "timezone": "",
   "title": "Containers",
   "uid": "oac39XzVk",
-  "version": 9,
+  "version": 7,
   "weekStart": ""
 }
