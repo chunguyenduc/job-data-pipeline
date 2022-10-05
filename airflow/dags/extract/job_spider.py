@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 import pandas as pd
 import scrapy
 from scrapy.crawler import CrawlerProcess
-from utils.extract_helper import JOB_FIELD, JOB_SKILL_FIELD
+from utils.extract_helper import JOB_FIELD, JOB_SKILL_FIELD, PREFIX_JOB, PREFIX_JOB_SKILL
 from utils.extract_helper import get_data_to_csv, get_created_time, \
     get_id, write_data_to_csv
 
@@ -53,13 +53,19 @@ class JobSpider(scrapy.Spider):
                 "div.distance-time-job-posted span::text").get()
             created_date = get_created_time(
                 distance_time).strftime("%Y-%m-%d")
-
-            self.df_job, self.df_job_skill = get_data_to_csv(
+            row_job, row_job_skill = get_data_to_csv(
                 job_id, title, company, city, url, created_date, skills)
+            self.df_job = pd.concat(
+                [self.df_job, row_job], ignore_index=True
+            )
+            self.df_job_skill = pd.concat(
+                [self.df_job_skill, row_job_skill], ignore_index=True
+            )
+
         logging.info(self.df_job.head())
         logging.info(self.df_job_skill.head())
-        write_data_to_csv(self.df_job, crawl_time)
-        write_data_to_csv(self.df_job_skill, crawl_time)
+        write_data_to_csv(self.df_job, crawl_time, PREFIX_JOB)
+        write_data_to_csv(self.df_job_skill, crawl_time, PREFIX_JOB_SKILL)
 
 
 def crawl_data():

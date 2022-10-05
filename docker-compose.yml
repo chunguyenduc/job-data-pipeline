@@ -3,14 +3,14 @@ x-environment:
     &airflow_environment
     - AIRFLOW__CORE__EXECUTOR=LocalExecutor
     - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
-    - AIRFLOW__CORE__LOAD_EXAMPLES=True
+    - AIRFLOW__CORE__LOAD_EXAMPLES=False
     - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql://airflow:airflow@postgres:5432/airflow
     - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=True
     - AIRFLOW__WEBSERVER__RBAC=False
     - AIRFLOW__WEBSERVER__COOKIE_SAMESITE=None
 
 x-spark-image: &spark-image chunguyenduc/job_etl_pipeline_spark:0.0.1
-x-airflow-image: &airflow-image chunguyenduc/job_etl_pipeline_airflow:0.0.1
+x-airflow-image: &airflow-image chunguyenduc/job_etl_pipeline_airflow:0.0.2
 x-superset-image: &superset-image apache/superset:latest
 x-superset-user: &superset-user root
 x-superset-depends-on:
@@ -200,7 +200,7 @@ services:
         user: "root"
         volumes: *superset-volumes
         environment:
-            SUPERSET_LOAD_EXAMPLES: "yes"
+            SUPERSET_LOAD_EXAMPLES: "no"
     prometheus:
         image: prom/prometheus:latest
         container_name: monitoring_prometheus

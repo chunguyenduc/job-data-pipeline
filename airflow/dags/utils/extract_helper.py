@@ -32,11 +32,11 @@ def get_data_to_csv(
         df_job_skill = pd.concat(
             [df_job_skill, df_add_job_skill], ignore_index=True
         )
-    df_add = pd.DataFrame(
+
+    df_job = pd.DataFrame(
         [[job_id, title, company, city, url, created_date]],
         columns=JOB_FIELD
     )
-    df_job = pd.concat([df_job, df_add], ignore_index=True)
     return df_job, df_job_skill
 
 
@@ -74,8 +74,8 @@ def get_filename(crawl_time: str, prefix: str) -> str:
     return f"{DAG_PATH}/{prefix}-{crawl_time}.{FORMAT}"
 
 
-def write_data_to_csv(df: pd.DataFrame, crawl_time: str) -> None:
-    df.to_csv(get_filename(crawl_time, PREFIX_JOB), index=False)
+def write_data_to_csv(df: pd.DataFrame, crawl_time: str, prefix: str) -> None:
+    df.to_csv(get_filename(crawl_time, prefix), index=False)
 
 
 def get_id(url: str) -> str:

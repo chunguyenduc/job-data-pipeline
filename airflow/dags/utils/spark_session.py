@@ -16,10 +16,10 @@ def init_spark_session() -> SparkSession:
         .set("spark.executor.memory", "4g")
         .set("hive.exec.dynamic.partition", "true")
         .set("hive.exec.dynamic.partition.mode", "nonstrict")
-        .set("spark.sql.session.timeZone", "UTC+7")
+        # .set("spark.sql.session.timeZone", "UTC+7")
         .set("spark.network.timeout", "50000")
         .set("spark.executor.heartbeatInterval", "5000")
-        .set("spark.worker.timeout", "5000")
+        # .set("spark.worker.timeout", "5000")
     )
 
     spark = (

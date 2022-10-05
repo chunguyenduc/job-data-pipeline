@@ -19,15 +19,12 @@ RUN apt-get update && \
 # Fix certificate issues
 RUN apt-get update && \
     apt-get install ca-certificates-java && \
-    apt-get -y install tzdata && \
     apt-get clean && \
     update-ca-certificates -f;
 
 # Setup JAVA_HOME -- useful for docker commandline
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 RUN export JAVA_HOME
-
-ENV TZ Asia/Ho_Chi_Minh
 
 USER airflow
 RUN pip install --user --no-cache-dir \
