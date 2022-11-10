@@ -1,9 +1,11 @@
 import unittest
 import unittest.mock as mock
 from datetime import datetime
+from typing import List
 
 import pandas as pd
-from airflow.dags.utils.extract_helper import (get_created_time,
+from airflow.dags.utils.extract_helper import (JOB_FIELD, JOB_SKILL_FIELD,
+                                               get_created_time,
                                                get_data_to_csv, get_filename,
                                                get_id, write_data_to_csv)
 
@@ -38,11 +40,40 @@ class TestExtractHelper(unittest.TestCase):
                 time_now, req), expected[i])
 
     def test_get_data_to_csv(self):
-        # temp = (pd.DataFrame(columns=JOB_FIELD, data=[["", "", "", "", "", [""]]]),
-        #         pd.DataFrame(JOB_SKILL_FIELD))
-        # pd.testing.assert_frame_equal(
-        #     get_data_to_csv("", "", "", "", "", "", [""])[0], temp[0])
-        pass
+        class Request:
+            def __init__(self, job_id: str,
+                         title: str,
+                         company: str,
+                         city: str,
+                         url: str,
+                         created_date: str,
+                         skills: List[str]):
+                self.job_id = job_id
+                self.title = title
+                self.company = company
+                self.city = city
+                self.url = url
+                self.created_date = created_date
+                self.skills = skills
+
+        requests = [
+            Request("id", "title", "company", "city",
+                    "url", "created_date", ["python"])
+        ]
+        expecteds = [
+            (pd.DataFrame(columns=JOB_FIELD, data=[
+                ["id", "title", "company", "city",
+                 "url", "created_date"]]), pd.DataFrame(columns=JOB_SKILL_FIELD, data=[["id", "python", "created_date"]]))
+        ]
+        for req, expected in zip(requests, expecteds):
+            actual = get_data_to_csv(
+                req.job_id, req.title, req.company, req.city, req.url, req.created_date, req.skills)
+            self.assertEqual(type(expected), type(actual))
+            self.assertEqual(len(expected), len(actual))
+            pd.testing.assert_frame_equal(
+                actual[0], expected[0])
+            pd.testing.assert_frame_equal(
+                actual[1], expected[1])
 
 
 if __name__ == '__main__':
