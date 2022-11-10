@@ -1,12 +1,11 @@
 import unittest
 import unittest.mock as mock
 from datetime import datetime
-import logging
 
 import pandas as pd
 from airflow.dags.utils.extract_helper import (get_created_time,
                                                get_data_to_csv, get_filename,
-                                               get_id, write_data_to_csv, JOB_FIELD, JOB_SKILL_FIELD)
+                                               get_id, write_data_to_csv)
 
 
 class TestExtractHelper(unittest.TestCase):
