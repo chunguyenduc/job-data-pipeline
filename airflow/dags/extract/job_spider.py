@@ -52,7 +52,7 @@ class JobSpider(scrapy.Spider):
             distance_time = bottom.css(
                 "div.distance-time-job-posted span::text").get()
             created_date = get_created_time(
-                distance_time).strftime("%Y-%m-%d")
+                datetime.now(), distance_time).strftime("%Y-%m-%d")
             row_job, row_job_skill = get_data_to_csv(
                 job_id, title, company, city, url, created_date, skills)
             self.df_job = pd.concat(

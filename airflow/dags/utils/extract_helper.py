@@ -40,14 +40,13 @@ def get_data_to_csv(
     return df_job, df_job_skill
 
 
-def get_created_time(distance_time: str) -> datetime:
+def get_created_time(time_now: datetime, distance_time: str) -> datetime:
     """
     Get created time from distance time.
     ie: 5h -> now-5h
     """
     # Process distance time
     distance_time = distance_time.strip("\n")
-    time_now = datetime.now()
 
     # case minute
     if distance_time[-1] == "m":
