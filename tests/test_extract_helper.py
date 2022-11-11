@@ -12,15 +12,36 @@ from airflow.dags.utils.extract_helper import (JOB_FIELD, JOB_SKILL_FIELD,
 
 class TestExtractHelper(unittest.TestCase):
     def test_get_filename(self):
-        prefix = "job"
-        crawl_time = "221108"
-        want = "/opt/airflow/dags/job-221108.csv"
-        self.assertEqual(want, get_filename(crawl_time, prefix))
+        class Request:
+            def __init__(self, name: str, prefix: str, crawl_time: str):
+                self.name = name
+                self.prefix = prefix
+                self.crawl_time = crawl_time
+
+        requests = [
+            Request(name="TC1", prefix="job", crawl_time="221108")
+        ]
+        expecteds = [
+            "/opt/airflow/dags/job-221108.csv"
+        ]
+        for req, exp in zip(requests, expecteds):
+            actual = get_filename(req.crawl_time, req.prefix)
+            self.assertEqual(exp, actual)
 
     def test_get_id(self):
-        url = "https://itviec.com/it-jobs/business-analyst-product-owner-remote-boost-commerce-0245?lab_feature=preview_jd_page"
-        want = "business-analyst-product-owner-remote-boost-commerce-0245"
-        self.assertEqual(want, get_id(url))
+        class Request:
+            def __init__(self, name: str, url: str):
+                self.name = name
+                self.url = url
+        requests = [
+            Request(name="TC1", url="https://itviec.com/it-jobs/business-analyst-product-owner-remote-boost-commerce-0245?lab_feature=preview_jd_page")
+        ]
+        expecteds = [
+            "business-analyst-product-owner-remote-boost-commerce-0245"
+        ]
+        for req, exp in zip(requests, expecteds):
+            actual = get_id(req.url)
+            self.assertEqual(exp, actual)
 
     def test_write_data_to_csv(self):
         test_df = pd.DataFrame()
@@ -41,13 +62,14 @@ class TestExtractHelper(unittest.TestCase):
 
     def test_get_data_to_csv(self):
         class Request:
-            def __init__(self, job_id: str,
+            def __init__(self, name: str, job_id: str,
                          title: str,
                          company: str,
                          city: str,
                          url: str,
                          created_date: str,
                          skills: List[str]):
+                self.name = name
                 self.job_id = job_id
                 self.title = title
                 self.company = company
@@ -57,7 +79,7 @@ class TestExtractHelper(unittest.TestCase):
                 self.skills = skills
 
         requests = [
-            Request("id", "title", "company", "city",
+            Request("TC1", "id", "title", "company", "city",
                     "url", "created_date", ["python"])
         ]
         expecteds = [
