@@ -1,4 +1,4 @@
-tests/test_upload_hdfs.pyimport unittest
+import unittest
 from unittest.mock import patch
 
 from airflow.dags.utils.spark_session import init_spark_session
