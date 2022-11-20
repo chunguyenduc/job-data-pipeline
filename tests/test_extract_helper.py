@@ -34,8 +34,9 @@ class TestExtractHelper(unittest.TestCase):
                 self.name = name
                 self.url = url
         requests = [
-            Request(name="TC1", url="https://itviec.com/it-jobs/business-analyst-product-owner-remote-boost-commerce-0245?lab_feature=preview_jd_page")
-        ]
+            Request(
+                name="TC1",
+                url="https://itviec.com/it-jobs/business-analyst-product-owner-remote-boost-commerce-0245?lab_feature=preview_jd_page")]
         expecteds = [
             "business-analyst-product-owner-remote-boost-commerce-0245"
         ]
@@ -82,14 +83,26 @@ class TestExtractHelper(unittest.TestCase):
             Request("TC1", "id", "title", "company", "city",
                     "url", "created_date", ["python"])
         ]
-        expecteds = [
-            (pd.DataFrame(columns=JOB_FIELD, data=[
-                ["id", "title", "company", "city",
-                 "url", "created_date"]]), pd.DataFrame(columns=JOB_SKILL_FIELD, data=[["id", "python", "created_date"]]))
-        ]
+        expecteds = [(pd.DataFrame(columns=JOB_FIELD,
+                                   data=[["id",
+                                          "title",
+                                          "company",
+                                          "city",
+                                          "url",
+                                          "created_date"]]),
+                      pd.DataFrame(columns=JOB_SKILL_FIELD,
+                                   data=[["id",
+                                          "python",
+                                          "created_date"]]))]
         for req, expected in zip(requests, expecteds):
             actual = get_data_to_csv(
-                req.job_id, req.title, req.company, req.city, req.url, req.created_date, req.skills)
+                req.job_id,
+                req.title,
+                req.company,
+                req.city,
+                req.url,
+                req.created_date,
+                req.skills)
             self.assertEqual(type(expected), type(actual))
             self.assertEqual(len(expected), len(actual))
             pd.testing.assert_frame_equal(

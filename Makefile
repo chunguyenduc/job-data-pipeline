@@ -1,4 +1,4 @@
-MODULE_LIST := $(shell find . -type f \( -iname "*.py" ! -iname "*__init__.py" ! -iname "*test_*.py" \))
+MODULE_LIST := $(shell find . -type f \( -iname "*.py" ! -iname "*__init__.py" ! -iname "*test_*.py" ! -iname "*config*.py" \))
 test:
 	@python3 -m unittest discover -v
 

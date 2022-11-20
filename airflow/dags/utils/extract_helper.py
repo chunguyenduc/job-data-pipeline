@@ -47,26 +47,24 @@ def get_created_time(time_now: datetime, distance_time: str) -> datetime:
     """
     # Process distance time
     distance_time = distance_time.strip("\n")
+    created = time_now
 
     # case minute
     if distance_time[-1] == "m":
         minute = int(distance_time[:-1])
         minute_subtracted = timedelta(minutes=minute)
         created = time_now - minute_subtracted
-        return created
     # case hour
-    if distance_time[-1] == "h":
+    elif distance_time[-1] == "h":
         hour = int(distance_time[:-1])
         hour_subtracted = timedelta(hours=hour)
         created = time_now - hour_subtracted
-        return created
     # case day
-    if distance_time[-1] == "d":
+    elif distance_time[-1] == "d":
         day = int(distance_time[:-1])
         day_subtracted = timedelta(days=day)
         created = time_now - day_subtracted
-        return created
-    return time_now
+    return created
 
 
 def get_filename(crawl_time: str, prefix: str) -> str:
