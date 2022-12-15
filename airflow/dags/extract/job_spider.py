@@ -53,19 +53,14 @@ class JobSpider(scrapy.Spider):
                 "div.distance-time-job-posted span::text").get()
             created_date = get_created_time(
                 datetime.now(), distance_time).strftime("%Y-%m-%d")
-            row_job, row_job_skill = get_data_to_csv(
+            row_job = get_data_to_csv(
                 job_id, title, company, city, url, created_date, skills)
             self.df_job = pd.concat(
                 [self.df_job, row_job], ignore_index=True
             )
-            self.df_job_skill = pd.concat(
-                [self.df_job_skill, row_job_skill], ignore_index=True
-            )
 
         logging.info(self.df_job.head())
-        logging.info(self.df_job_skill.head())
         write_data_to_csv(self.df_job, crawl_time, PREFIX_JOB)
-        write_data_to_csv(self.df_job_skill, crawl_time, PREFIX_JOB_SKILL)
 
 
 def crawl_data():

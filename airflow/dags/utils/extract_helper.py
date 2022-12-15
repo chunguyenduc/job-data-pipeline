@@ -3,7 +3,7 @@ from typing import List, Tuple
 import pandas as pd
 
 
-JOB_FIELD = ["id", "title", "company", "city", "url", "created_date"]
+JOB_FIELD = ["id", "title", "company", "city", "url", "skill", "created_date"]
 JOB_SKILL_FIELD = ["id", "skill", "created_date"]
 
 DAG_PATH = "/opt/airflow/dags"
@@ -14,30 +14,29 @@ FORMAT = "csv"
 
 
 def get_data_to_csv(
-    job_id: str,
-    title: str,
-    company: str,
-    city: str,
-    url: str,
-    created_date: str,
-    skills: List[str]) -> Tuple[pd.DataFrame,
-                                pd.DataFrame]:
+        job_id: str,
+        title: str,
+        company: str,
+        city: str,
+        url: str,
+        created_date: str,
+        skills: List[str]) -> pd.DataFrame:
     df_job = pd.DataFrame(columns=JOB_FIELD)
-    df_job_skill = pd.DataFrame(columns=JOB_SKILL_FIELD)
-    for s in skills:
-        df_add_job_skill = pd.DataFrame(
-            [[job_id, s.strip(), created_date]],
-            columns=JOB_SKILL_FIELD
-        )
-        df_job_skill = pd.concat(
-            [df_job_skill, df_add_job_skill], ignore_index=True
-        )
+    # df_job_skill = pd.DataFrame(columns=JOB_SKILL_FIELD)
+    # for s in skills:
+    #     df_add_job_skill = pd.DataFrame(
+    #         [[job_id, s.strip(), created_date]],
+    #         columns=JOB_SKILL_FIELD
+    #     )
+    #     df_job_skill = pd.concat(
+    #         [df_job_skill, df_add_job_skill], ignore_index=True
+    #     )
 
     df_job = pd.DataFrame(
-        [[job_id, title, company, city, url, created_date]],
+        [[job_id, title, company, city, url, skills, created_date]],
         columns=JOB_FIELD
     )
-    return df_job, df_job_skill
+    return df_job
 
 
 def get_created_time(time_now: datetime, distance_time: str) -> datetime:

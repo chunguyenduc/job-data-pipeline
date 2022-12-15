@@ -10,7 +10,7 @@ x-environment:
     - AIRFLOW__WEBSERVER__COOKIE_SAMESITE=None
 
 x-spark-image: &spark-image chunguyenduc/job_etl_pipeline_spark:0.0.1
-x-airflow-image: &airflow-image chunguyenduc/job_etl_pipeline_airflow:0.0.2
+x-airflow-image: &airflow-image chunguyenduc/job_etl_pipeline_airflow:0.0.3
 x-superset-image: &superset-image apache/superset:latest
 x-superset-user: &superset-user root
 x-superset-depends-on:
@@ -72,55 +72,6 @@ services:
         environment: *airflow_environment
         command: scheduler
 
-    namenode:
-        image: bde2020/hadoop-namenode:2.0.0-hadoop2.7.4-java8
-        container_name: namenode
-        ports:
-            - 50070:50070
-        volumes:
-            - hadoop_namenode:/hadoop/dfs/name
-        environment:
-            - CLUSTER_NAME=test
-        env_file:
-            - .env/hadoop.env
-
-    datanode:
-        image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
-        container_name: datanode
-        ports:
-            - 50075:50075
-        volumes:
-            - hadoop_datanode:/hadoop/dfs/data
-        environment:
-            SERVICE_PRECONDITION: "namenode:50070"
-        env_file:
-            - .env/hadoop.env
-
-    resourcemanager:
-        image: bde2020/hadoop-resourcemanager:2.0.0-hadoop2.7.4-java8
-        container_name: resourcemanager
-        environment:
-            SERVICE_PRECONDITION: "namenode:50070 datanode:50075"
-        env_file:
-            - .env/hadoop.env
-
-    nodemanager1:
-        image: bde2020/hadoop-nodemanager:2.0.0-hadoop2.7.4-java8
-        container_name: nodemanager1
-        environment:
-            SERVICE_PRECONDITION: "namenode:50070 datanode:50075 resourcemanager:8088"
-        env_file:
-            - .env/hadoop.env
-
-    historyserver:
-        image: bde2020/hadoop-historyserver:2.0.0-hadoop2.7.4-java8
-        container_name: historyserver
-        environment:
-            SERVICE_PRECONDITION: "namenode:50070 datanode:50075 resourcemanager:8088"
-        volumes:
-            - hadoop_historyserver:/hadoop/yarn/timeline
-        env_file:
-            - .env/hadoop.env
     spark:
         image: *spark-image
         user: root
@@ -156,30 +107,6 @@ services:
             - SPARK_SSL_ENABLED=no
         volumes:
             - ./airflow/dags/transform:/opt/airflow/dags/transform
-    hive-server:
-        image: bde2020/hive:2.3.2-postgresql-metastore
-        container_name: hive_server
-        env_file:
-            - .env/hadoop-hive.env
-        environment:
-            HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
-            SERVICE_PRECONDITION: "hive-metastore:9083"
-        ports:
-            - "10000:10000"
-        restart: on-failure
-    hive-metastore:
-        image: bde2020/hive:2.3.2-postgresql-metastore
-        container_name: hive_metastore
-        env_file:
-            - .env/hadoop-hive.env
-        command: /opt/hive/bin/hive --service metastore
-        environment:
-            SERVICE_PRECONDITION: "namenode:50070 datanode:50075 hive-metastore-postgresql:5432"
-        ports:
-            - "9083:9083"
-    hive-metastore-postgresql:
-        image: bde2020/hive-metastore-postgresql:2.3.0
-        container_name: hive_metastore_postgresql
 
     superset:
         image: *superset-image
@@ -252,8 +179,5 @@ services:
             - 3000:3000
 
 volumes:
-    hadoop_namenode:
-    hadoop_datanode:
-    hadoop_historyserver:
     superset_home:
         external: false
