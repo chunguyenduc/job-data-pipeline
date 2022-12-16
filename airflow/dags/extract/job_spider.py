@@ -1,3 +1,4 @@
+import json
 import logging
 from datetime import datetime
 from urllib.parse import urljoin
@@ -5,10 +6,8 @@ from urllib.parse import urljoin
 import pandas as pd
 import scrapy
 from scrapy.crawler import CrawlerProcess
-from utils.extract_helper import JOB_FIELD, JOB_SKILL_FIELD, PREFIX_JOB, PREFIX_JOB_SKILL
-from utils.extract_helper import get_data_to_csv, get_created_time, \
-    get_id, write_data_to_csv
-
+from utils.extract_helper import (JOB_FIELD, PREFIX_JOB, get_created_time,
+                                  get_data_to_csv, get_id, write_data_to_json)
 
 crawl_time = datetime.now().strftime("%d%m%y-%H%M")
 
@@ -21,7 +20,7 @@ class JobSpider(scrapy.Spider):
 
     def __init__(self):
         self.df_job = pd.DataFrame(columns=JOB_FIELD)
-        self.df_job_skill = pd.DataFrame(columns=JOB_SKILL_FIELD)
+        self.data = []
 
     def start_requests(self):
         urls = [
@@ -52,14 +51,25 @@ class JobSpider(scrapy.Spider):
                 "div.distance-time-job-posted span::text").get()
             created_date = get_created_time(
                 datetime.now(), distance_time).strftime("%Y-%m-%d")
+            skills_cleaned = [s.replace("\n", "") for s in skills]
             row_job = get_data_to_csv(
-                job_id, title, company, city, url, created_date, skills)
+                job_id, title, company, city,
+                url, created_date, skills_cleaned)
             self.df_job = pd.concat(
                 [self.df_job, row_job], ignore_index=True
             )
+            self.data.append({
+                "id": job_id,
+                "title": title,
+                "company": company,
+                "city": city,
+                "url": url,
+                "created_date": created_date,
+                "skills": skills_cleaned
+            })
 
-        logging.info(self.df_job.head())
-        write_data_to_csv(self.df_job, crawl_time, PREFIX_JOB)
+        logging.info(self.data)
+        write_data_to_json(self.data, crawl_time, PREFIX_JOB)
 
 
 def crawl_data():

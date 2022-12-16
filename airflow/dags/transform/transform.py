@@ -24,8 +24,9 @@ def prepare_data(spark, crawl_time: str) -> Tuple[DataFrame, DataFrame]:
 
     # Remove unnecessary tags
     blacklist_skills = ['Fresher Accepted']
-    df_job_skill = df_job_skill.filter(~df_job_skill.skill.isin(blacklist_skills)).withColumn(
-        "insert_time", F.current_timestamp().cast("timestamp"))
+    df_job_skill = df_job_skill.\
+        filter(~df_job_skill.skill.isin(blacklist_skills)).withColumn(
+            "insert_time", F.current_timestamp().cast("timestamp"))
     df_job_skill.show(n=20, truncate=True)
     df_job_skill.printSchema()
 

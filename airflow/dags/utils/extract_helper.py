@@ -1,16 +1,16 @@
+import json
 from datetime import datetime, timedelta
-from typing import List, Tuple
-import pandas as pd
+from typing import List
 
+import pandas as pd
 
 JOB_FIELD = ["id", "title", "company", "city", "url", "skill", "created_date"]
 JOB_SKILL_FIELD = ["id", "skill", "created_date"]
 
 DAG_PATH = "/opt/airflow/dags"
 PREFIX_JOB = "job"
-PREFIX_JOB_SKILL = "job_skill"
-
-FORMAT = "csv"
+FORMAT_CSV = "csv"
+FORMAT_JSON = "json"
 
 
 def get_data_to_csv(
@@ -21,16 +21,6 @@ def get_data_to_csv(
         url: str,
         created_date: str,
         skills: List[str]) -> pd.DataFrame:
-    df_job = pd.DataFrame(columns=JOB_FIELD)
-    # df_job_skill = pd.DataFrame(columns=JOB_SKILL_FIELD)
-    # for s in skills:
-    #     df_add_job_skill = pd.DataFrame(
-    #         [[job_id, s.strip(), created_date]],
-    #         columns=JOB_SKILL_FIELD
-    #     )
-    #     df_job_skill = pd.concat(
-    #         [df_job_skill, df_add_job_skill], ignore_index=True
-    #     )
 
     df_job = pd.DataFrame(
         [[job_id, title, company, city, url, skills, created_date]],
@@ -66,12 +56,18 @@ def get_created_time(time_now: datetime, distance_time: str) -> datetime:
     return created
 
 
-def get_filename(crawl_time: str, prefix: str) -> str:
-    return f"{DAG_PATH}/{prefix}-{crawl_time}.{FORMAT}"
+def get_filename(crawl_time: str, prefix: str, format_type: str) -> str:
+    return f"{DAG_PATH}/{prefix}-{crawl_time}.{format_type}"
 
 
 def write_data_to_csv(df: pd.DataFrame, crawl_time: str, prefix: str) -> None:
-    df.to_csv(get_filename(crawl_time, prefix), index=False)
+    df.to_csv(get_filename(crawl_time, prefix, FORMAT_CSV), index=False)
+
+
+def write_data_to_json(data, crawl_time: str, prefix: str) -> None:
+    filename = get_filename(crawl_time, prefix, FORMAT_JSON)
+    with open(filename, "w") as outfile:
+        json.dump(data, outfile)
 
 
 def get_id(url: str) -> str:

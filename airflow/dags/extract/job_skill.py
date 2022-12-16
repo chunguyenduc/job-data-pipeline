@@ -8,7 +8,6 @@ headers = {}
 
 response = requests.request("GET", url, headers=headers, data=payload)
 
-
 # Writing to sample.json
 with open("sample.json", "w") as outfile:
     json.dump(response.json(), outfile)

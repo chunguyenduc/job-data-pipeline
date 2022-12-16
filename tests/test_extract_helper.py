@@ -7,25 +7,27 @@ import pandas as pd
 from airflow.dags.utils.extract_helper import (JOB_FIELD, JOB_SKILL_FIELD,
                                                get_created_time,
                                                get_data_to_csv, get_filename,
-                                               get_id, write_data_to_csv)
+                                               get_id, write_data_to_csv, write_data_to_json)
 
 
 class TestExtractHelper(unittest.TestCase):
     def test_get_filename(self):
         class Request:
-            def __init__(self, name: str, prefix: str, crawl_time: str):
+            def __init__(self, name: str, prefix: str, crawl_time: str, format_type: str):
                 self.name = name
                 self.prefix = prefix
                 self.crawl_time = crawl_time
+                self.format_type = format_type
 
         requests = [
-            Request(name="TC1", prefix="job", crawl_time="221108")
+            Request(name="TC1", prefix="job",
+                    crawl_time="221108", format_type="csv")
         ]
         expecteds = [
             "/opt/airflow/dags/job-221108.csv"
         ]
         for req, exp in zip(requests, expecteds):
-            actual = get_filename(req.crawl_time, req.prefix)
+            actual = get_filename(req.crawl_time, req.prefix, req.format_type)
             self.assertEqual(exp, actual)
 
     def test_get_id(self):
@@ -83,17 +85,14 @@ class TestExtractHelper(unittest.TestCase):
             Request("TC1", "id", "title", "company", "city",
                     "url", "created_date", ["python"])
         ]
-        expecteds = [(pd.DataFrame(columns=JOB_FIELD,
-                                   data=[["id",
-                                          "title",
-                                          "company",
-                                          "city",
-                                          "url",
-                                          "created_date"]]),
-                      pd.DataFrame(columns=JOB_SKILL_FIELD,
-                                   data=[["id",
-                                          "python",
-                                          "created_date"]]))]
+        expecteds = [pd.DataFrame(columns=JOB_FIELD,
+                                  data=[["id",
+                                         "title",
+                                        "company",
+                                         "city",
+                                         "url",
+                                         ["python"],
+                                         "created_date"]])]
         for req, expected in zip(requests, expecteds):
             actual = get_data_to_csv(
                 req.job_id,
@@ -103,12 +102,8 @@ class TestExtractHelper(unittest.TestCase):
                 req.url,
                 req.created_date,
                 req.skills)
-            self.assertEqual(type(expected), type(actual))
-            self.assertEqual(len(expected), len(actual))
             pd.testing.assert_frame_equal(
-                actual[0], expected[0])
-            pd.testing.assert_frame_equal(
-                actual[1], expected[1])
+                actual, expected)
 
 
 if __name__ == '__main__':

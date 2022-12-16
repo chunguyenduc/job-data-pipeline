@@ -2,7 +2,6 @@ import logging
 from datetime import datetime, timedelta
 
 from extract.job_spider import crawl_data
-from extract.upload_hdfs import upload_hdfs
 # from extract.upload_s3 import upload_file_to_s3
 from load.load import load_data
 from transform.transform import transform_insert_staging
@@ -15,8 +14,8 @@ from airflow.providers.amazon.aws.operators.s3_bucket import \
 
 
 def upload_s3(crawl_time: str):
-    filename_job = f"/opt/airflow/dags/job-{crawl_time}.csv"
-    key = f"job-{crawl_time}.csv"
+    filename_job = f"/opt/airflow/dags/job-{crawl_time}.json"
+    key = f"job-{crawl_time}.json"
     logging.info(f"filename: {filename_job}")
     hook = S3Hook('s3_conn')
     hook.load_file(filename=filename_job, key=key, bucket_name='duccn-bucket')

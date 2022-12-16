@@ -21,4 +21,4 @@ CREATE_PUBLIC_TABLE_JOB_SKILL = "CREATE TABLE IF NOT EXISTS public.job_skill_inf
 INSERT_PUBLIC_TABLE_JOB_SKILL = "INSERT INTO public.job_skill_info \
         SELECT sub.id, sub.skill, sub.insert_time, sub.created_date FROM staging.job_skill_info AS sub \
         LEFT OUTER JOIN public.job_skill_info AS pub ON sub.id = pub.id \
-	    WHERE pub.id is NULL;"
+	WHERE pub.id is NULL;"
