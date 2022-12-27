@@ -2,9 +2,10 @@ import logging
 from datetime import datetime, timedelta
 
 from extract.job_spider import crawl_data
-# from extract.upload_s3 import upload_file_to_s3
 from load.load import load_data
 from transform.transform import transform_insert_staging
+from utils import create_tables
+from utils.extract_helper import PREFIX_JOB, PREFIX_JOB_SKILL
 
 from airflow import DAG
 from airflow.hooks.S3_hook import S3Hook
@@ -17,8 +18,8 @@ from airflow.sensors.filesystem import FileSensor
 
 
 def upload_s3(crawl_time: str, prefix: str):
-    filename_job = f"/opt/airflow/dags/job-{crawl_time}.csv"
-    key = f"{prefix}/job-{crawl_time}.csv"
+    filename_job = f"/opt/airflow/dags/{prefix}-{crawl_time}.csv"
+    key = f"{prefix}/{prefix}-{crawl_time}.csv"
     logging.info(f"filename: {filename_job}")
     hook = S3Hook('s3_conn')
     hook.load_file(filename=filename_job, key=key, bucket_name='duccn-bucket')
@@ -74,7 +75,9 @@ with DAG(
         task_id="upload_job_data_to_s3",
         python_callable=upload_s3,
         op_kwargs={
-            "crawl_time": "{{ task_instance.xcom_pull(task_ids='extract_job_data') }}"},
+            "crawl_time": "{{ task_instance.xcom_pull(task_ids='extract_job_data') }}",
+            "prefix": PREFIX_JOB
+        },
         retries=3,
         retry_delay=timedelta(seconds=30),
         dag=dag,
@@ -85,7 +88,9 @@ with DAG(
         task_id="upload_job_skill_data_to_s3",
         python_callable=upload_s3,
         op_kwargs={
-            "crawl_time": "{{ task_instance.xcom_pull(task_ids='extract_job_data') }}"},
+            "crawl_time": "{{ task_instance.xcom_pull(task_ids='extract_job_data') }}",
+            "prefix": PREFIX_JOB_SKILL
+        },
         retries=3,
         retry_delay=timedelta(seconds=30),
         dag=dag,
@@ -95,7 +100,11 @@ with DAG(
     create_staging_table = RedshiftSQLOperator(
         redshift_conn_id='redshift',
         task_id='create_staging_table',
-        sql="utils/create_tables.sql",
+        sql=[
+            create_tables.create_stg_schema,
+            create_tables.create_stg_job_table,
+            create_tables.create_stg_job_skill_table
+        ]
     )
 
     end_operator = DummyOperator(task_id='finish-execution', dag=dag)
