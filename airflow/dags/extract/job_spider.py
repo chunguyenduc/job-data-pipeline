@@ -1,13 +1,11 @@
-import json
 import logging
 from datetime import datetime
 from urllib.parse import urljoin
 
-import pandas as pd
 import scrapy
 from scrapy.crawler import CrawlerProcess
-from utils.extract_helper import (JOB_FIELD, PREFIX_JOB, get_created_time,
-                                  get_data_to_csv, get_id, write_data_to_json)
+from utils.extract_helper import (PREFIX_JOB, PREFIX_JOB_SKILL, JOB_FIELD,
+                                  JOB_SKILL_FIELD, get_created_time, get_id, write_data_to_csv)
 
 crawl_time = datetime.now().strftime("%d%m%y-%H%M")
 
@@ -19,8 +17,8 @@ class JobSpider(scrapy.Spider):
     base_url = "https://itviec.com"
 
     def __init__(self):
-        self.df_job = pd.DataFrame(columns=JOB_FIELD)
         self.data = []
+        self.data_skills = []
 
     def start_requests(self):
         urls = [
@@ -51,13 +49,7 @@ class JobSpider(scrapy.Spider):
                 "div.distance-time-job-posted span::text").get()
             created_date = get_created_time(
                 datetime.now(), distance_time).strftime("%Y-%m-%d")
-            skills_cleaned = [s.replace("\n", "") for s in skills]
-            row_job = get_data_to_csv(
-                job_id, title, company, city,
-                url, created_date, skills_cleaned)
-            self.df_job = pd.concat(
-                [self.df_job, row_job], ignore_index=True
-            )
+            skills = [s.replace("\n", "") for s in skills]
             self.data.append({
                 "id": job_id,
                 "title": title,
@@ -65,11 +57,21 @@ class JobSpider(scrapy.Spider):
                 "city": city,
                 "url": url,
                 "created_date": created_date,
-                "skills": skills_cleaned
             })
+            for skill in skills:
+                self.data_skills.append({
+                    "id": job_id,
+                    "skill": skill,
+                    "created_date": created_date,
+                })
 
         logging.info(self.data)
-        write_data_to_json(self.data, crawl_time, PREFIX_JOB)
+        logging.info(self.data_skills)
+        if len(self.data) == 0 or len(self.data_skills) == 0:
+            raise Exception("No data crawled")
+        write_data_to_csv(self.data, crawl_time, PREFIX_JOB, columns=JOB_FIELD)
+        write_data_to_csv(self.data_skills, crawl_time,
+                          PREFIX_JOB_SKILL, columns=JOB_SKILL_FIELD)
 
 
 def crawl_data():
@@ -81,4 +83,5 @@ def crawl_data():
     process = CrawlerProcess()
     process.crawl(JobSpider)
     process.start()
+
     return crawl_time

@@ -1,32 +1,19 @@
+import csv
 import json
+import logging
 from datetime import datetime, timedelta
 from typing import List
 
 import pandas as pd
 
-JOB_FIELD = ["id", "title", "company", "city", "url", "skill", "created_date"]
+JOB_FIELD = ["id", "title", "company", "city", "url", "created_date"]
 JOB_SKILL_FIELD = ["id", "skill", "created_date"]
 
 DAG_PATH = "/opt/airflow/dags"
 PREFIX_JOB = "job"
+PREFIX_JOB_SKILL = "job_skill"
 FORMAT_CSV = "csv"
 FORMAT_JSON = "json"
-
-
-def get_data_to_csv(
-        job_id: str,
-        title: str,
-        company: str,
-        city: str,
-        url: str,
-        created_date: str,
-        skills: List[str]) -> pd.DataFrame:
-
-    df_job = pd.DataFrame(
-        [[job_id, title, company, city, url, skills, created_date]],
-        columns=JOB_FIELD
-    )
-    return df_job
 
 
 def get_created_time(time_now: datetime, distance_time: str) -> datetime:
@@ -60,14 +47,25 @@ def get_filename(crawl_time: str, prefix: str, format_type: str) -> str:
     return f"{DAG_PATH}/{prefix}-{crawl_time}.{format_type}"
 
 
-def write_data_to_csv(df: pd.DataFrame, crawl_time: str, prefix: str) -> None:
-    df.to_csv(get_filename(crawl_time, prefix, FORMAT_CSV), index=False)
+def write_data_to_csv(data, crawl_time: str, prefix: str, columns: List) -> None:
+    filename = get_filename(crawl_time, prefix, FORMAT_CSV)
+    try:
+        with open(filename, 'w') as file:
+            writer = csv.DictWriter(file, fieldnames=columns)
+            writer.writeheader()
+            for d in data:
+                writer.writerow(d)
+    except IOError:
+        logging.error("I/O error: %s", filename)
 
 
 def write_data_to_json(data, crawl_time: str, prefix: str) -> None:
     filename = get_filename(crawl_time, prefix, FORMAT_JSON)
-    with open(filename, "w") as outfile:
-        json.dump(data, outfile)
+    try:
+        with open(filename, "w") as outfile:
+            json.dump(data, outfile)
+    except IOError:
+        logging.error("I/O error: %s", filename)
 
 
 def get_id(url: str) -> str:
