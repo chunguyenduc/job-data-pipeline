@@ -109,7 +109,7 @@ with DAG(
             FROM 's3://duccn-bucket/job/job-{{ ti.xcom_pull(task_ids='extract_job_data') }}.csv'
             REGION 'us-east-1' IAM_ROLE 'arn:aws:iam::191513327969:role/service-role/AmazonRedshift-CommandsAccessRole-20221217T160944' 
             DELIMITER ','
-            IGNOREHEADER 
+            IGNOREHEADER 1
             REMOVEQUOTES
             EMPTYASNULL
             BLANKSASNULL;
@@ -124,7 +124,7 @@ with DAG(
             FROM 's3://duccn-bucket/job_skill/job_skill-{{ ti.xcom_pull(task_ids='extract_job_data') }}.csv'
             REGION 'us-east-1' IAM_ROLE 'arn:aws:iam::191513327969:role/service-role/AmazonRedshift-CommandsAccessRole-20221217T160944' 
             DELIMITER ',' 
-            IGNOREHEADER;
+            IGNOREHEADER 1;
         """,
     )
 
