@@ -6,8 +6,9 @@ from typing import List
 
 import pandas as pd
 
-JOB_FIELD = ["id", "title", "company", "city", "url", "created_date"]
-JOB_SKILL_FIELD = ["id", "skill", "created_date"]
+JOB_FIELD = ["id", "title", "company", "city",
+             "url", "created_date", "created_time"]
+JOB_SKILL_FIELD = ["id", "skill", "created_date", "created_time"]
 
 DAG_PATH = "/opt/airflow/dags"
 PREFIX_JOB = "job"

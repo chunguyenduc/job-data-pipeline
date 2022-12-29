@@ -47,8 +47,9 @@ class JobSpider(scrapy.Spider):
             company = logo.css("img::attr(alt)").get()[:-11]
             distance_time = bottom.css(
                 "div.distance-time-job-posted span::text").get()
-            created_date = get_created_time(
-                datetime.now(), distance_time).strftime("%Y-%m-%d")
+            created_time = get_created_time(
+                datetime.now(), distance_time)
+            created_date = created_time.strftime("%Y-%m-%d")
             skills = [s.replace("\n", "") for s in skills]
             self.data.append({
                 "id": job_id,
@@ -57,12 +58,14 @@ class JobSpider(scrapy.Spider):
                 "city": city,
                 "url": url,
                 "created_date": created_date,
+                "created_time": created_time
             })
             for skill in skills:
                 self.data_skills.append({
                     "id": job_id,
                     "skill": skill,
                     "created_date": created_date,
+                    "created_time": created_time
                 })
 
         logging.info(self.data)
