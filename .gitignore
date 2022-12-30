@@ -20,3 +20,4 @@ data/grafana/grafana.db
 data/prometheus/data/
 htmlcov/
 .coverage
+*/*/configuration.conf

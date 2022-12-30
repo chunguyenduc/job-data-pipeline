@@ -1,10 +1,10 @@
+import configparser
 import logging
 import os
+import pathlib
 from datetime import datetime, timedelta
 
 from extract.job_spider import crawl_data
-from load.load import load_data
-from transform.transform import transform_insert_staging
 from utils import create_tables
 from utils.extract_helper import PREFIX_JOB, PREFIX_JOB_SKILL
 
@@ -14,6 +14,17 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.operators.redshift import RedshiftSQLOperator
 from airflow.sensors.filesystem import FileSensor
+
+# Read Configuration File
+parser = configparser.ConfigParser()
+script_path = pathlib.Path(__file__).parent.resolve()
+config_file = "configuration.conf"
+parser.read(f"{script_path}/{config_file}")
+
+
+BUCKET_NAME = parser.get("aws_config", "bucket_name")
+AWS_REGION = parser.get("aws_config", "aws_region")
+IAM_ROLE = parser.get("aws_config", "iam_role")
 
 
 def upload_s3(crawl_time: str, prefix: str):
@@ -89,17 +100,6 @@ with DAG(
         depends_on_past=False,
     )
 
-    # create_staging_table = RedshiftSQLOperator(
-    #     redshift_conn_id='redshift',
-    #     task_id='create_staging_table',
-    #     sql=[
-    #         create_tables.create_stg_schema,
-    #         create_tables.drop_stg_job_table,
-    #         create_tables.create_stg_job_table,
-    #         create_tables.create_stg_job_skill_table
-    #     ]
-    # )
-
     job_data_to_staging = RedshiftSQLOperator(
         task_id="job_data_to_staging",
         redshift_conn_id="redshift",
@@ -135,26 +135,13 @@ with DAG(
         """],
     )
 
-    # create_public_tables = RedshiftSQLOperator(
-    #     task_id="create_public_tables",
-    #     redshift_conn_id="redshift",
-    #     sql=[
-    #         create_tables.create_public_job_table,
-    #         create_tables.create_public_job_skill_table
-    #     ]
-    # )
-
     job_data_staging_to_public = RedshiftSQLOperator(
         task_id="job_data_staging_to_public",
         redshift_conn_id="redshift",
         sql=[
             create_tables.create_public_job_table,
-            """
-            INSERT INTO public.job_info (id, title, company, city, url, created_date, created_time, insert_time) 
-            SELECT sub.id, sub.title, sub.company, sub.city, sub.url, sub.created_date, sub.created_time, sub.insert_time FROM staging.job_info AS sub 
-            LEFT OUTER JOIN public.job_info AS pub ON sub.id = pub.id 
-            WHERE pub.id is NULL;
-        """],
+            create_tables.insert_public_job
+        ],
     )
 
     job_skill_data_staging_to_public = RedshiftSQLOperator(
@@ -162,12 +149,8 @@ with DAG(
         redshift_conn_id="redshift",
         sql=[
             create_tables.create_public_job_skill_table,
-            """
-            INSERT INTO public.job_skill (id, skill, insert_time, created_time, created_date)
-            SELECT sub.id, sub.skill, sub.insert_time, sub.created_time, sub.created_date FROM staging.job_skill AS sub 
-            LEFT OUTER JOIN public.job_skill AS pub ON sub.id = pub.id 
-            WHERE pub.id is NULL;
-        """],
+            create_tables.insert_public_job_skill
+        ],
     )
 
     end_operator = DummyOperator(task_id='finish-execution', dag=dag)
