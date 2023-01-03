@@ -27,6 +27,7 @@ services:
         image: redis:latest
     postgres:
         image: postgres:latest
+        container_name: postgres
         environment:
             - POSTGRES_USER=airflow
             - POSTGRES_PASSWORD=airflow
@@ -133,17 +134,17 @@ services:
         container_name: monitoring_prometheus
         restart: unless-stopped
         volumes:
-        - ./data/prometheus/config:/etc/prometheus/
-        - ./data/prometheus/data:/prometheus
+            - ./data/prometheus/config:/etc/prometheus/
+            - ./data/prometheus/data:/prometheus
         command:
-        - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--config.file=/etc/prometheus/prometheus.yml'
         expose:
             - 9090
         ports:
             - 9090:9090
         links:
-        - cadvisor:cadvisor
-        - node-exporter:node-exporter
+            - cadvisor:cadvisor
+            - node-exporter:node-exporter
 
     node-exporter:
         image: prom/node-exporter:latest
@@ -164,7 +165,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:rw
         ports:
             - 8083:8080
-  
+
     grafana:
         image: grafana/grafana:latest
         container_name: monitoring_grafana
@@ -175,6 +176,13 @@ services:
             - GF_SECURITY_ADMIN_USER=admin
             - GF_SECURITY_ADMIN_PASSWORD=admin
             - GF_USERS_ALLOW_SIGN_UP=false
+        ports:
+            - 3000:3000
+
+    metabase:
+        image: metabase/metabase:latest
+        container_name: metabase
+        restart: unless-stopped
         ports:
             - 3000:3000
 

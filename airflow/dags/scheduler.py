@@ -1,19 +1,21 @@
 import configparser
-import logging
 import os
 import pathlib
 from datetime import datetime, timedelta
 
 from extract.job_spider import crawl_data
-from utils import create_tables
+from airflow.dags.utils import queries
 from utils.extract_helper import PREFIX_JOB, PREFIX_JOB_SKILL
 
 from airflow import DAG
 from airflow.hooks.S3_hook import S3Hook
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python import PythonOperator
+from airflow.operators.sql import SQLCheckOperator
 from airflow.providers.amazon.aws.operators.redshift import RedshiftSQLOperator
 from airflow.sensors.filesystem import FileSensor
+from airflow.decorators import dag, task, task_group
+from airflow.utils.task_group import TaskGroup
 
 # Read Configuration File
 parser = configparser.ConfigParser()
@@ -25,14 +27,14 @@ parser.read(f"{script_path}/{config_file}")
 BUCKET_NAME = parser.get("aws_config", "bucket_name")
 AWS_REGION = parser.get("aws_config", "aws_region")
 IAM_ROLE = parser.get("aws_config", "iam_role")
+REDSHIFT_CONN_ID = parser.get("aws_config", "redshift_conn_id")
 
 
 def upload_s3(crawl_time: str, prefix: str):
     filename_job = f"/opt/airflow/dags/{prefix}-{crawl_time}.csv"
     key = f"{prefix}/{prefix}-{crawl_time}.csv"
-    logging.info("filename: %s ", filename_job)
     hook = S3Hook('s3_conn')
-    hook.load_file(filename=filename_job, key=key, bucket_name='duccn-bucket')
+    hook.load_file(filename=filename_job, key=key, bucket_name=BUCKET_NAME)
 
     if os.path.exists(filename_job):
         os.remove(filename_job)
@@ -45,7 +47,7 @@ with DAG(
         "retries": 1,
         "retry_delay": timedelta(seconds=10),
     },
-    description="Data pipeline crawl job description from itviec",
+    description="Data pipeline crawl job from ITViec",
     schedule_interval=timedelta(minutes=15),
     start_date=datetime(2021, 1, 1),
     catchup=False,
@@ -102,57 +104,67 @@ with DAG(
 
     job_data_to_staging = RedshiftSQLOperator(
         task_id="job_data_to_staging",
-        redshift_conn_id="redshift",
+        redshift_conn_id=REDSHIFT_CONN_ID,
         sql=[
-            create_tables.create_stg_schema,
-            create_tables.drop_stg_job_table,
-            create_tables.create_stg_job_table,
-            """
-            COPY staging.job_info (id, title, company, city, url, created_date, created_time)
-            FROM 's3://duccn-bucket/job/job-{{ ti.xcom_pull(task_ids='extract_job_data') }}.csv'
-            REGION 'us-east-1' IAM_ROLE 'arn:aws:iam::191513327969:role/service-role/AmazonRedshift-CommandsAccessRole-20221217T160944' 
-            DELIMITER ','
-            IGNOREHEADER 1
-            REMOVEQUOTES
-            EMPTYASNULL
-            BLANKSASNULL;
-        """],
+            queries.create_stg_schema,
+            queries.drop_stg_job_table,
+            queries.create_stg_job_table,
+            queries.insert_job
+        ],
+        params={
+            'bucket': BUCKET_NAME,
+            'iam_role': IAM_ROLE,
+            'region': AWS_REGION,
+        },
+        dag=dag
     )
 
     job_skill_data_to_staging = RedshiftSQLOperator(
         task_id="job_skill_data_to_staging",
-        redshift_conn_id="redshift",
+        redshift_conn_id=REDSHIFT_CONN_ID,
         sql=[
-            create_tables.create_stg_schema,
-            create_tables.drop_stg_job_skill_table,
-            create_tables.create_stg_job_skill_table,
-            """
-            COPY staging.job_skill (id, skill, created_date, created_time)
-            FROM 's3://duccn-bucket/job_skill/job_skill-{{ ti.xcom_pull(task_ids='extract_job_data') }}.csv'
-            REGION 'us-east-1' IAM_ROLE 'arn:aws:iam::191513327969:role/service-role/AmazonRedshift-CommandsAccessRole-20221217T160944' 
-            DELIMITER ',' 
-            IGNOREHEADER 1;
-        """],
+            queries.create_stg_schema,
+            queries.drop_stg_job_skill_table,
+            queries.create_stg_job_skill_table,
+            queries.insert_job_skill
+        ],
+        params={
+            'bucket': BUCKET_NAME,
+            'iam_role': IAM_ROLE
+        },
+        dag=dag
     )
 
     job_data_staging_to_public = RedshiftSQLOperator(
         task_id="job_data_staging_to_public",
-        redshift_conn_id="redshift",
+        redshift_conn_id=REDSHIFT_CONN_ID,
         sql=[
-            create_tables.create_public_job_table,
-            create_tables.insert_public_job
+            queries.create_public_job_table,
+            queries.insert_public_job
         ],
     )
 
     job_skill_data_staging_to_public = RedshiftSQLOperator(
         task_id="job_skill_data_staging_to_public",
-        redshift_conn_id="redshift",
+        redshift_conn_id=REDSHIFT_CONN_ID,
         sql=[
-            create_tables.create_public_job_skill_table,
-            create_tables.insert_public_job_skill
+            queries.create_public_job_skill_table,
+            queries.insert_public_job_skill
         ],
     )
 
+    with TaskGroup(group_id="data_quality_check") as data_quality_check:
+        job_data_quality_check = SQLCheckOperator(
+            task_id='job_data_quality_check',
+            conn_id=REDSHIFT_CONN_ID,
+            sql=queries.sql_check_job,
+        )
+
+        job_skill_data_quality_check = SQLCheckOperator(
+            task_id='job_skill_data_quality_check',
+            conn_id=REDSHIFT_CONN_ID,
+            sql=queries.sql_check_skill,
+        )
     end_operator = DummyOperator(task_id='finish-execution', dag=dag)
 
 start_operator >> extract_data >> [waiting_for_job,
@@ -164,7 +176,7 @@ waiting_for_job_skill >> job_skill_data_to_data_lake
 job_data_to_data_lake >> job_data_to_staging
 job_skill_data_to_data_lake >> job_skill_data_to_staging
 
-job_data_to_staging >> job_data_staging_to_public
-job_skill_data_to_staging >> job_skill_data_staging_to_public
+[job_data_to_staging, job_skill_data_to_staging] >> data_quality_check >> [
+    job_data_staging_to_public, job_skill_data_staging_to_public]
 
 [job_data_staging_to_public, job_skill_data_staging_to_public] >> end_operator
