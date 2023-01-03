@@ -4,7 +4,7 @@ import pathlib
 from datetime import datetime, timedelta
 
 from extract.job_spider import crawl_data
-from airflow.dags.utils import queries
+from utils import queries
 from utils.extract_helper import PREFIX_JOB, PREFIX_JOB_SKILL
 
 from airflow import DAG
@@ -130,7 +130,8 @@ with DAG(
         ],
         params={
             'bucket': BUCKET_NAME,
-            'iam_role': IAM_ROLE
+            'iam_role': IAM_ROLE,
+            'region': AWS_REGION,
         },
         dag=dag
     )
