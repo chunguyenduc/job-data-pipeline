@@ -109,26 +109,6 @@ services:
         volumes:
             - ./airflow/dags/transform:/opt/airflow/dags/transform
 
-    superset:
-        image: *superset-image
-        container_name: superset
-        command: [ "/app/docker/docker-bootstrap.sh", "app" ]
-        restart: unless-stopped
-        ports:
-            - 8088:8088
-        user: *superset-user
-        depends_on: *superset-depends-on
-        volumes: *superset-volumes
-
-    superset-init:
-        image: *superset-image
-        container_name: superset_init
-        command: [ "/app/docker/docker-init.sh" ]
-        depends_on: *superset-depends-on
-        user: "root"
-        volumes: *superset-volumes
-        environment:
-            SUPERSET_LOAD_EXAMPLES: "no"
     prometheus:
         image: prom/prometheus:latest
         container_name: monitoring_prometheus
