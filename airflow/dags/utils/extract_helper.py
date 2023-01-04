@@ -60,15 +60,6 @@ def write_data_to_csv(data, crawl_time: str, prefix: str, columns: List) -> None
         logging.error("I/O error: %s", filename)
 
 
-def write_data_to_json(data, crawl_time: str, prefix: str) -> None:
-    filename = get_filename(crawl_time, prefix, FORMAT_JSON)
-    try:
-        with open(filename, "w") as outfile:
-            json.dump(data, outfile)
-    except IOError:
-        logging.error("I/O error: %s", filename)
-
-
 def get_id(url: str) -> str:
     url_no_param = url[:url.find("?")]
     return url_no_param.split("/")[-1]

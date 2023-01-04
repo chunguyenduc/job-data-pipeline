@@ -28,6 +28,7 @@ BUCKET_NAME = parser.get("aws_config", "bucket_name")
 AWS_REGION = parser.get("aws_config", "aws_region")
 IAM_ROLE = parser.get("aws_config", "iam_role")
 REDSHIFT_CONN_ID = parser.get("aws_config", "redshift_conn_id")
+ALERT_EMAIL = parser.get("config", "email")
 
 
 def upload_s3(crawl_time: str, prefix: str):
@@ -46,12 +47,15 @@ with DAG(
         "depends_on_past": False,
         "retries": 1,
         "retry_delay": timedelta(seconds=10),
+        'email': [ALERT_EMAIL],
+        'email_on_failure': True
     },
     description="Data pipeline crawl job from ITViec",
     schedule_interval=timedelta(minutes=15),
     start_date=datetime(2021, 1, 1),
     catchup=False,
     tags=["job"],
+    dagrun_timeout=timedelta(minutes=10)
 ) as dag:
 
     start_operator = DummyOperator(task_id='begin-execution', dag=dag)
