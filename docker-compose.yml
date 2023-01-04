@@ -57,7 +57,7 @@ services:
             - ./airflow/dags:/opt/airflow/dags
         ports:
             - "8080:8080"
-        restart: on-failure
+        # restart: on-failure
         environment: *airflow_environment
         command: webserver
 
@@ -66,7 +66,7 @@ services:
         container_name: airflow_scheduler
         depends_on:
             - postgres
-        restart: on-failure
+        # restart: on-failure
         volumes:
             - ./airflow/dags:/opt/airflow/dags
             - ./airflow/logs:/opt/airflow/logs
