@@ -14,7 +14,7 @@ class TestScheduler(unittest.TestCase):
         print('DAG: ', dag)
         self.assertTrue(len(dag_bag.import_errors) == 0)
         self.assertTrue(dag is not None)
-        self.assertTrue(len(dag.tasks) == 1)
+        self.assertTrue(len(dag.tasks) == 12)
 
 
 if __name__ == '__main__':
