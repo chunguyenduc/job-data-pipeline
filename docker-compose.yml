@@ -23,8 +23,6 @@ x-superset-volumes:
     - superset_home:/app/superset_home
 
 services:
-    redis:
-        image: redis:latest
     postgres:
         image: postgres:latest
         container_name: postgres
