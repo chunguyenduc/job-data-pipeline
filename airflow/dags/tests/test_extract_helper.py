@@ -3,7 +3,7 @@ import unittest.mock as mock
 from datetime import datetime
 
 import pandas as pd
-from airflow.dags.utils.extract_helper import get_created_time, get_filename, get_id, write_data_to_csv
+from utils.extract_helper import get_created_time, get_filename, get_id, write_data_to_csv
 
 
 class TestExtractHelper(unittest.TestCase):

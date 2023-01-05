@@ -1,6 +1,6 @@
 import unittest
 
-from airflow.dags.utils.queries import create_stg_schema
+from utils.queries import create_stg_schema
 
 
 class TestQueries(unittest.TestCase):
