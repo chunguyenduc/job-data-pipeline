@@ -14,7 +14,6 @@ from airflow.operators.python import PythonOperator
 from airflow.operators.sql import SQLCheckOperator
 from airflow.providers.amazon.aws.operators.redshift import RedshiftSQLOperator
 from airflow.sensors.filesystem import FileSensor
-from airflow.decorators import dag, task, task_group
 from airflow.utils.task_group import TaskGroup
 
 # Read Configuration File
