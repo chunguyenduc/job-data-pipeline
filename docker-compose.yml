@@ -10,7 +10,7 @@ x-environment:
     - AIRFLOW__WEBSERVER__COOKIE_SAMESITE=None
 
 x-spark-image: &spark-image chunguyenduc/job_etl_pipeline_spark:0.0.1
-x-airflow-image: &airflow-image chunguyenduc/job_etl_pipeline_airflow:0.0.3
+x-airflow-image: &airflow-image chunguyenduc/job_etl_pipeline_airflow:0.0.4
 x-superset-image: &superset-image apache/superset:latest
 x-superset-user: &superset-user root
 x-superset-depends-on:
