@@ -13,12 +13,12 @@ jobs:
 
       - name: Build image 
         uses: docker/build-push-action@v2
-          with:
-            context: airflow
-            tags: test-image:latest
-            push: false
+        with:
+          context: airflow
+          tags: test-image:latest
+          push: false
       - name: Unit test
         uses: addnab/docker-run-action@v3
-          with:
-            image: test-image:latest
-            run: "./unittest.sh"
+        with:
+          image: test-image:latest
+          run: "./unittest.sh"
