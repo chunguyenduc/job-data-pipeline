@@ -28,6 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: test-image:latest
+      credentials:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
       volumes:
         - ./airflow/logs:/opt/airflow/logs
         - ./airflow/dags:/opt/airflow/dags
