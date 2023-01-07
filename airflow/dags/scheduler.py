@@ -22,10 +22,8 @@ from airflow.utils.task_group import TaskGroup
 parser = configparser.ConfigParser()
 script_path = pathlib.Path(__file__).parent.resolve()
 config_file = "configuration.conf"
-try:
+if os.path.exists(config_file):
     parser.read(f"{script_path}/{config_file}")
-except:
-    pass
 
 
 BUCKET_NAME = parser.get("aws_config", "bucket_name")
