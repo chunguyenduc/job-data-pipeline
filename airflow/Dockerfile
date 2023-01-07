@@ -9,7 +9,7 @@ RUN pip install --user --no-cache-dir \
 
 COPY airflow.cfg /opt/airflow/
 COPY webserver_config.py /opt/airflow/
-COPY unittest.sh  /opt/airflow/
+COPY unittest.sh /opt/airflow/
 
 
 

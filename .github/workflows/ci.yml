@@ -19,5 +19,17 @@ jobs:
       #     connFile: airflow/dags/tests/conns.json
       #     loadExamples: False
       #     accessToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: Unit test
-        run:  bash ${GITHUB_WORKSPACE}/airflow/unittest.sh
+      # - name: Unit test
+      #   run:  bash ${GITHUB_WORKSPACE}/airflow/unittest.sh
+      # - name: Build docker
+      #   runs:
+      #   using: 'docker'
+      #   image: 'Dockerfile'
+      - uses: docker/build-push-action@v2
+        with:
+        tags: test-image:latest
+        push: false
+      - uses: addnab/docker-run-action@v3
+        with:
+        image: test-image:latest
+        run: "./unittest.sh"
