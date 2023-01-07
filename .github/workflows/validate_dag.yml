@@ -5,7 +5,7 @@ on:
     branches:
       - dev 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,3 +19,6 @@ jobs:
           connFile: airflow/dags/tests/conns.json
           loadExamples: False
           accessToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Unit test
+        uses: actions/checkout@v2 
+        run:  bash ${GITHUB_WORKSPACE}/airflow/unittest.sh
