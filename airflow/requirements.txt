@@ -1,1 +1,2 @@
 Scrapy==2.6.2
+coverage==6.5.0
