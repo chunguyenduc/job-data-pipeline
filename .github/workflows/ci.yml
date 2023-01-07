@@ -18,6 +18,7 @@ jobs:
           tags: test-image:latest
           push: false
   test:
+    needs: job1
     runs-on: ubuntu-latest
     container:
       image: test-image:latest
