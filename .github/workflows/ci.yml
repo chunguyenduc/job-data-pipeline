@@ -5,7 +5,7 @@ on:
     branches:
       - dev 
 jobs:
-  test:
+  prepare:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,8 +17,13 @@ jobs:
           context: airflow
           tags: test-image:latest
           push: false
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: test-image:latest
+      volumes:
+        - ./airflow/logs:/opt/airflow/logs
+        - ./airflow/dags:/opt/airflow/dags
+    steps:
       - name: Unit test
-        uses: addnab/docker-run-action@v3
-        with:
-          image: test-image:latest
-          run: "./unittest.sh"
+        run: "./unittest.sh"

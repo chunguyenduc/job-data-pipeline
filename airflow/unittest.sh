@@ -2,7 +2,7 @@
 
 
 BASEDIR=${PWD}
-echo BASEDIR
+echo $BASEDIR
 cd $BASEDIR/dags
 ls -l
 python3 -m unittest discover -v
