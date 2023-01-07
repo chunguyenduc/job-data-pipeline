@@ -4,7 +4,6 @@ import os
 import pathlib
 from datetime import datetime, timedelta
 
-from dags import *
 from extract.job_spider import crawl_data
 from utils import queries
 from utils.extract_helper import PREFIX_JOB, PREFIX_JOB_SKILL
@@ -26,14 +25,12 @@ config_path = os.path.join(script_path, "configuration.conf")
 if os.path.exists(config_path):
     parser.read(config_path)
 
-try:
-    BUCKET_NAME = parser.get("aws_config", "bucket_name")
-    AWS_REGION = parser.get("aws_config", "aws_region")
-    IAM_ROLE = parser.get("aws_config", "iam_role")
-    REDSHIFT_CONN_ID = parser.get("aws_config", "redshift_conn_id")
-    ALERT_EMAIL = parser.get("config", "email")
-except configparser.NoSectionError:
-    logging.warning('No section found in configuration file')
+BUCKET_NAME = parser.get("aws_config", "bucket_name", fallback="")
+AWS_REGION = parser.get("aws_config", "aws_region", fallback="")
+IAM_ROLE = parser.get("aws_config", "iam_role", fallback="")
+REDSHIFT_CONN_ID = parser.get(
+    "aws_config", "redshift_conn_id", fallback="redshift")
+ALERT_EMAIL = parser.get("config", "email", fallback="")
 
 
 def upload_s3(crawl_time: str, prefix: str):
