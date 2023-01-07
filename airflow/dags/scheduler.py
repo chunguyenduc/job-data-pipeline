@@ -24,8 +24,8 @@ script_path = pathlib.Path(__file__).parent.resolve()
 config_file = "configuration.conf"
 try:
     parser.read(f"{script_path}/{config_file}")
-except configparser.NoSectionError:
-    sys.exit()
+except:
+    pass
 
 
 BUCKET_NAME = parser.get("aws_config", "bucket_name")
