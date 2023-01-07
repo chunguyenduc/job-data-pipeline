@@ -27,9 +27,9 @@ jobs:
       #   image: 'Dockerfile'
       - uses: docker/build-push-action@v2
         with:
-        tags: test-image:latest
-        push: false
+          tags: test-image:latest
+          push: false
       - uses: addnab/docker-run-action@v3
         with:
-        image: test-image:latest
-        run: "./unittest.sh"
+          image: test-image:latest
+          run: "./unittest.sh"
