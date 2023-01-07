@@ -11,6 +11,5 @@ dashboard:
 
 ci:
 	docker compose up postgres airflow_init -d
-	sleep 240
 	docker exec airflow_init ./unittest.sh
 	docker compose stop
