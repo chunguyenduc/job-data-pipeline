@@ -36,7 +36,7 @@ services:
                 max-file: "3"
         ports:
             - "5432:5432"
-    initdb_adduser:
+    airflow_init:
         image: *airflow-image
         depends_on:
             - postgres
@@ -45,7 +45,7 @@ services:
         entrypoint: /bin/bash
         command: -c 'airflow db upgrade && airflow db init && airflow users create --username admin --password admin --firstname Anonymous --lastname Admin --role Admin --email admin@example.org && airflow sync-perm'
 
-    webserver:
+    airflow_webserver:
         image: *airflow-image
         container_name: airflow_webserver
         depends_on:
@@ -59,7 +59,7 @@ services:
         environment: *airflow_environment
         command: webserver
 
-    scheduler:
+    ariflow_scheduler:
         image: *airflow-image
         container_name: airflow_scheduler
         depends_on:

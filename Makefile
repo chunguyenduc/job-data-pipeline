@@ -8,3 +8,8 @@ out_test:
 
 dashboard:
 	docker compose up metabase -d
+
+ci:
+	docker-compose up postgres airflow_init
+	sleep 240
+	docker exec airflow_init ./unittest.sh
