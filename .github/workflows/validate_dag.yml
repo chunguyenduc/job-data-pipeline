@@ -11,11 +11,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: 'Validate DAGs'
-        uses: jayamanikharyono/airflow-dag-action@v2.3
+        uses: jayamanikharyono/airflow-dag-action@v2.4
         with:
           requirementsFile: airflow/requirements.txt
           dagPaths: airflow/dags
           varFile: airflow/dags/tests/var.json
           connFile: airflow/dags/tests/conns.json
-          loadExample: False
+          loadExamples: False
           accessToken: ${{ secrets.GITHUB_TOKEN }}
