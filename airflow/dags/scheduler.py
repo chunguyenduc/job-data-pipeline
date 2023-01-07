@@ -23,17 +23,17 @@ from airflow.utils.task_group import TaskGroup
 parser = configparser.ConfigParser()
 script_path = pathlib.Path(__file__).parent.resolve()
 config_path = os.path.join(script_path, "configuration.conf")
-logging.info(config_path)
 if os.path.exists(config_path):
-    logging.info(f'Configuration exists: {config_path}')
     parser.read(config_path)
 
-
-BUCKET_NAME = parser.get("aws_config", "bucket_name")
-AWS_REGION = parser.get("aws_config", "aws_region")
-IAM_ROLE = parser.get("aws_config", "iam_role")
-REDSHIFT_CONN_ID = parser.get("aws_config", "redshift_conn_id")
-ALERT_EMAIL = parser.get("config", "email")
+try:
+    BUCKET_NAME = parser.get("aws_config", "bucket_name")
+    AWS_REGION = parser.get("aws_config", "aws_region")
+    IAM_ROLE = parser.get("aws_config", "iam_role")
+    REDSHIFT_CONN_ID = parser.get("aws_config", "redshift_conn_id")
+    ALERT_EMAIL = parser.get("config", "email")
+except configparser.NoSectionError:
+    logging.warning('No section found in configuration file')
 
 
 def upload_s3(crawl_time: str, prefix: str):
