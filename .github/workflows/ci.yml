@@ -26,10 +26,10 @@ jobs:
 
       - name: Unit test 
         uses: addnab/docker-run-action@v3
-          with:
-            option: -v ${{ GITHUB_WORKSPACE }}/airflow/dags:/opt/airflow/dags
-            image: test-image:latest
-            run: "./unittest.sh"
+        with:
+          option: -v ${{ GITHUB_WORKSPACE }}/airflow/dags:/opt/airflow/dags
+          image: test-image:latest
+          run: "./unittest.sh"
   # test:
   #   needs: prepare
   #   runs-on: ubuntu-latest
