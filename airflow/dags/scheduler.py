@@ -1,4 +1,5 @@
 import configparser
+import logging
 import os
 import pathlib
 import sys
@@ -21,9 +22,11 @@ from airflow.utils.task_group import TaskGroup
 # Read Configuration File
 parser = configparser.ConfigParser()
 script_path = pathlib.Path(__file__).parent.resolve()
-config_file = "configuration.conf"
-if os.path.exists(config_file):
-    parser.read(f"{script_path}/{config_file}")
+config_path = os.path.join(script_path, "configuration.conf")
+logging.info(config_path)
+if os.path.exists(config_path):
+    logging.info(f'Configuration exists: {config_path}')
+    parser.read(config_path)
 
 
 BUCKET_NAME = parser.get("aws_config", "bucket_name")
