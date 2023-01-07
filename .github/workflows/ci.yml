@@ -20,5 +20,4 @@ jobs:
           loadExamples: False
           accessToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Unit test
-        uses: actions/checkout@v2 
         run:  bash ${GITHUB_WORKSPACE}/airflow/unittest.sh
