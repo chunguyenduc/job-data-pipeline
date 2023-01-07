@@ -18,22 +18,29 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build image 
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: airflow
           tags: test-image:latest
           push: false
-  test:
-    needs: prepare
-    runs-on: ubuntu-latest
-    container:
-      image: test-image:latest
-      credentials:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      volumes:
-        - ./airflow/logs:/opt/airflow/logs
-        - ./airflow/dags:/opt/airflow/dags
-    steps:
-      - name: Unit test
-        run: "./unittest.sh"
+
+      - name: Unit test 
+        uses: addnab/docker-run-action@v3
+          with:
+            option: -v ${{ GITHUB_WORKSPACE }}/airflow/dags:/opt/airflow/dags
+            image: test-image:latest
+            run: "./unittest.sh"
+  # test:
+  #   needs: prepare
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: test-image:latest
+  #     credentials:
+  #       username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #       password: ${{ secrets.DOCKERHUB_PASSWORD }}
+  #     volumes:
+  #       - ./airflow/logs:/opt/airflow/logs
+  #       - ./airflow/dags:/opt/airflow/dags
+  #   steps:
+  #     - name: Unit test
+  #       run: "./unittest.sh"
