@@ -5,17 +5,12 @@ on:
     branches:
       - dev 
 jobs:
-  prepare:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v2
-      #   with:
-      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #     password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build image 
         uses: docker/build-push-action@v3
@@ -31,19 +26,3 @@ jobs:
           image: test-image:latest
           run: "airflow db init && \
                 ./unittest.sh"
-      # - name: Unit test
-      #   run: make ci
-  # test:
-  #   needs: prepare
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: test-image:latest
-  #     credentials:
-  #       username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #       password: ${{ secrets.DOCKERHUB_PASSWORD }}
-  #     volumes:
-  #       - ./airflow/logs:/opt/airflow/logs
-  #       - ./airflow/dags:/opt/airflow/dags
-  #   steps:
-  #     - name: Unit test
-  #       run: "./unittest.sh"
