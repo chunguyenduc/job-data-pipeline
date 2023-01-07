@@ -20,7 +20,10 @@ from airflow.utils.task_group import TaskGroup
 parser = configparser.ConfigParser()
 script_path = pathlib.Path(__file__).parent.resolve()
 config_file = "configuration.conf"
-parser.read(f"{script_path}/{config_file}")
+try:
+    parser.read(f"{script_path}/{config_file}")
+except configparser.NoSectionError:
+    pass
 
 
 BUCKET_NAME = parser.get("aws_config", "bucket_name")
