@@ -2,9 +2,9 @@ import configparser
 import logging
 import os
 import pathlib
-import sys
 from datetime import datetime, timedelta
 
+from dags import *
 from extract.job_spider import crawl_data
 from utils import queries
 from utils.extract_helper import PREFIX_JOB, PREFIX_JOB_SKILL
