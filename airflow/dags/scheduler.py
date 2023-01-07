@@ -1,6 +1,7 @@
 import configparser
 import os
 import pathlib
+import sys
 from datetime import datetime, timedelta
 
 from extract.job_spider import crawl_data
@@ -12,7 +13,8 @@ from airflow.hooks.S3_hook import S3Hook
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python import PythonOperator
 from airflow.operators.sql import SQLCheckOperator
-from airflow.providers.amazon.aws.operators.redshift_sql import RedshiftSQLOperator
+from airflow.providers.amazon.aws.operators.redshift_sql import \
+    RedshiftSQLOperator
 from airflow.sensors.filesystem import FileSensor
 from airflow.utils.task_group import TaskGroup
 
@@ -23,7 +25,7 @@ config_file = "configuration.conf"
 try:
     parser.read(f"{script_path}/{config_file}")
 except configparser.NoSectionError:
-    pass
+    sys.exit()
 
 
 BUCKET_NAME = parser.get("aws_config", "bucket_name")
