@@ -1,4 +1,5 @@
 #!/bin/bash
 
-cd dags
+BASEDIR=${PWD}
+cd $BASEDIR/airflow/dags
 python3 -m unittest discover -v
