@@ -9,10 +9,10 @@ from utils import queries
 from utils.extract_helper import PREFIX_JOB, PREFIX_JOB_SKILL
 
 from airflow import DAG
-from airflow.hooks.S3_hook import S3Hook
-from airflow.operators.dummy_operator import DummyOperator
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
-from airflow.operators.sql import SQLCheckOperator
+from airflow.providers.common.sql.operators.sql import SQLCheckOperator
 from airflow.providers.amazon.aws.operators.redshift_sql import \
     RedshiftSQLOperator
 from airflow.sensors.filesystem import FileSensor
@@ -60,7 +60,7 @@ with DAG(
     dagrun_timeout=timedelta(minutes=10)
 ) as dag:
 
-    start_operator = DummyOperator(task_id='begin-execution', dag=dag)
+    start_operator = EmptyOperator(task_id='begin-execution', dag=dag)
 
     extract_data = PythonOperator(
         task_id="extract_job_data",
@@ -172,7 +172,7 @@ with DAG(
             conn_id=REDSHIFT_CONN_ID,
             sql=queries.sql_check_skill,
         )
-    end_operator = DummyOperator(task_id='finish-execution', dag=dag)
+    end_operator = EmptyOperator(task_id='finish-execution', dag=dag)
 
 start_operator >> extract_data >> [waiting_for_job,
                                    waiting_for_job_skill]
