@@ -21,11 +21,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build image 
+      - id: commit
+        uses: pr-mpt/actions-commit-hash@v2
+
+      - name: Build push image 
         uses: docker/build-push-action@v3
         with:
           context: airflow
-          tags: ${{ env.IMAGE_NAME }}:${{ env.TAG_VERSION }}
+          tags: ${{ env.IMAGE_NAME }}:${{ steps.commit.outputs.short }}
           push: true
 
       - name: Unit test 
@@ -48,7 +51,7 @@ jobs:
             git checkout ${GITHUB_REF##*/}
             git pull origin ${GITHUB_REF##*/} 
             docker-compose stop
-            AIRFLOW_BUILD_IMAGE=$${{ env.IMAGE_NAME }} TAG=$${{ env.TAG_VERSION }} docker-compose up -d
+            AIRFLOW_BUILD_IMAGE=${{ env.IMAGE_NAME }} TAG=$${ steps.commit.outputs.short }} docker-compose up -d
 
       
 
