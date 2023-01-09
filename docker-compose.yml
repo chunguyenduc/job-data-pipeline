@@ -59,5 +59,38 @@ services:
         environment: *airflow_environment
         command: scheduler
 
+    node-exporter:
+        image: prom/node-exporter:latest
+        container_name: node-exporter
+        restart: unless-stopped
+        expose:
+            - 9100
+    vmagent:
+        container_name: vmagent
+        image: victoriametrics/vmagent:v1.85.3
+        depends_on:
+            - "victoriametrics"
+        ports:
+            - 8429:8429
+        volumes:
+            - vmagentdata:/vmagentdata
+            - prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+        command:
+            - "--promscrape.config=/etc/prometheus/prometheus.yml"
+        restart: always
+
+    victoriametrics:
+        container_name: victoriametrics
+        image: victoriametrics/victoria-metrics:v1.85.3
+        ports:
+            - 8428:8428
+        volumes:
+            - vmdata:/storage
+        command:
+            - "--storageDataPath=/storage"
+            - "--httpListenAddr=:8428"
+            - "--vmalert.proxyURL=http://vmalert:8880"
+        restart: always
+
 volumes:
     pgdata:
