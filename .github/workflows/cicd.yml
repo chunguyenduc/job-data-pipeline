@@ -6,6 +6,7 @@ on:
       - dev 
 env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
+  COMMIT_SHA: ${{ steps.commit.outputs.short }} 
 
 jobs:
   Deployment:
@@ -27,14 +28,14 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: airflow
-          tags: ${{ env.IMAGE_NAME }}:${{ steps.commit.outputs.short }}
+          tags: ${{ env.IMAGE_NAME }}:${{ env.COMMIT_SHA }}
           push: true
 
       - name: Unit test 
         uses: addnab/docker-run-action@v3
         with:
-          options: -v ${{ github.workspace }}/airflow/dags:/opt/airflow/dags
-          image: ${{ env.IMAGE_NAME }}:${{ steps.commit.outputs.short }}
+          options: -v ${{ github.workspace }}/airflow:/opt/airflow
+          image: ${{ env.IMAGE_NAME }}:${{ env.COMMIT_SHA}}
           run: "airflow db init && \
                 ./unittest.sh"
 
@@ -47,7 +48,7 @@ jobs:
           script:  | 
             set -x
             export AIRFLOW_BUILD_IMAGE=${{ env.IMAGE_NAME }} \
-                  TAG=${{ steps.commit.outputs.short }} \
+                  TAG=${{ env.COMMIT_SHA}}\
                   POSTGRES_CONN=${{ secrets.POSTGRES_CONN }} \
                   FERNET_KEY=${{ secrets.AIRFLOW_FERNET_KEY }} \
             cd ${{ github.event.repository.name }}
