@@ -9,7 +9,7 @@ x-environment:
     - AIRFLOW__WEBSERVER__RBAC=False
     - AIRFLOW__WEBSERVER__COOKIE_SAMESITE=None
 
-x-airflow-image: &airflow-image ${AIRFLOW_BUILD_IMAGE}:{TAG}
+x-airflow-image: &airflow-image ${AIRFLOW_BUILD_IMAGE}:${TAG}
 
 services:
     postgres:
