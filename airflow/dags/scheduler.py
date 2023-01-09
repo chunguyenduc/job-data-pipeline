@@ -1,7 +1,4 @@
-import configparser
-import logging
 import os
-import pathlib
 from datetime import datetime, timedelta
 
 from extract.job_spider import crawl_data
@@ -9,28 +6,23 @@ from utils import queries
 from utils.extract_helper import PREFIX_JOB, PREFIX_JOB_SKILL
 
 from airflow import DAG
-from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.models import Variable
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import PythonOperator
-from airflow.providers.common.sql.operators.sql import SQLCheckOperator
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.providers.amazon.aws.operators.redshift_sql import \
     RedshiftSQLOperator
+from airflow.providers.common.sql.operators.sql import SQLCheckOperator
 from airflow.sensors.filesystem import FileSensor
 from airflow.utils.task_group import TaskGroup
 
-# Read Configuration File
-parser = configparser.ConfigParser()
-script_path = pathlib.Path(__file__).parent.resolve()
-config_path = os.path.join(script_path, "configuration.conf")
-if os.path.exists(config_path):
-    parser.read(config_path)
 
-BUCKET_NAME = parser.get("aws_config", "bucket_name", fallback="")
-AWS_REGION = parser.get("aws_config", "aws_region", fallback="")
-IAM_ROLE = parser.get("aws_config", "iam_role", fallback="")
-REDSHIFT_CONN_ID = parser.get(
-    "aws_config", "redshift_conn_id", fallback="redshift")
-ALERT_EMAIL = parser.get("config", "email", fallback="")
+BUCKET_NAME = Variable.get("bucket_name", default_var="")
+AWS_REGION = Variable.get("aws_region", default_var="")
+IAM_ROLE = Variable.get("iam_role", default_var="")
+REDSHIFT_CONN_ID = Variable.get(
+    "redshift_conn_id", default_var="redshift")
+ALERT_EMAIL = Variable.get("email", default_var="")
 
 
 def upload_s3(crawl_time: str, prefix: str):

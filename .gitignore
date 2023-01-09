@@ -21,3 +21,4 @@ data/prometheus/data/
 htmlcov/
 .coverage
 */*/configuration.conf
+*.json
