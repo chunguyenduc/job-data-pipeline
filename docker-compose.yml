@@ -74,7 +74,7 @@ services:
             - 8429:8429
         volumes:
             - vmagentdata:/vmagentdata
-            - prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+            - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
         command:
             - "--promscrape.config=/etc/prometheus/prometheus.yml"
         restart: always
@@ -94,3 +94,5 @@ services:
 
 volumes:
     pgdata:
+    vmagentdata:
+    vmdata:
