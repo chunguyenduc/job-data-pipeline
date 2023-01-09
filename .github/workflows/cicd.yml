@@ -1,0 +1,45 @@
+name: Validate DAGs
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev 
+jobs:
+  cicd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+
+      - name: Build image 
+        uses: docker/build-push-action@v3
+        with:
+          context: airflow
+          tags: ${{ github.event.repository.name }}:0.0.4
+          push: true
+
+      - name: Unit test 
+        uses: addnab/docker-run-action@v3
+        with:
+          options: -v ${{ github.workspace }}/airflow/dags:/opt/airflow/dags
+          image: ${{ github.event.repository.name }}:0.0.4
+          run: "airflow db init && \
+                ./unittest.sh"
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script:  | 
+            cd ${{ github.event.repository.name }}
+            git checkout ${GITHUB_REF##*/}
+            git pull origin ${GITHUB_REF##*/} 
+            docker-compose stop
+            docker-compose up -d
+
+      
+
+
+    
