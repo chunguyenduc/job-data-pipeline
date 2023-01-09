@@ -6,7 +6,6 @@ on:
       - dev 
 env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
-  TAG_VERSION: $(git rev-parse --short "$GITHUB_SHA") 
 
 jobs:
   cicd:
@@ -35,7 +34,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           options: -v ${{ github.workspace }}/airflow/dags:/opt/airflow/dags
-          image: ${{ env.IMAGE_NAME }}:${{ env.TAG_VERSION }}
+          image: ${{ env.IMAGE_NAME }}:${{ steps.commit.outputs.short }}
           run: "airflow db init && \
                 ./unittest.sh"
 
