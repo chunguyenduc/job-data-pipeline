@@ -6,7 +6,8 @@ MODULE_LIST=`find . -type f \( -iname "*.py" ! -iname "*__init__.py" ! -iname "*
 cd $BASEDIR/dags
 ls -l
 python3 -m unittest discover -v
+touch .coverage
 python3 -m coverage run -m unittest
-ls -l
+ls -l -a
 chmod u+x .coverage
 python3 -m coverage report $MODULE_LIST
