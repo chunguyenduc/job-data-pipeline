@@ -47,7 +47,7 @@ services:
         environment: *airflow_environment
         command: webserver
 
-    ariflow_scheduler:
+    airflow_scheduler:
         image: *airflow-image
         container_name: airflow_scheduler
         depends_on:

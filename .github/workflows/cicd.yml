@@ -54,7 +54,7 @@ jobs:
             docker-compose up postgres -d
             docker-compose up airflow_init -d
             sleep 10
-            docker-compose up webserver scheduler -d
+            docker-compose up airflow_webserver airflow_scheduler -d
  
 
       
