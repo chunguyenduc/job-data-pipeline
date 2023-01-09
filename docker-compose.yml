@@ -77,7 +77,8 @@ services:
             - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
         command:
             - "--promscrape.config=/etc/prometheus/prometheus.yml"
-            - "--remoteWrite.url=${GRAFANA_URL}"
+            - "--envflag.enable"
+            - "--remoteWrite.url=%{GRAFANA_URL}"
         restart: always
 
     victoriametrics:
