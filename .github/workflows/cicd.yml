@@ -50,9 +50,6 @@ jobs:
                   TAG=${{ steps.commit.outputs.short }} \
                   POSTGRES_CONN=${{ secrets.POSTGRES_CONN }} \
                   FERNET_KEY=${{ secrets.AIRFLOW_FERNET_KEY }} \
-                  GRAFANA_URL=${{ secrets.GRAFANA_URL }} \
-                  GRAFANA_USERNAME=${{ secrets.GRAFANA_USERNAME }} \
-                  GRAFANA_PASSWORD=${{ secrets.GRAFANA_PASSWORD }}
             cd ${{ github.event.repository.name }}
             git checkout ${GITHUB_REF##*/}
             git pull origin ${GITHUB_REF##*/} 
