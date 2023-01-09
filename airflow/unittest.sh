@@ -8,5 +8,5 @@ ls -l
 python3 -m unittest discover -v
 python3 -m coverage run -m unittest
 ls -l
-chmod u+x /opt/airflow/dags/.coverage
-python3 -m coverage report $(MODULE_LIST)
+chmod u+x .coverage
+python3 -m coverage report $MODULE_LIST
