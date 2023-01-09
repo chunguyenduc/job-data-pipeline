@@ -54,7 +54,13 @@ jobs:
             docker-compose up postgres -d
             docker-compose up airflow_init -d
             sleep 10
-            docker-compose up airflow_webserver airflow_scheduler -d
+            docker-compose up airflow_webserver airflow_scheduler -d 
+            docker exec -it airflow_webser airflow users create --username ${{ secrets.AIRFLOW_USERNAME}} \
+                    --password ${{ secrets.AIRFLOW_PASSWORD}} \
+                    --firstname Anonymous \ 
+                    --lastname Admin \
+                    --role Admin \
+                    --email ${{ secrets.AIRFLOW_EMAIL}} && airflow sync-perm
  
 
       
