@@ -1,4 +1,4 @@
-name: Validate DAGs
+name: CI/CD 
 on:
   workflow_dispatch:
   push:
@@ -21,17 +21,18 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: airflow
-          tags: ${{ github.event.repository.name }}:0.0.4
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:0.0.4
           push: true
 
       - name: Unit test 
         uses: addnab/docker-run-action@v3
         with:
           options: -v ${{ github.workspace }}/airflow/dags:/opt/airflow/dags
-          image: ${{ github.event.repository.name }}:0.0.4
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:0.0.4
           run: "airflow db init && \
                 ./unittest.sh"
-      - name: executing remote ssh commands using password
+
+      - name: Deploy EC2
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.HOST_DNS }}
