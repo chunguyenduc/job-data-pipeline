@@ -8,12 +8,3 @@ out_test:
 
 dashboard:
 	docker compose up metabase -d
-
-env:
-	export AIRFLOW_BUILD_IMAGE=${{ env.IMAGE_NAME }} \
-                  TAG=${{ steps.commit.outputs.short }} \
-                  POSTGRES_CONN=${{ secrets.POSTGRES_CONN }} \
-                  FERNET_KEY=${{ secrets.AIRFLOW_FERNET_KEY }} \
-                  GRAFANA_URL=${{ GRAFANA_URL }} \
-                  GRAFANA_USERNAME=${{ GRAFANA_USERNAME }} \
-                  GRAFANA_PASSWORD=${{ GRAFANA_PASSWORD }}
