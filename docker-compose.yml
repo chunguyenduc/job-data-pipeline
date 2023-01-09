@@ -9,18 +9,7 @@ x-environment:
     - AIRFLOW__WEBSERVER__RBAC=False
     - AIRFLOW__WEBSERVER__COOKIE_SAMESITE=None
 
-x-spark-image: &spark-image chunguyenduc/job_etl_pipeline_spark:0.0.1
-x-airflow-image: &airflow-image chunguyenduc/job_etl_pipeline_airflow:0.0.4
-x-superset-image: &superset-image apache/superset:latest
-x-superset-user: &superset-user root
-x-superset-depends-on:
-    &superset-depends-on
-    - postgres
-    - redis
-x-superset-volumes:
-    &superset-volumes
-    - ./superset/docker:/app/docker
-    - superset_home:/app/superset_home
+x-airflow-image: &airflow-image chunguyenduc/${AIRFLOW_BUILD_IMAGE}:{TAG}
 
 services:
     postgres:
@@ -55,7 +44,6 @@ services:
             - ./airflow/dags:/opt/airflow/dags
         ports:
             - "8080:8080"
-        # restart: on-failure
         environment: *airflow_environment
         command: webserver
 
@@ -64,20 +52,8 @@ services:
         container_name: airflow_scheduler
         depends_on:
             - postgres
-        # restart: on-failure
         volumes:
             - ./airflow/dags:/opt/airflow/dags
             - ./airflow/logs:/opt/airflow/logs
         environment: *airflow_environment
         command: scheduler
-
-    metabase:
-        image: metabase/metabase:latest
-        container_name: metabase
-        restart: unless-stopped
-        ports:
-            - 3000:3000
-
-volumes:
-    superset_home:
-        external: false

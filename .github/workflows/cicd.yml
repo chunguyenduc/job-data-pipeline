@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - dev 
+env:
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
+  TAG_VERSION: $(git rev-parse --short "$GITHUB_SHA") 
+
 jobs:
   cicd:
     runs-on: ubuntu-latest
@@ -21,14 +25,14 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: airflow
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:0.0.4
+          tags: ${{ env.IMAGE_NAME }}:$${{ env.TAG_VERSION }}
           push: true
 
       - name: Unit test 
         uses: addnab/docker-run-action@v3
         with:
           options: -v ${{ github.workspace }}/airflow/dags:/opt/airflow/dags
-          image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:0.0.4
+          image: ${{ env.IMAGE_NAME }}:$${{ env.TAG_VERSION }}
           run: "airflow db init && \
                 ./unittest.sh"
 
@@ -39,11 +43,12 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script:  | 
+            set -x
             cd ${{ github.event.repository.name }}
             git checkout ${GITHUB_REF##*/}
             git pull origin ${GITHUB_REF##*/} 
             docker-compose stop
-            docker-compose up -d
+            AIRFLOW_BUILD_IMAGE=$${{ env.IMAGE_NAME }} TAG=$${{ env.TAG_VERSION }} docker-compose up -d
 
       
 
