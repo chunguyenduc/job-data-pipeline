@@ -8,10 +8,3 @@ out_test:
 
 dashboard:
 	docker compose up metabase -d
-
-ci:
-	docker compose up postgres -d
-	docker compose up airflow_init -d
-	docker cp airflow/dags airflow_init:/opt/airflow/
-	docker exec airflow_init ./unittest.sh
-	docker compose stop
