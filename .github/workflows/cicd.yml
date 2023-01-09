@@ -46,15 +46,15 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script:  | 
             set -x
+            export AIRFLOW_BUILD_IMAGE=${{ env.IMAGE_NAME }} && TAG=${{ steps.commit.outputs.short }} 
             cd ${{ github.event.repository.name }}
             git checkout ${GITHUB_REF##*/}
             git pull origin ${GITHUB_REF##*/} 
             docker-compose stop
             docker-compose up postgres -d
-            AIRFLOW_BUILD_IMAGE=${{ env.IMAGE_NAME }} TAG=${{ steps.commit.outputs.short }} docker-compose up airflow_init -d
+            docker-compose up airflow_init -d
             sleep 10
-            AIRFLOW_BUILD_IMAGE=${{ env.IMAGE_NAME }} TAG=${{ steps.commit.outputs.short }} \
-              docker-compose up airflow_webserver airflow_scheduler -d
+            docker-compose up webserver scheduler -d
  
 
       
