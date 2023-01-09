@@ -8,7 +8,7 @@ env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}
 
 jobs:
-  cicd:
+  Deployment:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
