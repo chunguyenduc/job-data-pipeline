@@ -55,10 +55,10 @@ jobs:
             docker-compose up airflow_init -d
             sleep 10
             docker-compose up airflow_webserver airflow_scheduler -d 
-            docker exec airflow_webserver /bin/bash -c 'airflow users create \
+            docker exec airflow_webserver /bin/bash -c 'airflow users create --verbose \
                     --username ${{ secrets.AIRFLOW_USERNAME}} \
-                    --password ${{ secrets.AIRFLOW_PASSWORD}} \
-                    --firstname Anonymous \ 
+                    --password ${{ secrets.AIRFLOW_PASSWORD}} 
+                    --firstname Anonymous \
                     --lastname Admin \
                     --role Admin \
                     --email ${{ secrets.AIRFLOW_EMAIL}} && airflow sync-perm'
