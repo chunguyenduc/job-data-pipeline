@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script:  | 
             set -x
-            export AIRFLOW_BUILD_IMAGE=${{ env.IMAGE_NAME }} && TAG=${{ steps.commit.outputs.short }} 
+            export AIRFLOW_BUILD_IMAGE=${{ env.IMAGE_NAME }} TAG=${{ steps.commit.outputs.short }} 
             cd ${{ github.event.repository.name }}
             git checkout ${GITHUB_REF##*/}
             git pull origin ${GITHUB_REF##*/} 
