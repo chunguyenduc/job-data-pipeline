@@ -25,14 +25,14 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: airflow
-          tags: ${{ env.IMAGE_NAME }}:$${{ env.TAG_VERSION }}
+          tags: ${{ env.IMAGE_NAME }}:${{ env.TAG_VERSION }}
           push: true
 
       - name: Unit test 
         uses: addnab/docker-run-action@v3
         with:
           options: -v ${{ github.workspace }}/airflow/dags:/opt/airflow/dags
-          image: ${{ env.IMAGE_NAME }}:$${{ env.TAG_VERSION }}
+          image: ${{ env.IMAGE_NAME }}:${{ env.TAG_VERSION }}
           run: "airflow db init && \
                 ./unittest.sh"
 
