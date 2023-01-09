@@ -57,7 +57,7 @@ jobs:
             docker-compose up airflow_webserver airflow_scheduler -d 
             docker exec airflow_webserver /bin/bash -c 'airflow users create --verbose \
                     --username ${{ secrets.AIRFLOW_USERNAME}} \
-                    --password ${{ secrets.AIRFLOW_PASSWORD}} 
+                    --password ${{ secrets.AIRFLOW_PASSWORD}}  \
                     --firstname Anonymous \
                     --lastname Admin \
                     --role Admin \
