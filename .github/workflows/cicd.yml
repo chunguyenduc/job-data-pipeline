@@ -33,7 +33,7 @@ jobs:
       - name: Unit test 
         uses: addnab/docker-run-action@v3
         with:
-          options: -v ${{ github.workspace }}/airflow/dags:/opt/airflow/dags
+          options: -v ${{ github.workspace }}/airflow:/opt/airflow
           image: ${{ env.IMAGE_NAME }}:${{ steps.commit.outputs.short }}
           run: "airflow db init && \
                 ./unittest.sh"
