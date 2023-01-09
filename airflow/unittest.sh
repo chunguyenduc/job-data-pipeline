@@ -2,9 +2,6 @@
 
 set -x
 BASEDIR=${PWD}
-echo $BASEDIR
 cd $BASEDIR/dags
-# MODULE_LIST=`find . -type f \( -iname "*.py" ! -iname "*__init__.py" ! -iname "*test_*.py" ! -iname "*config*.py" \)`
 ls -l
 python3 -m unittest discover -v
-# coverage report $MODULE_LIST
