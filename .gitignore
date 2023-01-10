@@ -22,3 +22,4 @@ htmlcov/
 .coverage
 */*/configuration.conf
 *.json
+*.html

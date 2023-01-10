@@ -14,99 +14,109 @@
 </details>
 
 
+<br />
 
 <!-- ABOUT THE PROJECT -->
-## Motivation
-I want to make a beginner data engineering project, also want to look for a new job. So i make this ETL pipeline that crawl data from job search website, do some transform, store data in data warehouse and load data to visualization tool.
+# Motivation
+I want to make a beginner data engineering project, also want to look for a new job. So i made this data pipeline that crawl data from job search website, store data in data warehouse and load data to visualization tool.
 
-## Built With
+# Built With
 
 * [Airflow](https://airflow.apache.org/)
-* [Hadoop (HDFS)](https://hadoop.apache.org/)
-* [Spark](https://spark.apache.org/)
-* [Hive](https://hive.apache.org/)
-* [Superset](https://superset.apache.org/)
+* [Amazon S3](https://aws.amazon.com/s3/)
+* [Amazon Redshift](https://aws.amazon.com/redshift/)
+* [Amazon EC2](https://aws.amazon.com/ec2/)
+* [Looker Studio](https://datastudio.google.com/)
 * [Docker](https://www.docker.com/)
-* [Prometheus](https://prometheus.io/) & [Grafana](https://grafana.com)
+* [Github Action](https://github.com/features/actions)
 
 
-## Architecture
-![Data pipeline design](media/job_etl.jpg)
 
-1. Extract data using Scrapy
-2. Load data into HDFS
-3. Use Spark to transform, remove unnecessary data
-4. Load data to Hive
-5. Create dashboard, write queries in Superset
-6. Orchestrate with Airflow in Docker
-7. Use Prometheus and Grafana to monitor resources
+# Architecture
+![Data pipeline design](media/job-data-pipeline-architecture.jpg)
 
-## Usage
-<br />
-
-- Clone and cd into the project directory.
-
-```bash
-git clone https://github.com/chunguyenduc/Job-ETL-Pipeline.git
-cd Job-ETL-Pipeline
-```
-<br />  
-
-- Use  `docker compose` to start. The pipeline has a lot of components so this may take a while
-```
-docker compose up -d
-```
-<br />  
-
-- Go to Airflow webserver on [localhost:8080](http://localhost:8080) and turn on our DAG
-
-![Job ETl Pipeline DAG](media/jot_etl_pipeline_dag.png)
-
-<br />  
-
-- Our DAG has four tasks as step 1 to 4 in [Architecture](#architecture). The DAG runs every 15 minutes and crawl the first page of [ITviec](https://itviec.com/it-jobs?page=1&query=&source=search_job)
-
-<!-- ![Job ETl Pipeline Task](media/job_etl_pipeline_task.png) -->
-![Job ETl Pipeline Task](media/job_etl_pipeline_task.png) 
-
-<br />  
-
-- Before running Hive, you need to create the `/tmp` folder and a separate Hive folder in HDFS:
-
-```
-docker exec -it namenode /bin/bash
-hadoop fs -mkdir /tmp 
-hadoop fs -mkdir /user/hive/warehouse
-hadoop fs -chmod g+w /tmp 
-hadoop fs -chmod g+w /user/hive/warehouse
-```
+1. Extract data using `Scrapy`
+2. Load raw data to `S3 bucket` 
+4. Add timestamp field and upsert data to `Redshift` data warehouse
+5. Use `Looker Studio (Google Data Studio)` to visualize our data 
+6. Orchestrate with `Airflow` using `Docker` in `EC2 instance`
+7. Implement `CI/CD` and `Unit Testing` using `Github Action`  
 
 
 <br />
 
-- Once the DAG is done running, you can go to Superset on [127.0.0.1:8088](http://127.0.0.1:8088) and query data or create dashboard like this:
-![Job-ETL-Dashboard](media/job_etl_dashboard.jpg)
+# Environment Setup
+## Cloud Services Used  
+
+<pre>
+Redshift cluster type <b>dc2.large</b>
+S3 bucket
+EC2 instance type <b>t2.medium</b> 
+IAM role to allow Redshift access to S3
+</pre>
+
+<br />  
+
+## Setting Up Airflow
+I use `Docker Compose` to setup Airflow. There are 3 components: `webserver`, `scheduler` and `Postgres` as our database. Details in [docker-compose.yml](docker-compose.yml)  
+
+Pipeline DAG:
+![](media/job-data-pipeline-dag.png)
 
 
-<br /><br />  
+Graph View:
+![](media/job-data-pipeline-graph.png)
 
-- You can also monitor metrics like CPU usage, memory usage on Grafana ([localhost:3000](http://localhost:3000)). I have export [grafana.json](grafana.json) in this repository
-![Job-ETL-Monitor](media/job_etl_monitor.png)
+<br />  
 
-- List servers I used in this project
+## Configuring connections and variables
 
-| Service               | URL                              |                                 
-| :-------------------: | :------------------------------: | 
-| Airflow | http://localhost:8080/           |                                           
-| Spark  | http://localhost:8181/           |                                           
-| Superset              | http://127.0.0.1:8088/           |   
-| Prometheus               | http://localhost:9000/           |  
-| Grafana               | http://localhost:3000/           | 
+This pipeline uses `File System`, `Redshift` and `S3` **connections**. To configure connections, I used Airflow's UI:  
+
+![](media/job-data-pipeline-connections.png)
 
 
- **Note**: 
-  - Username/password is admin/admin
-  - Airflow and Superset both use Flask web server. You will not be able to access both servers at the same time because of [CSRF](https://en.wikipedia.org/wiki/Cross-site_request_forgery). I disabled [Airflow authentication](https://airflow.apache.org/docs/apache-airflow/stable/security/webserver.html#web-authentication) but was not able to disable Superset authentication. So I have to change from localhost to 127.0.0.1 to use it
+To configure **variables**, create a `json` file like this: 
+```
+{
+	"bucket_name": "xxx",
+	"aws_region": "xxx",
+	"iam_role": "xxx",
+	"redshift_conn_id": "Xxx",
+	"email": "xx"
+}
+
+```
+Then use the `Import Variables` feature in Airflow's UI:  
+
+![](media/job-data-pipeline-variables.png)
+
+
+# Deployment
+
+## CI/CD Pipeline  
+
+Triggers on pushing to branch `dev`. The steps are:  
+
+1.  Checkout our current repository
+2.  Login Docker Hub
+3.  Get short commit hash for image tag
+4.  Buid push image to Docker Hub
+5.  Unit test
+6.  Deploy to EC2 instance
+   
+Details in [workflow file](.github/workflows/cicd.yml)
+
+Use Github Secrets to configure secrets  
+
+![](media/job-data-pipeline-secrets.png)
+
+# Output  
+
+The result is vailable [here](https://datastudio.google.com/reporting/d8cf3a97-1f06-4854-8001-fb57c6b17c49). This is just a simple visualization  
+
+![Job-ETL-Dashboard](media/job-data-pipeline-dashboard.jpg)
+
 
 
 <br />
