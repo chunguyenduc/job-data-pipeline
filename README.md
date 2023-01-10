@@ -7,12 +7,14 @@
   <ol>
     <li><a href="#motivation">Motivation</a></li>
     <li><a href="#built-with">Built With</a></li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#environment-setup">Environment Setup</a></li>
+    <li><a href="#deployment">Deployment</a></li>
+    <li><a href="#output">Output</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact">Contact</a></li
   </ol>
 </details>
-
 
 <br />
 
@@ -99,15 +101,15 @@ Then use the `Import Variables` feature in Airflow's UI:
 Triggers on pushing to branch `dev`. The steps are:  
 
 1.  Checkout our current repository
-2.  Login Docker Hub
+2.  Login to [Docker Hub](https://hub.docker.com/)
 3.  Get short commit hash for image tag
-4.  Buid push image to Docker Hub
+4.  Buid push image to `Docker Hub`
 5.  Unit test
-6.  Deploy to EC2 instance
+6.  Deploy to `EC2 instance`
    
 Details in [workflow file](.github/workflows/cicd.yml)
 
-Use Github Secrets to configure secrets  
+Use [Github Secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) to configure secrets for this repository
 
 ![](media/job-data-pipeline-secrets.png)
 
