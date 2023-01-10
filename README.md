@@ -16,8 +16,6 @@
   </ol>
 </details>
 
-<br />
-
 <!-- ABOUT THE PROJECT -->
 # Motivation
 I want to make a beginner data engineering project, also want to look for a new job. So i made this data pipeline that crawl data from job search website, store data in data warehouse and load data to visualization tool.
