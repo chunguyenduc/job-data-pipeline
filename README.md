@@ -28,7 +28,7 @@ I want to make a beginner data engineering project, also want to look for a new 
 * [Amazon EC2](https://aws.amazon.com/ec2/)
 * [Looker Studio](https://datastudio.google.com/)
 * [Docker](https://www.docker.com/)
-* [Github Action](https://github.com/features/actions)
+* [Github Actions](https://github.com/features/actions)
 
 
 
@@ -40,7 +40,7 @@ I want to make a beginner data engineering project, also want to look for a new 
 4. Add timestamp field and upsert data to `Redshift` data warehouse
 5. Use `Looker Studio (Google Data Studio)` to visualize our data 
 6. Orchestrate with `Airflow` using `Docker` in `EC2 instance`
-7. Implement `CI/CD` and `Unit Testing` using `Github Action`  
+7. Implement `CI/CD` and `Unit Testing` using `Github Actions`  
 
 
 <br />
