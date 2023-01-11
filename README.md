@@ -101,7 +101,7 @@ Triggers on pushing to branch `dev`. The steps are:
 1.  Checkout our current repository
 2.  Login to [Docker Hub](https://hub.docker.com/)
 3.  Get short commit hash for image tag
-4.  Buid push image to `Docker Hub`
+4.  Buid and push image to `Docker Hub`
 5.  Unit test
 6.  Deploy to `EC2 instance`
    
