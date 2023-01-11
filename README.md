@@ -1,8 +1,7 @@
 
 # **Job Data Pipeline**
 
-![Deployment](https://github.com/github/chunguyenduc/job-data-pipeline/workflows/cicd.yml/badge.svg?event=push)
-
+[![Deployment](https://github.com/chunguyenduc/job-data-pipeline/actions/workflows/cicd.yml/badge.svg?branch=dev)](https://github.com/chunguyenduc/job-data-pipeline/actions/workflows/cicd.yml)
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
