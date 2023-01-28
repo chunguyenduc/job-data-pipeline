@@ -1,10 +1,8 @@
 import csv
-import json
 import logging
 from datetime import datetime, timedelta
 from typing import List
 
-import pandas as pd
 
 JOB_FIELD = ["id", "title", "company", "city",
              "url", "created_date", "created_time"]

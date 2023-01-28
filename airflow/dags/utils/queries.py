@@ -1,3 +1,5 @@
+"""
+"""
 create_stg_schema = "CREATE SCHEMA IF NOT EXISTS staging"
 
 drop_stg_job_table = "DROP TABLE IF EXISTS staging.job_info;"

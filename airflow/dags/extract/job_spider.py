@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 
 import scrapy
 from scrapy.crawler import CrawlerProcess
+# pylint: disable=no-name-in-module
 from utils.extract_helper import (PREFIX_JOB, PREFIX_JOB_SKILL, JOB_FIELD,
                                   JOB_SKILL_FIELD, get_created_time, get_id, write_data_to_csv)
 
